@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=MaF5RPSfVdWeNqjlmZART93qXVoPiZ2N"></script>
+    <script type="text/javascript" src="./js/Heatmap_min.js"></script>
+    <script type="text/javascript" src="./js/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="./css/SearchInfoWindow_min.css"/>
+    <title>盈创动力——高新区融资信用平台</title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but project doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

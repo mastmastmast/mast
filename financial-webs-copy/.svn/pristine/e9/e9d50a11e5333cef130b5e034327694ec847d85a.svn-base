@@ -1,0 +1,630 @@
+<template>
+  <div class="declaration">
+    <!--导航-->
+    <div style="text-align: left" class="navbar-back">
+      <navbar :data="navbar"/>
+    </div>
+    <!--公司分析对比-->
+    <div class="company">
+      <!--公司名称-->
+      <!--公司信息-->
+      <el-row>
+        <div class="company-base-info">
+          <el-col :span="16">
+            <p class="name">{{companyName}}</p>
+            <div class="company-label">
+              <span class="yc-label green"
+                    v-if="baseInfo.operateStatus&&baseInfo.operateStatus!==null && baseInfo.operateStatus!==''">{{baseInfo.operateStatus}}</span>
+              <el-tooltip
+                  class="item"
+                  v-if="item!==null"
+                  v-for="(item,index) in baseInfo.cognizance"
+                  :key="'label_1_'+index"
+                  :content="item.cognizance">
+                <span class="yc-label blue">{{item.cognizance}}</span>
+              </el-tooltip>
+              <el-tooltip class="item" v-for="(item,index) in baseInfo.policies" effect="dark" :key="'label_2_'+index"
+                          placement="right">
+                <div slot="content">时<span
+                    class="blank_1"></span>间：{{item.dateCreated}}<br/>操作人：{{item.createBy}}<br/><span>原<span
+                    class="blank_1"></span>因</span>：{{item.describe}}
+                </div>
+                <span
+                    class="yc-label info">{{item.greyName}}<i class="icon el-icon-warning"></i></span>
+              </el-tooltip>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="operation" >
+              <el-button  class="btn default" v-if="!grayListStatus && showAddGrayListBtn"
+                         @click="grayListData.flag='Y';showGrayListDialog=true">加入灰名单
+              </el-button>
+              <el-button  class="btn default" v-if="grayListStatus && showRemoveGrayListBtn"
+                         @click="grayListData.flag='N';showGrayListDialog=true">移除灰名单
+              </el-button>
+            </div>
+          </el-col>
+        </div>
+      </el-row>
+      <!--分析总结-->
+      <el-row>
+        <div class="box evaluate">
+          <i class="yc-icon yc-icon-evaluate "></i>
+          <div class="summary">
+            <p>分析总结</p>
+            <p>{{analyze.Z==='' || analyze.Z===null||analyze.Z.length===0 || analyze.Z[0].evaluation==='' ? "暂无数据" : analyze.Z[0].evaluation}}</p>
+          </div>
+        </div>
+      </el-row>
+      <!--优点缺点分析-->
+      <el-row>
+        <div class="analyze content-box">
+          <div class="content-box-body">
+            <div class="sub-content-box-1 merit-defect">
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <div class="content-box">
+                    <div class="content-box-title">
+                      <div class="title-content">优点分析</div>
+                    </div>
+                    <div class="content-box-body list"
+                         :class="{nodata:  analyze.Y==='' || analyze.Y===null||analyze.Y.length===0}">
+                      <ul>
+                        <li v-for="(item, index) in analyze.Y" :key="index">
+                          <i class="yc-icon" :class="item.icon"></i>
+                          <div>
+                            <p>{{item.name}}</p>
+                            <p>{{item.evaluation}}</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="content-box">
+                    <div class="content-box-title">
+                      <div class="title-content">缺点分析</div>
+                    </div>
+                    <div class="content-box-body list defect"
+                         :class="{nodata:analyze.N==='' || analyze.N===null||analyze.N.length===0}">
+                      <ul>
+                        <li v-for="(item, index) in analyze.N" :key="index">
+                          <i class="yc-icon" :class="item.icon"></i>
+                          <div>
+                            <p>{{item.name}}</p>
+                            <p>{{item.evaluation}}</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+        </div>
+      </el-row>
+      <!--企业重点要素对比分析-->
+      <el-row>
+        <div class="content-box compare">
+          <div class="content-box-title">
+            企业重点要素对比分析
+          </div>
+          <div class="content-box-body">
+            <div class="total">
+              <div class="fl">
+                <ul>
+                  <li>{{companyName}}</li>
+                  <li>所属行业：{{baseInfo.trade}}</li>
+                  <li>公司类型：{{baseInfo.companyType}}</li>
+                </ul>
+              </div>
+              <div class="fr">
+                <ul class="fr">
+                  <li>同行业申报平均值（含历史）</li>
+                  <li>对比行业：{{baseInfo.trade}}</li>
+                  <li>公司类型：{{baseInfo.companyType}}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="compare-block" :class="{nodata:item.kpis.length===0}" v-for="(item,index) in compareInfo"
+                 :key="'compare_'+index">
+              <p class="title">{{item.name}}</p>
+              <div class="compare-item" v-if="item.kpis.length>0">
+                <ul>
+                  <li v-for="(kpi,kpiIndex) in item.kpis" :key="'kpi_'+index+'_'+kpiIndex">
+                    <div class="compare-label">{{kpi.label}}</div>
+                    <div class="compare-re">
+                      <span>{{kpi.firstValue}}</span>
+                      <i class="dot ml10"
+                         :class="{orange:kpi.comparisonResults===1}"></i><i
+                        class="dot ml15 mr10" :class="{blue:kpi.comparisonResults===2}"></i>
+                      <span>{{kpi.secondValue}}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="compare-result" :class="item.result.type" v-if="item.kpis.length>0">
+                <div>
+                  <p>对比结果：</p>
+                  <p class="mt15" v-if="item.result.content!==''">{{companyName}}在<i>{{item.name}}</i>分析项对比中，整体<i>{{item.result.content}}</i>历史同行业申报企业平均值。
+                  <p class="mt15 nodata" v-else>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-row>
+    </div>
+    <switch-gray-list-status :show-dialog="showGrayListDialog" :data="grayListData"
+                             @success="handleSwitchGrayListStatus" @cancel="showGrayListDialog=false"/>
+  </div>
+</template>
+
+<script>
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+  import {arrayFunc} from "../../assets/js/common";
+  import SwitchGrayListStatus from "../Common/switchGrayListStatus";
+  import {policyDeclaration} from "../../api/api-policy-declare";
+  import xhr from '../../api/axiosConfig';
+
+  export default {
+    name: "Declaration",
+    inject: ['reload'],
+    components: {SwitchGrayListStatus},
+    data() {
+      return {
+        navbar: {
+          prevs: [
+            {
+              name: '首页',
+              path: '/home'
+            }
+          ],
+          current: '政策申报分析'
+        },
+        // 企业名称
+        companyName: '',
+        // 企业基本信息
+        baseInfo: {},
+        grayListStatus: false,
+        //分析总结 优缺点分析,后台返回的XNZ，我也不想
+        analyze: {
+          Y: [],
+          N: [],
+          Z: [{evaluation: ""}]},
+        //是否显示灰名单操作弹出层
+        showGrayListDialog: false,
+        grayListData: {
+          type: 1,
+          behaviorType: '政策申报',
+          flag: 'N'
+        },
+        compareInfo: [
+          {
+            name: '基础势能',
+            //指标项
+            kpis: [],
+            result: {
+              content: '',
+              type: 'equal'
+            },
+            url: 'declarationAnalysis/selectFactorContrast'
+          },
+          {
+            name: '人力资源',
+            //指标项
+            kpis: [],
+            result: {
+              content: '',
+              type: 'equal'
+            },
+            url: 'declarationAnalysis/selecHumanResources'
+          },
+          {
+            name: '创新能力',
+            //指标项
+            kpis: [],
+            result: {
+              content: '',
+              type: 'equal'
+            },
+            url: 'declarationAnalysis/selecInnovationAbility'
+          },
+          {
+            name: '发展能力',
+            //指标项
+            kpis: [],
+            result: {
+              content: '',
+              type: 'equal'
+            },
+            url: 'declarationAnalysis/selectDevelopmentAbility'
+          },
+          {
+            name: '公共监管',
+            //指标项
+            kpis: [],
+            result: {
+              content: '',
+              type: 'equal'
+            },
+            url: 'declarationAnalysis/selectPublicSupervise'
+          },
+        ],
+        //是否显示灰名单操作按钮
+        showAddGrayListBtn:false,
+        showRemoveGrayListBtn:false
+      }
+    },
+    beforeRouteUpdate(to, from, next) {
+      let params = to.params;
+      let companyName = params.companyName;
+      if (companyName) {
+        this.companyName = companyName;
+      }
+      next();
+      this.reload();
+    },
+    created() {
+      this.companyName = this.$route.params.companyName;
+      this.getBaseInfo();
+      this.getGrayListInfo();
+      this.getCompareInfo();
+      this.getAdvantagesAndDisadvantages();
+      let authorities = JSON.parse(sessionStorage.getItem('authorities'));
+      this.showAddGrayListBtn=arrayFunc.contains(authorities,{code:'analysis_add_greyList'},'code');
+      this.showRemoveGrayListBtn=arrayFunc.contains(authorities,{code:'analysis_remove_greyList'},'code');
+    },
+    methods: {
+      /**
+       * 获取企业的基本信息
+       *
+       */
+      getBaseInfo() {
+        policyDeclaration.getEnterpriseInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            if (res.data !== null) {
+              this.baseInfo = res.data;
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 获取企业行为数据、灰名单相关信息
+       *
+       */
+      getGrayListInfo() {
+        enterpriseCredit.getGrayListInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            let behaviors = res.data;
+            if (!arrayFunc.isEmpty(behaviors)) {
+              let grayListInfo = behaviors.filter((item) => {
+                return item.type === 1
+              })[0];
+              this.grayListStatus = grayListInfo.greyflag === 1;
+              this.grayListData.companyName = this.companyName;
+              this.grayListData.describe = grayListInfo.describe;
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 切换灰名单的成功回调
+       */
+      handleSwitchGrayListStatus() {
+        this.showGrayListDialog = false;
+        this.getGrayListInfo();
+        this.getBaseInfo();
+      },
+      getItemCompareInfo: function (item) {
+        xhr.request({
+          url: item.url,
+          method: 'post',
+          data: {
+            companyName: this.companyName
+          }
+        }).then(res => {
+          if (res.code === '200') {
+            const data = res.data;
+            if (data !== null) {
+              item.kpis = data.potentialEnergy;
+              item.result = {
+                content: data.summaryType === 1 ? '优于' : data.summaryType === 2 ? '弱于' : '持平',
+                type: data.summaryType === 1 ? 'better' : data.summaryType === 2 ? 'weaker' : 'equal'
+              }
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        }).catch(err => {
+          dialog.error('获取企业的' + item.name + '对比数据失败');
+        });
+      },
+      /**
+       * 获取企业重点要素对比分析数据
+       *
+       */
+      getCompareInfo() {
+        this.compareInfo.forEach((item, index) => {
+          this.getItemCompareInfo(item);
+        })
+      },
+      /**
+       * 获取企业优缺点分析数据
+       * appNum 区分是1：政策申报分析还是2：融资信用报告
+       */
+      getAdvantagesAndDisadvantages() {
+        let params = {
+          enName: this.companyName,
+          appNum: "1"
+        }
+        policyDeclaration.advantagesAndDisadvantages(params).then((res) => {
+          let data = res.data;
+          if (res.code === "200") {
+            this.analyze = data;
+          } else {
+            dialog.error(res.message)
+          }
+        })
+      },
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  .company {
+    padding-top: 20px;
+    box-sizing: border-box;
+    .evaluate {
+      position: relative;
+      i {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 44px;
+        color: #ec8767;
+      }
+      .summary {
+        min-height: 44px;
+        padding-left: 60px;
+        font-size: 14px;
+        color: #666;
+        p:nth-of-type(2) {
+          margin-top: 6px;
+          font-size: 16px;
+          font-weight: bold;
+          color: #e95906;
+          line-height: 1.3;
+        }
+      }
+
+    }
+    .analyze {
+      overflow: hidden;
+      .merit-defect {
+        .list {
+          border-right: 1px solid #eeeeee;
+          ul {
+            overflow: hidden;
+            margin-left: 15px;
+            li {
+              float: left;
+              margin-top: 25px;
+              width: 50%;
+              position: relative;
+              &:nth-of-type(1), &:nth-of-type(2) {
+                margin-top: 0;
+              }
+              i {
+                position: absolute;
+                top: 0;
+                left: 0;
+                font-size: 32px;
+                color: #ff9411;
+              }
+              div {
+                width: 80%;
+                min-height: 32px;
+                padding-left: 42px;
+                font-size: 14px;
+                color: #999;
+                word-break: break-word;
+                p:nth-of-type(2) {
+                  margin-top: 2px;
+                  color: #333;
+                  line-height: 1.5;
+                }
+              }
+            }
+          }
+        }
+        .defect {
+          border: none;
+          ul {
+            li {
+              i {
+                color: #66bce4;
+              }
+            }
+          }
+        }
+      }
+    }
+    .compare {
+      overflow: hidden;
+      .total {
+        overflow: hidden;
+        div {
+          width: 50%;
+          color: white;
+          &:nth-of-type(1) {
+            background-color: #e95906;
+          }
+          &:nth-of-type(2) {
+            background-color: #01aff1;
+            ul {
+              li {
+                text-align: justify;
+              }
+            }
+          }
+          ul {
+            padding: 20px;
+            li {
+              margin-top: 15px;
+              font-size: 12px;
+              &:nth-of-type(1) {
+                margin-top: 0;
+                font-size: 16px;
+              }
+            }
+          }
+        }
+      }
+      .compare-block {
+        position: relative;
+        overflow: hidden;
+        min-height: 100px;
+        margin-top: 20px;
+        border-bottom: 1px solid #DCDCDC;
+        &:last-child {
+          border-bottom: none;
+        }
+        .title {
+          color: #333;
+          font-size: 15px;
+          font-weight: bold;
+        }
+        .compare-item {
+          position: relative;
+          float: left;
+          overflow: hidden;
+          width: 75%;
+          margin-top: 20px;
+          padding-bottom: 20px;
+          box-sizing: border-box;
+          &::after {
+            content: '';
+            position: absolute;
+            width: 1px;
+            top: 5px;
+            right: 0;
+            bottom: 25px;
+            background: #DCDCDC;
+          }
+          ul {
+            overflow: hidden;
+            li {
+              float: left;
+              width: 50%;
+              margin-top: 20px;
+              box-sizing: border-box;
+              padding-left: 20px;
+              &:nth-of-type(1), &:nth-of-type(2) {
+                margin-top: 0;
+              }
+              div {
+                display: inline-block;
+              }
+              .compare-label{
+                width:40%
+              }
+              .compare-re {
+                width:60%;
+                span {
+                  display: inline-block;
+                  width: 40%;
+                  &:nth-of-type(1) {
+                    text-align: right;
+                  }
+                }
+              }
+            }
+            @media (max-width: 1449px) {
+              li{
+                width: 100%;
+                &:nth-child(2){
+                  margin-top: 20px;
+                }
+              }
+            }
+          }
+        }
+        .compare-result {
+          position: absolute;
+          width: 25%;
+          right: 0;
+          bottom: 0;
+          padding-left: 15px;
+          padding-bottom: 20px;
+          box-sizing: border-box;
+          &.better {
+            i {
+              color: #e95906;
+            }
+          }
+          &.weaker {
+            i {
+              color: #01aff1;
+            }
+          }
+          &.equal {
+            i {
+              color: #50c592;
+            }
+
+          }
+        }
+      }
+    }
+  }
+
+  .title {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    span {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .suxian {
+    display: inline-block;
+    border: none;
+    border-left: 3px #e95906 solid;
+    height: 15px;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: 1px solid #DCDCDC;
+    &.blue {
+      background-color: #01aff1;
+      border-color: #01aff1;
+    }
+    &.orange {
+      background-color: #e95906;
+      border-color: #e95906;
+    }
+  }
+
+  .content-box {
+    .content-box-title {
+      font-size: 15px;
+      color: #333;
+      font-weight: bold;
+    }
+  }
+</style>

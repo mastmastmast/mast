@@ -1,0 +1,173 @@
+<template>
+  <el-dialog v-if="data.flag==='N'"
+             id="remove-gray-list"
+             title="移除灰名单"
+             :visible.sync="showDialog"
+             :before-close="handleClose"
+             width="30%">
+    <p class="company-name" style="text-indent: 30px;font-size: 16px">确定将" {{data.companyName}} "从{{data.behaviorType}}灰名单移除?</p>
+    <p class="desc" style="text-indent: 30px;margin-top: 20px">原因描述：{{data.describe}}</p>
+    <span slot="footer" class="dialog-footer">
+    <el-button class="btn cancel" @click="handleClose">取 消</el-button>
+    <el-button class="btn submit" :class="{disabled:disableSaveBtn}" :disabled="disableSaveBtn"
+               @click="removeFromGrayList">确 定</el-button>
+  </span>
+  </el-dialog>
+
+
+  <el-dialog v-else
+             id="add-gray-list"
+             title="加入灰名单"
+             :visible.sync="showDialog"
+             :before-close="handleClose"
+             width="30%">
+    <p class="company-name">{{data.companyName}}</p>
+    <p>将被加入{{data.behaviorType}}灰名单，请填写原因</p>
+    <el-form :model="form" :rules="rules" ref="form" label-width="80px" class="mt20" label-position="left">
+      <el-form-item label="原因描述" prop="describe">
+        <el-input
+            type="textarea"
+            maxlength="25"
+            :rows="3"
+            placeholder="请输入原因"
+            v-model="form.describe">
+        </el-input>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+    <el-button class="btn cancel" @click="handleClose">取 消</el-button>
+    <el-button class="btn submit" :class="{disabled:disableSaveBtn}" :disabled="disableSaveBtn"
+               @click="addGrayList">确 定</el-button>
+  </span>
+  </el-dialog>
+</template>
+
+<script>
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+
+  export default {
+    //切换灰名单状态
+    name: "switchGrayListStatus",
+    props: {
+      showDialog: {
+        type: Boolean
+      },
+      data: {
+        type: Object,
+        default() {
+          return {
+            companyName: '',
+            describe: '',
+            //1：政策申报，2： 政策性贷款
+            type: 1,
+            flag: 'Y',
+            //企业行为描述
+            behaviorType: ''
+          }
+        }
+      }
+    },
+    data() {
+      return {
+        form: {
+          //加入灰名单的原因
+          describe: ''
+        },
+        rules: {
+          describe: [
+            {required: true, message: '请输入原因', trigger: 'blur'},
+            {min: 1, max: 25, message: '请输入原因(25字以内)', trigger: 'blur' }
+          ]
+        },
+        //是否禁用保存按钮
+        disableSaveBtn: false
+      }
+    },
+    mounted() {
+    },
+    methods: {
+      /**
+       * 移除灰名单
+       */
+      removeFromGrayList() {
+        let params = {
+          entName: this.data.companyName,
+          greyFlag: 'N',
+          greyType: this.data.type
+        };
+        this.disableSaveBtn = true;
+        enterpriseCredit.switchGrayListStatus(params).then(res => {
+          if (res.code === '200') {
+            dialog.success('移除灰名单成功');
+            this.$emit('success');
+          } else {
+            dialog.error(res.message);
+          }
+          this.disableSaveBtn = false;
+        }).catch(err => {
+          dialog.error('移除灰名单失败');
+          this.disableSaveBtn = false;
+        });
+      },
+      /**
+       * 添加灰名单
+       */
+      addGrayList() {
+        let params = {
+          entName: this.data.companyName,
+          greyType: this.data.type,
+          greyFlag: 'Y',
+          describe: this.form.describe
+        };
+
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.disableSaveBtn = true;
+            enterpriseCredit.switchGrayListStatus(params).then(res => {
+              if (res.code === '200') {
+                dialog.success('添加灰名单成功');
+                this.$refs['form'].clearValidate();
+                this.form.describe = ''
+                this.$emit('success');
+              } else {
+                dialog.error(res.message);
+              }
+              this.disableSaveBtn = false;
+            }).catch(err => {
+              dialog.error('移除灰名单失败');
+              this.disableSaveBtn = false;
+            });
+          } else {
+            return false;
+          }
+        });
+      },
+      handleClose() {
+        if (this.greyFlag === 'Y') {
+          this.$refs['form'].clearValidate();
+        }
+        this.form.describe = ''
+        this.$emit('cancel');
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+
+  #add-gray-list,
+  #remove-gray-list {
+    p.company-name {
+      line-height: 28px;
+      color: #333;
+      font-weight: bold;
+    }
+  }
+
+  #remove-gray-list {
+    p.desc {
+      color: #999;
+    }
+  }
+</style>

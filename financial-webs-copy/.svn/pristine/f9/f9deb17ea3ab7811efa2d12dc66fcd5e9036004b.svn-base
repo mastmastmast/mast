@@ -1,0 +1,112 @@
+<script type="text/html" id="loan-evaluate-tp2">
+  <!-- 贷款准入基础数据 -->
+  <!-- todo -->
+  <div class="loan-evalute content-box-body3 watermark">
+    <!--修正项-->
+    <div class="content-box-body4">
+      <p class="title">有效修正项：</p>
+      <table style="width: 100%">
+        <tbody>
+        {{if loanCorrection.valid_item.length > 0}}
+        {{each loanCorrection.valid_item item1 index1}}
+        <tr>
+          <td style="position: relative;padding-left: 1.5em;padding-top: 15px">
+            <i style="position: absolute;
+                      top: 25px;
+                      left: 0px;"
+               class="yc-icon {{item1.accessStatus=='1' ? 'yc-icon-check-fill' :  'yc-icon-forbidden'}}"></i>
+            {{item1.accessContent}}
+          </td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td style="position: relative;padding-left: 1.5em;padding-top: 15px">
+            暂无数据
+          </td>
+        </tr>
+        {{/if}}
+        </tbody>
+      </table>
+    </div>
+    <div class="content-box-body4">
+      <p class="title">无效修正项：</p>
+      <table style="width: 100%">
+        <tbody>
+        {{if loanCorrection.invalid_items.length>0}}
+        {{each loanCorrection.invalid_items item2 index2}}
+        <tr>
+          <td style="position: relative;padding-left: 1.5em;padding-top: 15px">
+            <i style="position: absolute;
+                      top: 25px;
+                      left: 0px;"
+               class="yc-icon yc-icon-loading-2"></i>
+            {{item2.accessContent}}
+            {{if item2.invalidItemResult.value == '0'}}
+            <mark>（未校验）</mark>
+            {{else}}
+            <mark>（{{item2.invalidItemResult.value == '1' ? '符合' :
+              '不符合'}}，时间：{{item2.invalidItemResult.updateDate}}，操作人：{{item2.invalidItemResult.updater}}）
+            </mark>
+            {{/if}}
+          </td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td style="position: relative;padding-left: 1.5em;padding-top: 15px">
+            暂无数据
+          </td>
+        </tr>
+        {{/if}}
+        </tbody>
+      </table>
+    </div>
+    <div class="content-box-body4">
+      <p class="title">企业未来判断：</p>
+      <table style="width: 100%">
+        <tbody>
+        {{if loanCorrection.ent_future_judge.value == '3'}}
+        <tr>
+          <td style="position: relative;padding-left: 1.5em;padding-top: 15px">暂无数据</td>
+        </tr>
+        {{else}}
+        <tr>
+          <td style="position: relative;padding-left: 1.5em;padding-top: 15px">
+            {{if loanCorrection.ent_future_judge.value == '0'}}
+            <mark>（未校验）</mark>
+            {{else}}
+            <mark>{{loanCorrection.ent_future_judge.value == '1' ? '一般' : loanCorrection.ent_future_judge.value == '2' ?
+              '良好' :
+              '优秀'}}（时间：{{loanCorrection.ent_future_judge.updateDate}}，操作人：{{loanCorrection.ent_future_judge.updater}}）
+            </mark>
+            {{/if}}
+          </td>
+        </tr>
+        {{/if}}
+        </tbody>
+      </table>
+    </div>
+    <div class="content-box-body4">
+      <ul class="explain process">
+        <li>
+          <i>注：</i>
+          <div>
+            <p>
+              <i class="yc-icon yc-icon-check-fill"></i>
+              <span>指企业当前符合的贷款准入条件项；</span>
+            </p>
+            <p>
+              <i class="yc-icon yc-icon-forbidden"></i>
+              <span>指企业当前不符合的贷款准入条件项；</span>
+            </p>
+            <p>
+              <i class="yc-icon yc-icon-loading-2"></i>
+              <span>指企业当前无法确认是否符合的贷款准入条件项。</span>
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</script>

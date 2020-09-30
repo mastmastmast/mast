@@ -1,0 +1,80 @@
+<script type="text/html" id="loan-evaluate-tp">
+  {{if list!==null && list.length>0}}
+  {{each list item index}}
+  <div class="sub-content-box">
+    <div class="process">
+    <h2 class="title"><i class="yc-icon yc-icon-lingxing"></i>（{{index+1 | toChineseCharacter}}）{{item.name}}</h2>
+    </div>
+      <div class="content-box-body">
+      <div class="info-block">
+        <div class="title">贷款产品专项评价</div>
+        <div class="content summary">
+          {{item.evaluation ? item.evaluation:'该企业暂未申请该贷款'}}
+        </div>
+      </div>
+      {{if item.validCorrectionItems.length>0}}
+      <div class="info-block">
+        <div class="title">有效修正项</div>
+        <div class="content">
+          <ul>
+            {{each item.validCorrectionItems validItem}}
+            <li><i class="yc-icon {{validItem.icon}}"></i>
+              <div>{{validItem.accessContent}}</div>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+      {{/if}}
+      {{if item.invalidCorrectionItems.length>0}}
+      <div class="info-block">
+        <div class="title">无效修正项</div>
+        <div class="content">
+          <ul>
+            {{each item.invalidCorrectionItems invalidItem}}
+            <li><i class="yc-icon yc-icon-loading-2"></i>
+              <div>{{invalidItem.accessContent}}（
+                {{if invalidItem.invalidItemResult.value==='0'}}
+                未校验
+                {{else}}
+                {{invalidItem.invalidItemResult.value==='1'?'符合':'不符合'}}，时间：{{invalidItem.invalidItemResult.updateDate}}，操作人：{{invalidItem.invalidItemResult.updater}}
+                {{/if}}）
+              </div>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+      {{/if}}
+      <div class="info-block">
+        <div class="title">企业未来判断</div>
+        <div class="content">
+          <ul>
+            <div style="color:#407ddd">
+              {{if item.prediction.value==='0'}}
+              未校验
+              {{else}}
+              {{item.prediction.value==='1'?'一般':item.prediction.value==='2'?'良好':'优秀'}}（时间：{{item.prediction.updateDate}}，操作人：{{item.prediction.updater}}）
+              {{/if}}
+            </div>
+          </ul>
+        </div>
+      </div>
+      {{if item.validCorrectionItems.length>0 ||item.invalidCorrectionItems.length>0}}
+      <div class="info-block">
+        <div class="content">
+          <div class="note">
+            <ul>
+              <li><i class="yc-icon yc-icon-check-fill"></i>指企业当前符合的贷款准入条件项</li>
+              <li><i class="yc-icon yc-icon-forbidden"></i>指企业当前不符合的贷款准入条件项</li>
+              <li><i class="yc-icon yc-icon-loading-2"></i>指企业当前无法确认是否符合的贷款准入条件项</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{/each}}
+  {{/if}}
+</script>

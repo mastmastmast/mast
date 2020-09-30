@@ -1,0 +1,104 @@
+import xhr from './axiosConfig';
+import {dialog} from "../assets/js/dialog";
+
+/**
+ * 政策申报分析
+ * @type {{}}
+ */
+export const policyDeclaration = {
+  /**
+   * 查询企业的基本信息
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  getEnterpriseInfo(companyName) {
+    return xhr.request({
+      url: 'declarationAnalysis/selectEnterpriseInfo',
+      method: 'post',
+      data: {
+        companyName: companyName
+      }
+    });
+  },
+  /**
+   * 企业重点要素对比分析
+   */
+  comparision: {
+    /**
+     * 基础势能对比
+     * @param companyName 公司名称
+     * @returns {Promise<T | never>}
+     */
+    getBaseCapacity(companyName) {
+      return xhr.request({
+        url: 'declarationAnalysis/selectFactorContrast',
+        method: 'post',
+      }).catch(err => {
+        dialog.error('获取基础势能对比数据失败')
+      });
+    },
+    /**
+     * 人力资源对比信息
+     * @param companyName 公司名称
+     */
+    getHRInfo(companyName) {
+      return xhr.request({
+        url: 'declarationAnalysis/selecHumanResources',
+        method: 'post',
+      }).catch(err => {
+        dialog.error('获取人力资源对比数据失败')
+      });
+    },
+    /**
+     * 创新对比信息
+     * @param companyName 公司名称
+     */
+    getCreativeAbilityInfo(companyName) {
+      return xhr.request({
+        url: 'declarationAnalysis/selecInnovationAbility',
+        method: 'post',
+      }).catch(err => {
+        dialog.error('获取创新能力对比数据失败')
+      });
+    },
+    /**
+     *发展能力对比信息
+     * @param companyName 公司名称
+     */
+    getDevelopAbilityInfo(companyName) {
+      return xhr.request({
+        url: 'declarationAnalysis/selecDevelopmentAbility',
+        method: 'post',
+      }).catch(err => {
+        dialog.error('获取发展能力对比数据失败')
+      });
+    },
+    /**
+     * 公共监管对比数据
+     * @param companyName 公司名称
+     * @returns {Promise<T | never>}
+     */
+    getPublicRegulationInfo(companyName) {
+      return xhr.request({
+        url: 'declarationAnalysis/selectPublicSupervise',
+        method: 'post',
+      }).catch(err => {
+        dialog.error('获取公共监管对比数据失败')
+      });
+    },
+  },
+  /**
+   * 优缺点分析+总结数据
+   * @param companyName 公司名称
+   * @returns {Promise<T | never>}
+   */
+  advantagesAndDisadvantages(params) {
+    return xhr.request({
+      url: 'advantagesAndDisadvantages',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('获取优缺点分析数据失败')
+    });
+  },
+};

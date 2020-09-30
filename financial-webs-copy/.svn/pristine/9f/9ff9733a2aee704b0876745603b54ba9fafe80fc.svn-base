@@ -1,0 +1,120 @@
+import xhr from './axiosConfig';
+import {dialog} from "../assets/js/dialog";
+
+/**
+ * 融资信用报告相关接口
+ * @type {{ post*}}
+ */
+export const financing = {
+  /**
+   * 查询融资信用企业基本信息
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectFinancingCreditEnt(params) {
+    return xhr.request({
+      url: 'creditReport/selectFinancingCreditEnt',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取企业基本信息失败")
+    });
+  },
+  /**
+   * 查询信用基础评分
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectCreditScore(params) {
+    return xhr.request({
+      url: 'creditReport/selectCreditScore',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取信用基础评分失败")
+    });
+  },
+  /**
+   * 修改企业扶持类型
+   * @param companyName 公司名称
+   * @param type 类型
+   * @returns {*}
+   */
+  updateTotalScore(params) {
+    return xhr.request({
+      url: 'creditReport/updateTotalScore',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取信用基础评分失败")
+    });
+  },
+  /**
+   * 融资信用贷款信息
+   * @param enName 公司名称
+   * @param type 类型
+   * @returns {*}
+   */
+  financingCreditListInfo(params) {
+    return xhr.request({
+      url: 'financingCreditDetails/financingCreditListInfo',
+      method: 'post',
+      data: params
+    }).catch(error=>{
+      dialog.error("获取融资信用贷款信息失败")
+    })
+  },
+  /**
+   * 融资信用贷款信息
+   * @param enName 公司名称
+   * @returns {*}
+   */
+  accessConditionsInfo(params) {
+    return xhr.request({
+      url: 'financingCreditDetails/accessConditionsInfo',
+      method: 'post',
+      data: params
+    }).catch(error=>{
+      dialog.error("获取准入条件有效和无效项展示信息失败")
+    })
+  },
+  /**
+   * 更新贷款修正项参数
+   * @param params
+   * @returns {Promise<T | never>}
+   */
+  updateConditionsInfo(params){
+    return xhr.request({
+      url: 'financingCreditDetails/updateConditionsInfo',
+      method: 'post',
+      data: params
+    }).catch(error=>{
+      dialog.error("更新贷款修正项参数失败")
+    })
+  },
+
+  /**
+   * 信用分分布
+   */
+  creditScoreDistribution(data) {
+    return xhr.request({
+      url: 'creditEvaluation/selectCreditScoreDistribution',
+      method: 'post',
+      data
+    }).catch(err=>{
+      dialog.error('获取信用分分布失败')
+    })
+  },
+  /**
+   * 数据分析
+   */
+  InformationConclusion(data) {
+    return xhr.request({
+      url: 'queryInformationConclusion',
+      method: 'post',
+      data
+    }).catch(err=>{
+      dialog.error('获取数据分析失败')
+    })
+  }
+};

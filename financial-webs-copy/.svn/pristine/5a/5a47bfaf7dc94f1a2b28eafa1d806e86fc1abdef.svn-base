@@ -1,0 +1,80 @@
+@import "../lib-variable";
+//表格背景
+$tableBg: #fff;
+//表头字体颜色
+$labelColor: #666;
+//表格border颜色
+$borderColor: #eee;
+$hoverBg: #373c52;
+$labelBg: #e6e6e6;
+.vertical-table-wrapper {
+  background-color: $tableBg;
+  border: 1px solid $borderColor;
+  border-radius: 6px;
+}
+
+.vertical-table {
+  position: relative;
+  table-layout: fixed;
+  width: 100%;
+  font-size: 13px;
+
+  box-sizing: border-box;
+  .vertical-table-header {
+    color: $labelColor;
+    text-align: center;
+  }
+  .vertical-table-header, .vertical-table-row {
+    border-bottom: 1px solid $borderColor;
+    &:last-child {
+      border-bottom: none
+    }
+    > .cell {
+      position: relative;
+      padding: 17px 15px;
+      border-right: 1px solid $borderColor;
+      vertical-align: middle;
+      word-break: break-all;
+      box-sizing: border-box;
+      &:last-child {
+        border-right: none;
+      }
+      &.label {
+        color: $labelColor;
+        &.fill {
+          background: $labelBg;
+        }
+      }
+      &.value {
+        color: #333;
+        > span {
+          margin: 0 35px 10px 0;
+        }
+        .number {
+          margin: 0 5px;
+          color: #ff0000;
+          font-weight: bold;
+        }
+        &.emphasis {
+          color: #ff0000;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  &.ellipsis {
+    .vertical-table-header, .vertical-table-row {
+      .cell {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.table-nodata {
+  margin: 35px 0;
+  font-size: 16px;
+  text-align: center;
+}

@@ -1,0 +1,53 @@
+<script type="text/html" id="cover-tp">
+    <div class="cover-header">
+        <div class="header-left"><span>成都高新区融资信用平台</span></div>
+        <div class="header-right">{{coverInfo.report_num}}</div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="section">
+            <div class="section-body cover-box">
+                <div class="content-box">
+                    <div class="cover-title">大数据征信报告</div>
+                    <div class="cover-subtitle">（“<span class="underline-cu">{{loanName}}</span>”评议报告）</div>
+
+                    <div class="cover-content">
+                        <span class="underline-cu">{{coverInfo.company_name}}</span>于<span class="underline-cu">{{coverInfo.loan_date}}</span><span class="underline-cu" style="min-width: 0px">申请</span>高新区 <span class="underline-cu">{{loanName}}</span>
+                        政策性贷款，高新区融资信用平台根据该企业填写的资料、互联网数据、政务数据、党建数据等大数据分析，且得出以下结论：
+                    </div>
+                </div>
+                <div class="content-box">
+                    <div class="cover-item">
+                        一、综合评价：该企业“{{loanName}}”评议报告得分{{coverInfo.special_score}}分，党建增信附加分{{coverInfo.djzx_score}}分
+                    </div>
+                    <div class="cover-main">
+                        <div class="cover-top">
+                            <div id="radar-chart" style="height: 390px;width: 50%;float: left"></div>
+                            <div class="cover-right">
+                                <div class="cover-summary">
+                                    {{coverInfo.overall_merit}}
+                                </div>
+                                <div class="score-bar">
+                                    <ul>
+                                        {{each group item}}
+                                        <li class="single-bar"><span class="{{item === coverInfo.evaluate ? 'selected' : ''}}">{{item}}</span></li>
+                                        {{/each}}
+                                    </ul>
+                                    <div class="score-legend">
+                                        <span>0</span><span>70</span><span>75</span><span>80</span><span>90</span><span>100</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cover-item2">
+                        二、{{coverInfo.loan_evaluation}}，有效期从<span class="underline-cu">{{coverInfo.validity_date_from}}</span>至<span class="underline-cu">{{coverInfo.validity_date_to}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cover-statement">
+        声明：本报告基于融资信用平台大数据分析结果，仅用于高新区政策性贷款申请
+    </div>
+</script>

@@ -1,0 +1,55 @@
+@import "../lib-variable";
+//表格背景
+$tableBg: #32374a;
+//表头字体颜色
+$labelColor: #c7c7c7;
+//表格border颜色
+$borderColor: #555C7A;
+$tdMinHeight: 50px;
+.table-block {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background-color: $tableBg;
+  border: 1px solid $borderColor;
+  border-radius: 6px;
+  box-sizing: border-box;
+  .table-row {
+    display: table;
+    position: relative;
+    width: 100%;
+    min-height: $tdMinHeight;
+    overflow: hidden;
+    border-bottom: 1px solid $borderColor;
+    box-sizing: border-box;
+    &:last-child {
+      border-bottom: none;
+    }
+    > div {
+      display: table-cell;
+      min-height: $tdMinHeight;
+      vertical-align: middle;
+      text-align: center;
+      border-right: 1px solid $borderColor;
+      box-sizing: border-box;
+      &:last-child {
+        border-right: none;
+        margin-left: 1px;
+      }
+      .inner-table {
+      }
+    }
+    &.table-header {
+      > div {
+        padding: 10px 15px;
+        color: $labelColor;
+      }
+    }
+    .label {
+      color: $labelColor;
+    }
+    span {
+      margin-right: 15px;
+    }
+  }
+}

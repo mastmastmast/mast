@@ -1,0 +1,76 @@
+// 给重点人员布控 提供 css
+.newForm {
+    width: 700px;
+    height: 700px;
+    background-color: #bfbfbf;
+  }
+  
+  .all {
+    margin-left: 20px;
+    .emphasisOne {
+      margin-top: 30px;
+      display: flex;
+      font-size: 20px;
+      margin: 20xp;
+      width: 700px;
+      .delete,
+      .new {
+        border: 2px solid #f45411;
+        background-color: white;
+        color: #f45411;
+        width: 100px;
+        text-align: center;
+        border-radius: 10px;
+        margin-right: 20px;
+        padding: 5px;
+        cursor: pointer;
+      }
+      .search {
+        // .icon-search {
+        //   background: url(../../../public/img/iconEmphasis/sousuo.png) right center no-repeat;
+        // //   background-image: url(../../../public/img/catalog.png);
+        // }
+        input {
+          border-radius: 5px;
+          margin-right: 10px;
+          position: absolute;
+          margin-left: 400px;
+          height: 38px;
+        }
+      }
+    }
+    .emphasisTwo {
+      font-size: 20px;
+      display: flex;
+      margin-top: 20px;
+      .labelAll {
+        padding: 10px;
+        // text-align: center;
+        // align-items: center;
+        span {
+          border: 2px solid #f45411;
+          border-radius: 10px;
+          font-size: 20px;
+          padding: 5px;
+          margin-top: 100px;
+        }
+      }
+      
+
+      // 按钮组件 修改样式用的
+      .el-button--primary {
+        color: #fff !important;
+        border-radius: 10px !important;
+        background-color: #494949 !important;
+        border: 2px solid #494949 !important;
+      }
+      .el-button--primary:hover {
+        background-color: #f45411 !important;
+        border-color: #f45411 !important;
+      }
+      .el-button--primary:focus {
+        background-color: #f45411 !important;
+        border-color: #f45411 !important;
+      }
+    }
+  }

@@ -1,0 +1,49 @@
+.yc-label {
+  display: inline-block;
+  overflow: hidden;
+  max-width: 300px;
+  height: 25px;
+  margin-right: 8px;
+  padding: 0 10px;
+  line-height: 25px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-radius: 3px;
+  box-sizing: border-box;
+  &.default {
+    display: inline-block;
+    height: auto;
+    text-align: center;
+    border: 1px solid #e8e8e8;
+    .desc {
+      color: #6bd5fc;
+    }
+  }
+  &.green {
+    color: #50c592;
+    border: 1px solid #50c592;
+  }
+  &.blue {
+    color: #6bd5fc;
+    border: 1px solid #6bd5fc;
+  }
+  &.info {
+    color: #8c9bdb;
+    border: 1px solid #8c9bdb;
+    cursor: default;
+    i {
+      margin-left: 5px;
+    }
+  }
+  &.red {
+    color: #ff6565;
+    border: 1px solid #ff6565;
+  }
+  &.pdf {
+    height: 64px;
+    line-height: 64px;
+    margin-right:25px;
+    border-radius: 10px;
+    border-width: 2px;
+  }
+}

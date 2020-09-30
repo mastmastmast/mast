@@ -1,0 +1,78 @@
+<script type="text/html" id="lawsuits-info-tp">
+  <!--涉诉行为-->
+  <!--开庭公告-->
+  <!--法院公告-->
+  <div class="software-info content-box-body3 watermark">
+    <h2 class="title">（一）法院公告</h2>
+    <div class="content-box-body4">
+        <table class="pdf-table mb20">
+            <thead>
+            <tr>
+              <th>发布日期</th>
+              <th>公告类型</th>
+              <th>公告机构</th>
+              <th>地点</th>
+              <th>公告内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{if courtAnnouncement.length > 0}}
+              {{each courtAnnouncement item index}}
+                <tr>
+                  <td><div>{{item.bulletinTime ? item.bulletinTime : '-'}}</div></td>
+                  <td><div>{{item.instrumentType ? item.instrumentType : '-'}}</div></td>
+                  <td><div>{{item.court ? item.court : '-'}}</div></td>
+                  <td><div>{{item.bulletinPlace ? item.bulletinPlace : '-'}}</div></td>
+                  <td>{{item.text ? item.text : '-'}}</td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr>
+                <td colspan="5">暂无数据</td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+      {{if courtAnnouncement.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--裁判文书-->
+  <div class="software-info content-box-body3 watermark">
+    <h2 class="title">（二）裁判文书</h2>
+    <div class="content-box-body4">
+        <table class="pdf-table mb20">
+            <thead>
+            <tr>
+              <th>序号</th>
+              <th>判决日期</th>
+              <th>身份</th>
+              <th>判决机构</th>
+              <th>地点</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{if rulingClerical.length > 0}}
+              {{each rulingClerical item index}}
+                <tr>
+                  <td>{{index + 1}}</td>
+                  <td>{{item.executionBasisDate ? item.executionBasisDate : '-'}}</td>
+                  <td>{{item.shenfen ? item.shenfen : '-'}}</td>
+                  <td>{{item.panjuejigou ? item.panjuejigou : '-'}}</td>
+                  <td>{{item.panjuePlace ? item.panjuePlace : '-'}}</td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr>
+                <td colspan="5">暂无数据</td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+      {{if rulingClerical.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+</script>

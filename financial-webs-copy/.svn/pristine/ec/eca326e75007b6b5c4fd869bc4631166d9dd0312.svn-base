@@ -1,0 +1,234 @@
+<script type="text/html" id="administrative-tp">
+  <div class="administrative content-box-body3 watermark">
+    <h2 class="title">（一）行政处罚</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20 watermark">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>决定书文号</th>
+          <th>处罚内容</th>
+          <th>决定机关</th>
+          <th>处罚决定日期</th>
+        </tr>
+        </thead>
+        <tbody>
+          {{if administrativeInfo.length < 1}}
+            <tr>
+              <td colspan="5">暂无数据</td>
+            </tr>
+          {{else}}
+            {{each administrativeInfo value i}}
+              <tr id="administrativeInfo{{value.id}}">
+                <td>{{i + 1}}</td>
+                <td>{{value.penaltyNumber ? value.penaltyNumber : '-'}}</td>
+                <td>{{value.penaltyContent ? value.penaltyContent : '-'}}</td>
+                <td>{{value.penaltyDesicionDepartment ? value.penaltyDesicionDepartment : '-'}}</td>
+                <td>{{value.penaltyDesicionDate ? value.penaltyDesicionDate : '-'}}</td>
+              </tr>
+            {{/each}}
+          {{/if}}
+        </tbody>
+      </table>
+      {{if administrativeInfo.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="abnormal-info content-box-body3 watermark">
+    <h2 class="title">（二）经营异常</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>列入原因</th>
+          <th>列入日期</th>
+          <th>移出原因</th>
+          <th>移出日期</th>
+          <th>决定机关</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if abnormalInfo.length < 1}}
+        <tr>
+          <td colspan="6">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each abnormalInfo value i}}
+        <tr id="abnormalInfo{{value.id}}">
+          <td>{{i + 1}}</td>
+          <td>{{value.abnormalOperationReason ? value.abnormalOperationReason : '-'}}</td>
+          <td>{{value.abnormalOperationDate ? value.abnormalOperationDate : '-'}}</td>
+          <td>{{value.moveAbnormalOperationReason ? value.moveAbnormalOperationReason : '-'}}</td>
+          <td>{{value.moveDate ? value.moveDate : '-'}}</td>
+          <td>{{value.department ? value.department : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if abnormalInfo.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="illegal-info content-box-body3 ">
+    <h2 class="title">（三）严重违法</h2>
+  </div>
+
+  <div class="executedPerson-info content-box-body3 watermark" style="margin-top: 0px">
+    <div class="content-box-body4">
+      <p class="title">被执行人</p>
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>立案时间</th>
+          <th>案号</th>
+          <th>执行标的</th>
+          <th>执行法院</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if executedPersonInfo.length < 1}}
+        <tr>
+          <td colspan="5">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each executedPersonInfo value i}}
+        <tr id="executedPersonInfo{{value.id}}">
+          <td>{{i + 1}}</td>
+          <td>{{value.caseDate ? value.caseDate : '-'}}</td>
+          <td>{{value.caseNumber ? value.caseNumber : '-'}}</td>
+          <td>{{value.caseCount ? value.caseCount : '-'}}</td>
+          <td>{{value.caseCourt ? value.caseCourt : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if executedPersonInfo.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="executed-info content-box-body3 watermark">
+    <div class="content-box-body4">
+      <p class="title">失信被执行人</p>
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>立案时间</th>
+          <th>案号</th>
+          <th>执行依据文号</th>
+          <th>执行法院</th>
+          <th>履行情况</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if executedInfo.length < 1}}
+        <tr>
+          <td colspan="6">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each executedInfo value i}}
+        <tr id="executedInfo{{value.id}}">
+          <td>{{i + 1}}</td>
+          <td>{{value.date ? value.date : '-'}}</td>
+          <td>{{value.caseNumber ? value.caseNumber : '-'}}</td>
+          <td>{{value.docNumber ? value.docNumber : '-'}}</td>
+          <td>{{value.executionCourt ? value.executionCourt : '-'}}</td>
+          <td>{{value.performSituation ? value.performSituation : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if executedInfo.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="chattelMortgage-info content-box-body3 watermark">
+    <h2 class="title">（四）动产抵押</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>登记编号</th>
+          <th>登记日期</th>
+          <th>状态</th>
+          <th>登记机关</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if chattelMortgageInfo.length < 1}}
+        <tr>
+          <td colspan="5">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each chattelMortgageInfo value i}}
+        <tr id="chattelMortgageInfo{{value.id}}">
+          <td>{{i + 1}}</td>
+          <td>{{value.registerNumber ? value.registerNumber : '-'}}</td>
+          <td>{{value.registerDate ? value.registerDate : '-'}}</td>
+          <td>{{value.status ? value.status : '-'}}</td>
+          <td>{{value.registerDepartment ? value.registerDepartment : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if chattelMortgageInfo.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="equityPledged-info content-box-body3 watermark">
+    <h2 class="title">（五）股权出质</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>登记编号</th>
+          <th>出质人</th>
+          <th>质权人</th>
+          <th>状态</th>
+          <th>登记日期</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if equityPledgedInfo.length < 1}}
+        <tr>
+          <td colspan="6">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each equityPledgedInfo value i}}
+        <tr id="equityPledgedInfo{{value.id}}">
+          <td>{{i + 1}}</td>
+          <td>{{value.registerNumber ? value.registerNumber : '-'}}</td>
+          <td>{{value.pledgor ? value.pledgor : '-'}}</td>
+          <td>{{value.pledgee ? value.pledgee : '-'}}</td>
+          <td>{{value.status ? value.status : '-'}}</td>
+          <td>{{value.pledgedRegisterDate ? value.pledgedRegisterDate : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if equityPledgedInfo.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+
+</script>

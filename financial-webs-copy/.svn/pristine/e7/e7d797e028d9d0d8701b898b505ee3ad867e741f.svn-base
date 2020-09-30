@@ -1,0 +1,487 @@
+<template>
+  <div>
+    <el-row>
+      <div class="company-base-info">
+        <el-col :span="16">
+          <p class="name">{{companyName}}</p>
+          <div class="company-label">
+            <span class="yc-label green" v-if="baseInfo.operateStatus!==null && baseInfo.operateStatus!==''">{{baseInfo.operateStatus}}</span>
+            <el-tooltip
+                class="item"
+                v-if="item!==null"
+                v-for="(item,index) in baseInfo.cognizance"
+                :key="'label_1_'+index"
+                :content="item.cognizance">
+              <span class="yc-label blue">{{item.cognizance}}</span>
+            </el-tooltip>
+            <el-tooltip class="item" v-for="(item,index) in baseInfo.policies" effect="dark" :key="'label_2_'+index"
+                        placement="right">
+              <div slot="content">时<span
+                  class="blank_1"></span>间：{{item.dateCreated}}<br/>操作人：{{item.createBy}}<br/><span>原<span
+                  class="blank_1"></span>因</span>：{{item.describe}}
+              </div>
+              <span
+                  class="yc-label info">{{item.greyName}}<i class="icon el-icon-warning"></i></span></el-tooltip>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="operation" v-if="showDownloadBtn">
+            <el-button class="btn download" icon="el-icon-download" @click="download()">下载报告</el-button>
+          </div>
+        </el-col>
+      </div>
+    </el-row>
+    <el-row>
+      <div class="content-box">
+        <div class="content-box-title">
+          盈创信用评价体系
+          <span class="desc">（更新日期：{{baseInfo.generateTime?baseInfo.generateTime:'暂无数据'}}）</span>
+          <span class="fr">
+            <el-button class="btn default" v-if="baseInfo.totalScore" @click="showCreditDisDialog=true">信用分分布</el-button>
+            <el-tooltip placement="left-end" v-else>
+              <div slot="content">
+                <span>暂无信用分</span>
+              </div>
+              <el-button class="btn disabled my-btn">
+                信用分分布
+              </el-button>
+            </el-tooltip>
+          </span>
+        </div>
+        <div class="content-box-body evaluate-info" style="height:317px;">
+          <el-col :span="9" id="radar-chart">
+          </el-col>
+          <el-col :span="9">
+            <div class="mark-info">
+              <p><span class="info-title">盈创信用分</span><span class="number">{{baseInfo.totalScore?baseInfo.totalScore:'暂无数据'}}</span>
+              </p>
+              <p><span class="info-title">天府之星</span><span class="number">
+                <el-rate style="display: inline-block"
+                         :colors="['#ef7a3c','#ef7a3c','#ef7a3c']"
+                         disabled
+                         v-model="baseInfo.creditRating"></el-rate>
+              </span>
+              </p>
+              <p><span class="info-title">信用分整体排名</span><span
+                  class="number">{{baseInfo.ranking?baseInfo.ranking:'暂无数据'}}</span>
+                <!--<span-->
+                  <!--class="desc" v-if="baseInfo.rankingDescribe!==null && baseInfo.rankingDescribe!==''">（{{baseInfo.rankingDescribe}}）</span>-->
+              </p>
+              <p><span class="info-title">信用分行业比较</span><span class="desc emphasis">{{baseInfo.rankingDescribe?baseInfo.rankingDescribe:'暂无数据'}}</span></p>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="type-info">
+              <div v-for="(item,index) in behaviors" :key="'behavior_'+index">
+                <p>{{item.behaviortype}}（本年度）</p>
+                <p><span class="desc">{{item.stage}}</span>
+                  <el-button class="btn text" v-if="item.greyflag===0 && item.showAddGrayListBtn"
+                             @click="toSwitchGrayListStatus(item,'Y')">
+                    加入灰名单
+                  </el-button>
+                  <el-button class="btn text" v-if="item.greyflag===1 && item.showRemoveGrayListBtn"
+                             @click="toSwitchGrayListStatus(item,'N')">
+                    移除灰名单
+                  </el-button>
+                </p>
+              </div>
+            </div>
+          </el-col>
+        </div>
+      </div>
+    </el-row>
+    <el-row>
+      <div class="content-box tab">
+        <div class="tool-tip-div"
+             v-if="hintIsShow"></div>
+        <ul class="tablist">
+          <li v-for="(item,index) in tabItems" :key="'tab_'+index" :class="{active:activeTabIndex===index}"
+              @click="switchTab(item)">
+            {{item.name}}
+          </li>
+        </ul>
+        <div class="content-box-body">
+          <div class="tab-content active">
+            <keep-alive>
+              <component :is="tabItems[activeTabIndex].ref" :ref="tabItems[activeTabIndex].ref"
+                         :companyName="companyName" :hintIsShow="hintIsShow"
+                         @hintChangeTrue="hintIsShow=true"
+                         @hintChangeFalse="hintIsShow=false"/>
+            </keep-alive>
+          </div>
+
+        </div>
+      </div>
+    </el-row>
+    <switch-gray-list-status :show-dialog="showGrayListDialog" :data="grayListData"
+                             @success="handleSwitchGrayListStatus" @cancel="showGrayListDialog=false"/>
+    <credit-distribution v-model="showCreditDisDialog" :on-size="onSize" :company-name="companyName"/>
+  </div>
+</template>
+
+<script>
+  import {ycChart} from "../../assets/js/chart";
+  import EnterpriseQualification from './enterpriseQualification';
+  import EnterpriseOperation from './enterpriseOperation';
+  import EnterpriseOperationRisk from './enterpriseOperationRisk';
+  import EnterpriseRelationship from './enterpriseRelationship';
+  import EnterpriseLawsuits from './enterpriseLawsuits';
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+  import {arrayFunc, getMinAndMax, loading} from "../../assets/js/common";
+  import SwitchGrayListStatus from "../Common/switchGrayListStatus";
+  import creditDistribution from './creditDistribution';
+
+  export default {
+    //企业公共信用
+    name: "creditIndex",
+    inject: ['reload'],
+    components: {
+      SwitchGrayListStatus,
+      EnterpriseQualification,
+      EnterpriseOperation,
+      EnterpriseOperationRisk,
+      EnterpriseRelationship,
+      EnterpriseLawsuits,
+      creditDistribution
+    },
+    props: {
+      toggleMenu: {
+        type: Boolean,
+        default: false
+      }
+    },
+    beforeRouteUpdate(to, from, next) {
+      let params = to.params;
+      let companyName = params.companyName;
+      if (companyName) {
+        this.companyName = companyName;
+      }
+      this.reload();
+      next();
+    },
+    beforeRouteEnter(to, from, next) {
+      let authorities = JSON.parse(sessionStorage.getItem('authorities'));
+      let item = {
+        code: 'credit',
+        name: '企业公共信用'
+      };
+      if (!arrayFunc.contains(authorities, item, 'code')) {
+        dialog.error("该用户无权限查看");
+        return false;
+      }
+      next();
+    },
+    data() {
+      return {
+        tabItems: [
+          {
+            name: '企业资质',
+            index: 0,
+            ref: 'EnterpriseQualification',
+            hasLoaded: false
+          },
+          {
+            name: '经营行为',
+            index: 1,
+            ref: 'EnterpriseOperation',
+            hasLoaded: false
+          },
+          {
+            name: '经营风险',
+            index: 2,
+            ref: 'EnterpriseOperationRisk',
+            hasLoaded: false
+          },
+          {
+            name: '关联关系',
+            index: 3,
+            ref: 'EnterpriseRelationship',
+            hasLoaded: false
+          },
+          {
+            name: '涉诉行为',
+            index: 4,
+            ref: 'EnterpriseLawsuits',
+            hasLoaded: false
+          }
+        ],
+        activeTabIndex: 0,
+        //公司名字
+        companyName: '',
+        //企业基本信息
+        baseInfo: {},
+        //企业行为
+        behaviors: [],
+        //是否显示灰名单操作弹出层
+        showGrayListDialog: false,
+        grayListData: {
+          companyName: '',
+          type: 1,
+          behaviorType: '',
+          flag: 'N'
+        },
+        hintIsShow: false,
+        //是否显示下载按钮
+        showDownloadBtn: false,
+        showAddGrayListBtn: false,
+        showRemoveGrayListBtn: false,
+        //是否显示信用分布弹出层
+        showCreditDisDialog:false,
+        //
+        onSize: 1,
+        clickDistribution: false,
+      }
+    },
+    created() {
+      let companyName = this.$route.params.companyName;
+      this.companyName = companyName;
+      this.grayListData.companyName = companyName;
+      let authorities = JSON.parse(sessionStorage.getItem('authorities'));
+      let item = {
+        code: 'creadit_pdf_downlode',
+        name: '企业公关信用PDF报告下载'
+      };
+      this.showDownloadBtn = arrayFunc.contains(authorities, item, 'code');
+      this.getBaseInfo();
+      this.getGrayListInfo();
+    },
+    mounted() {
+      window.onresize = () => {
+        $('#radar-chart').trigger('windowResize');
+        this.onSize ++;
+      };
+      this.$nextTick(() => {
+        this.drawRadar();
+      });
+    },
+    watch: {
+      toggleMenu(newVal) {
+        setTimeout(() => {
+          $('#radar-chart').trigger('windowResize');
+        }, 500);
+      }
+    },
+    methods: {
+      /**
+       * 获取企业的基本信息
+       *
+       */
+      getBaseInfo() {
+        enterpriseCredit.getBaseInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            this.baseInfo = res.data;
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 获取企业行为数据、灰名单相关信息
+       *
+       */
+      getGrayListInfo() {
+        let authorities = JSON.parse(sessionStorage.getItem('authorities'));
+        enterpriseCredit.getGrayListInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            this.behaviors = res.data;
+            if (this.behaviors !== null && this.behaviors.length > 0) {
+              this.behaviors.forEach((item, index) => {
+                if (item.type === 1) {
+                  item.showAddGrayListBtn = arrayFunc.contains(authorities, {code: 'creadit_add_greyList'}, 'code');
+                  item.showRemoveGrayListBtn = arrayFunc.contains(authorities, {code: 'creadit_remove_greyList'}, 'code');
+                } else {
+                  item.showAddGrayListBtn = arrayFunc.contains(authorities, {code: 'creadit_loan_add_greyList'}, 'code');
+                  item.showRemoveGrayListBtn = arrayFunc.contains(authorities, {code: 'creadit_loan_remove_greyList'}, 'code');
+                }
+              })
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       *雷达图
+       */
+      drawRadar() {
+        let el = document.getElementById('radar-chart');
+        enterpriseCredit.getEvaluationInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            let indicator = [];
+            let data = res.data;
+            if (!arrayFunc.isEmpty(data.name) && !arrayFunc.isEmpty(data.value)) {
+              $(el).removeClass('nodata');
+              data.name.forEach((item, index) => {
+                indicator.push({
+                  name: item
+                });
+              });
+              let minAndMax = getMinAndMax(data.value);
+              let max = minAndMax.max;
+              let min = minAndMax.min;
+              min = min >= 0 ? 0 : min;
+              indicator.forEach((item, index) => {
+                item.max = max;
+                item.min = min;
+              });
+              let myChart = ycChart.renderRadar(el, indicator, data.value, '企业信用评价');
+              $(el).on('resize windowResize', () => {
+                myChart.resize();
+              });
+            } else {
+              $(el).addClass('nodata')
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 切换tab
+       * @param tabItem
+       */
+      switchTab(tabItem) {
+        this.activeTabIndex = tabItem.index;
+        const vm = this;
+        // if (!tabItem.hasLoaded) {
+        //   setTimeout(function () {
+        //     vm.$refs[tabItem.ref].getInfo();
+        //   }, 200);
+        //   tabItem.hasLoaded = true;
+        // }
+      },
+      /**
+       * 切换灰名单状态
+       * @param item
+       * @param flag
+       */
+      toSwitchGrayListStatus(item, flag) {
+        this.showGrayListDialog = true;
+        this.grayListData.type = item.type;
+        this.grayListData.describe = item.describe;
+        this.grayListData.behaviorType = item.behaviortype;
+        this.grayListData.flag = flag;
+      },
+      /**
+       * 切换灰名单的成功回调
+       */
+      handleSwitchGrayListStatus() {
+        this.showGrayListDialog = false;
+        this.getGrayListInfo();
+        this.getBaseInfo();
+      },
+      /**
+       * 报告下载
+       */
+      download() {
+        let params = {
+          companyName: this.companyName,
+          type: 1
+        }
+        loading.showLoading('pdf-download');
+        enterpriseCredit.getEnterpriseCreditReport(params).then(res => {
+          let fileName = '公共信用报告(' + this.companyName + ').pdf';
+          const blob = new Blob([res]);
+          if ('download' in document.createElement('a')) { // 非IE下载
+            const elink = document.createElement('a');
+            elink.download = fileName;
+            elink.style.display = 'none';
+            elink.href = URL.createObjectURL(blob);
+            document.body.appendChild(elink);
+            elink.click();
+            URL.revokeObjectURL(elink.href); // 释放URL 对象
+            document.body.removeChild(elink);
+          } else { // IE10+下载
+            navigator.msSaveBlob(blob, fileName);
+          }
+          loading.hideLoading('pdf-download');
+        }).catch(err => {
+          dialog.error('下载公共信用报告失败');
+        })
+      },
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  .evaluate-info {
+    > div {
+      position: relative;
+      height: 100%;
+    }
+  }
+
+  .mark-info {
+    margin-top: 20px;
+    position: relative;
+    height: 170px;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      background: #eee;
+      height: 100%;
+    }
+    p {
+      line-height: 50px;
+      font-size: 16px;
+    }
+    .info-title {
+      margin-right: 10px;
+      display: inline-block;
+      width: 150px;
+      font-weight: bold;
+      color: #333;
+      text-align: right;
+      @media screen and (max-width: 1400px) {
+        width: 100px;
+      }
+    }
+    .number {
+      margin-right: 5px;
+      font-size: 18px;
+      /*font-weight: bold;*/
+      color: #ef7a3c;
+    }
+    .desc {
+      color: #999;
+      &.emphasis{
+        margin-right: 5px;
+        font-size: 18px;
+        /*font-weight: bold;*/
+        color: #ef7a3c;
+      }
+    }
+  }
+
+  .type-info {
+    margin: 70px auto auto;
+    width: 220px;
+    height: 170px;
+    > div {
+      margin: 35px auto 35px 50px;
+    }
+    .desc {
+      color: #999;
+    }
+  }
+
+  #add-gray-list,
+  #remove-gray-list {
+    p.company-name {
+      line-height: 28px;
+      color: #333;
+      font-weight: bold;
+    }
+  }
+
+  #remove-gray-list {
+    p.desc {
+      color: #999;
+    }
+  }
+
+</style>

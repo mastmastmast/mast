@@ -1,0 +1,190 @@
+<template>
+  <div>
+    <navbar :data="navData"/>
+    <el-row style="padding:15px 0;">
+      <div class="operation fr" style="width:560px">
+        <el-form :inline="true">
+          <el-form-item label="年度：" style="float:right;margin-right:0">
+            <el-select v-model="year" value-key="value" @change="listEnterprise(1)">
+              <el-option value="" label="请选择"></el-option>
+              <el-option v-for="(item,index) in selectYearInfo.list" :value="item.year" :key="item.year"
+                         :label="item.year+'年'"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--<el-form-item label="企业：" style="margin-right:0">-->
+          <!--<el-select v-model="type" value-key="value" @change="listEnterprise(1)">-->
+          <!--<el-option value="" label="请选择"></el-option>-->
+          <!--<el-option v-for="(item,index) in selectTypeInfo.list" :value="item.value" :key="item.value"-->
+          <!--:label="item.behaviorType"></el-option>-->
+          <!--</el-select>-->
+          <!--</el-form-item>-->
+        </el-form>
+      </div>
+    </el-row>
+    <el-row style="margin-top:-35px;" id="msg-list">
+      <router-link class="msg-block" :to="'/enterprise/credit/'+item.companyName" tag="div"
+                   v-for="(item,index) in listData" :key="index">
+        <div>
+          <el-col :span="18">
+            <div class="base-info">
+              <p class="title">{{item.companyName }}
+              </p>
+              <p>法定代表人：{{item.operName?item.operName:'暂无数据'}}</p>
+              <p>注册资本：{{item.registeredCapital?item.registeredCapital:'暂无数据'}}</p>
+              <p>成立时间：{{item.foundingDate?item.foundingDate:'暂无数据'}}</p>
+              <p>注册地址：{{item.enterpriseAddress?item.enterpriseAddress:'暂无数据'}}</p>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="type-info">
+              <p :class="{disabled:item.plType===0}">政策性贷款申请</p>
+              <p :class="{disabled:item.pdType===0}">政策申报</p>
+            </div>
+          </el-col>
+        </div>
+        <div class="mt10">
+          <span class="yc-label green" v-if="item.operateStatus">{{item.operateStatus}}</span>
+          <el-tooltip
+              class="label_1"
+              v-if="label_1!==null"
+              v-for="(label_1,label_index_1) in item.cognizance"
+              :key="'label_1_'+label_index_1"
+              :content="label_1.cognizance">
+            <span class="yc-label blue">{{label_1.cognizance}}</span>
+          </el-tooltip>
+          <el-tooltip class="item" v-for="(label_2,label_index_2) in item.policies" effect="dark"
+                      :key="'label_2_'+label_index_2"
+                      placement="right">
+            <div slot="content">时<span
+                class="blank_1"></span>间：{{label_2.dateCreated}}<br/>操作人：{{label_2.createBy}}<br/><span>原<span
+                class="blank_1"></span>因</span>：{{label_2.describe}}
+            </div>
+            <span
+                class="yc-label info">{{label_2.greyName}}<i class="icon el-icon-warning"></i></span></el-tooltip>
+        </div>
+
+      </router-link>
+      <div class="msg-block nodata" v-if="listData.length===0"></div>
+      <pagination :pagination="paginationData" :container="container" @changePage="handlePageChange"/>
+    </el-row>
+
+  </div>
+</template>
+
+<script>
+  import {home} from "../../api/api";
+  import {dialog} from "../../assets/js/dialog";
+
+  export default {
+    //企业搜索列表
+    name: "enterpriseList",
+    props: [''],
+    data() {
+      return {
+        //快速导航数据
+        navData: {
+          prevs: [
+            {
+              name: '首页',
+              path: '/home'
+            }
+          ],
+          current: '企业搜索'
+        },
+        //选择的企业行为类型
+        type: '',
+        //选择的年度
+        year: '',
+        //年度下拉数据
+        selectYearInfo: {
+          list: [],
+          hasInit: false
+        },
+        //企业行为下拉数据
+        selectTypeInfo: {
+          list: [],
+          hasInit: false
+        },
+        //列表数据
+        listData: [],
+        //分页对象
+        paginationData: {
+          pageNum: 1,
+          pageSize: 10,
+          total: 0,
+          url: 'marketBaseInfo/selectMarketBaseInfo',
+          params: {}
+        },
+        container: null,
+        //跳转类型
+        jumpType: 3
+      }
+    },
+    created() {
+      this.setQueryString();
+      this.listEnterprise();
+    },
+    mounted() {
+      this.container = document.getElementsByClassName('main')[0];
+    },
+    methods: {
+      setQueryString() {
+        let behaviorType = this.$route.query.behaviorType;
+        if (behaviorType) {
+          this.type = behaviorType + '';
+        }
+        let jumpType = this.$route.query.jumpType;
+        if (jumpType) {
+          this.jumpType = jumpType;
+        }
+      },
+      /**
+       * 搜索企业列表
+       */
+      listEnterprise(pageNum) {
+        if (pageNum) {
+          this.paginationData.pageNum = pageNum;
+        }
+        let params = {
+          pageNum: this.paginationData.pageNum,
+          pageSize: this.paginationData.pageSize,
+          jumpType: this.jumpType,
+          behaviorType: this.type,
+          year: this.year
+
+        };
+        home.searchEnterpriseList(params).then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            if (!this.selectTypeInfo.hasInit) {
+              this.selectTypeInfo.list = data.optionList;
+              this.selectTypeInfo.hasInit = true;
+            }
+            if (!this.selectYearInfo.hasInit) {
+              this.selectYearInfo.list = data.selectYear;
+              this.selectYearInfo.hasInit = true;
+            }
+
+            this.listData = data.listData;
+            this.paginationData.total = data.total;
+            this.paginationData.params = params;
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      handlePageChange(data) {
+        this.paginationData = data.pagination;
+        this.listData = data.tableData;
+        let el = document.getElementsByClassName('content')[0].getElementsByTagName('div')[0];
+        if (el) {
+          el.scrollIntoView({behavior: 'smooth',block: 'start'});
+        }
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  @import "../../assets/css/enterprise-list";
+</style>

@@ -1,0 +1,294 @@
+<template>
+  <div>
+    <!--行为类型和风险类-->
+    <el-row class="mt10">
+      <div class="nav-wrapper">
+        <div class="nav">
+          <span class="title">行为类型</span>
+          <a @click="pointJump('announcementInfo')" @mouseenter="hintShow('数据来源：中华人民共和国最高人民法院')" @mouseleave="hintHide()">法院公告</a>
+          <a @click="pointJump('judgmentInfo')" @mouseenter="hintShow('数据来源：中华人民共和国最高人民法院')" @mouseleave="hintHide()">裁判文书</a>
+        </div>
+        <div class="nav">
+          <span class="title">风险类型</span>
+          <div class="yc-label default ml10">
+            一年内涉诉次数（{{riskType.involvedNum}}）
+            <div class="desc">{{riskType.involvedNumProportion}}</div>
+          </div>
+          <div class="yc-label default ml10">
+            一年内起诉次数（{{riskType.prosecutionNum}}）
+            <div class="desc">{{riskType.prosecutionNumProportion}}</div>
+          </div>
+          <div class="yc-label default ml10">
+            一年内被诉次数（{{riskType.sudeNum}}）
+            <div class="desc">{{riskType.sudeNumProportion}}</div>
+          </div>
+          <div class="yc-label default ml10">
+            于注册地涉诉占比（{{riskType.registeredPlaceNum}}）
+            <div class="desc">{{riskType.registeredPlaceNumProportion}}</div>
+          </div>
+        </div>
+      </div>
+    </el-row>
+    <!--开庭公告-->
+    <!--法院公告-->
+    <el-row>
+      <div id="announcementInfo" class="content-box">
+        <div class="content-box-title">法院公告</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="announcement-info-table"
+                    :data="tableData.announcementInfo.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                width="160px"
+                :show-overflow-tooltip="true"
+                prop="bulletinTime"
+                label="发布日期"
+            >
+            </el-table-column>
+            <el-table-column
+                width="160px"
+                :show-overflow-tooltip="true"
+                prop="instrumentType"
+                label="公告类型"
+            >
+            </el-table-column>
+            <el-table-column
+                width="160px"
+                :show-overflow-tooltip="true"
+                prop="court"
+                label="公告机构"
+            >
+            </el-table-column>
+            <el-table-column
+                width="160px"
+                :show-overflow-tooltip="true"
+                prop="bulletinPlace"
+                label="地点"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="text"
+                label="公告内容"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.announcementInfo.pagination"
+                      :container="tableData.announcementInfo.container"
+                      @changePage="handleChangePage($event,'announcementInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <!--裁判文书-->
+    <el-row>
+      <div id="judgmentInfo" class="content-box">
+        <div class="content-box-title">裁判文书</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    :data="tableData.judgmentInfo.data"
+                    id="judgment-info-table"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="executionBasisDate"
+                label="判决日期"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="shenfen"
+                label="身份"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="panjuejigou"
+                label="判决机构"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="panjuePlace"
+                label="地点"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.judgmentInfo.pagination"
+                      :container="tableData.judgmentInfo.container"
+                      @changePage="handleChangePage($event,'judgmentInfo')"/>
+        </div>
+      </div>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+  import xhr from '../../api/axiosConfig';
+  export default {
+    //涉诉行为
+    name: "enterpriseLawsuits",
+    props: ['companyName'],
+    data() {
+      return {
+        riskType: {
+          involvedNum: '',//涉诉次数
+          involvedNumProportion: '',
+          prosecutionNum: '',//起诉次数
+          prosecutionNumProportion: '',
+          registeredPlaceNum: '',//于注册地涉诉次数
+          registeredPlaceNumProportion: '',
+          sudeNum: '',//被诉次数
+          sudeNumProportion: ''
+        },//风险类型
+        tableData: {
+          announcementInfo: {
+            desc: '法院公告',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'announcementInfo',
+              method: 'post'
+            },
+            containerId: 'announcement-info-table',
+            container: null
+          },
+          judgmentInfo: {
+            desc: '裁判文书',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'judgmentInfo',
+              method: 'post'
+            },
+            containerId: 'judgment-info-table',
+            container: null
+          },
+        },
+      }
+    },
+    mounted() {
+      this.getInfo();
+    },
+    methods: {
+      getInfo(){
+        //在这里依次调用相应的接口
+        this.involvedData();
+        for (let key in this.tableData) {
+          if (this.tableData.hasOwnProperty(key)) {
+            let item = this.tableData[key];
+            let containerId = item.containerId;
+            if (containerId) {
+              item.container = document.getElementById(containerId);
+            }
+            this.getListData(item);
+          }
+        }
+      },
+      /**
+       * 通用获取相关列表数据的方法
+       * @param itemConfig tableData中的一个配置项
+       * @returns {Promise<T | never>}
+       */
+      getListData(itemConfig) {
+        let pagination = itemConfig.pagination;
+        let params = {
+          pageNum: pagination.pageNum,
+          pageSize: pagination.pageSize,
+          enName: this.companyName
+        };
+        return xhr.request({
+          url: pagination.url,
+          method: 'post',
+          data: params
+        }).then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            // 数据处理
+            data.listData.map((item)=>{
+              for(let key in item) {
+                if (item[key] === "" || item[key] === null) {
+                  item[key] = '-';
+                }
+              }
+            })
+            itemConfig.data = data.listData;
+            pagination.total = data.total;
+            pagination.params = params;
+          } else {
+            dialog.error(res.message);
+          }
+        }).catch(err => {
+          dialog.error('获取' + itemConfig.desc + '失败');
+        });
+      },
+      handleChangePage($event, target) {
+        $event.tableData.map((item)=>{
+          for(let key in item) {
+            if (item[key] === "" || item[key] === null) {
+              item[key] = '-';
+            }
+          }
+        })
+        this.tableData[target].data = $event.tableData;
+        this.tableData[target].pagination = $event.pagination;
+      },
+      // 获取标签信息
+      involvedData() {
+        let params = {
+          enName: this.companyName
+        }
+        enterpriseCredit.lawsuits.involvedData(params).then((res)=>{
+          if (res.code==='200') {
+            this.riskType = res.data;
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      /**
+       * 锚点悬浮提示
+       */
+      hintShow(text) {
+        let el = event.currentTarget;
+        this.$emit('hintChangeTrue');
+        this.$nextTick(()=>{
+          $('.tool-tip-div')
+              .css({'top':$(el).position().top-$(el).outerHeight(true)-10+77+'px',
+                'left':$(el).position().left+25+'px',})
+              .html(text);
+        })
+      },
+      hintHide() {
+        this.$emit('hintChangeFalse');
+      },
+      pointJump(id) {
+        document.getElementById(id).scrollIntoView({behavior: 'smooth',block: 'start'})
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  @import "../../assets/css/enterprise-credit";
+</style>

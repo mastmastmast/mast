@@ -1,0 +1,61 @@
+define(function (require, exports, module) {
+  var template = require('art-template');
+  var api = require('api');
+  var api2 = require('api2');
+  var $ = require('jquery');
+  var pdf = require('pdf');
+  var verticalTable = require('verticalTable');
+  var data = {
+    technical: {},
+    market: {},
+    party: {},
+  };
+  //  导出模块内容
+  module.exports = {
+    load: function () {
+      this.getInfo(pdf.companyName)
+
+    },
+    getInfo: function (companyName) {
+      new api2(
+          [
+            {
+              url: 'loanCredit/techIndicator',
+              data: {
+                companyName: companyName
+              },
+              success: function (res) {
+                if (res.data !== null) {
+                  data.technical = res.data;
+                }
+              }
+            },
+            {
+              url: 'loanCredit/marketIndicator',
+              data: {
+                companyName: companyName
+              },
+              success: function (res) {
+                if (res.data !== null) {
+                  data.market = res.data;
+                }
+              }
+            },
+            {
+              url: 'loanCredit/partyBuildingInfo',
+              data: {
+                companyName: companyName
+              },
+              success: function (res) {
+                if (res.data !== null) {
+                  data.party = res.data;
+                }
+              }
+            }
+          ],function () {
+            $('#loan-review').html(template('loan-review-tp', data));
+          }
+      )
+    },
+  }
+});

@@ -1,0 +1,241 @@
+<template>
+  <div id="app" class="wrapper">
+    <div class="loading" id="pdf-download"><i class="yc-icon yc-icon-loading"></i><i class="note">正在下载报告，请稍等</i></div>
+    <my-header></my-header>
+    <div class="main">
+      <i class="yc-icon yc-icon-menu menu-icon" v-show="!showSidebar" @click="onClickMenuIcon"></i>
+      <transition name="fade">
+        <div v-show="showSidebar" :class="{expanded:expanded,collapse:!expanded}" class="left">
+          <div class="sidebar">
+            <div class="operation"><span class="desc">导航</span>
+              <i class="yc-icon yc-icon-menu fr" @click="expanded=!expanded;toggleMenu=!toggleMenu"></i>
+            </div>
+            <ul class="nav">
+              <!-- 语法错误 -->
+              <!-- v-if="item.show" -->
+              
+              <li v-for="(item,index) in menuItems" :key='"menu_"+index' 
+                  :class="{active:item.active,leaf:!item.children,disabled:item.needParam&&(companyName==null||companyName==='')}"
+                  @click="onClickMenu(item)">
+                <i class="yc-icon" :class="item.icon"></i><span
+                  class="desc">{{item.name}}</span>
+                <ul class="sub-nav" v-if="item.children &&item.children.length>0">
+                  <li class="leaf" :class="{active:subItem.active}" v-for="(subItem,subIndex) in item.children"
+                      :key="'submenu_'+subIndex"
+                      @click="onClickMenu(subItem)"><span class="desc">{{subItem.name}}</span>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </transition>
+      <div :class="{wider:!expanded}" class="right">
+        <div class="content">
+          <router-view v-if="isRouterAlive" :toggleMenu="toggleMenu"/>
+        </div>
+        <div class="footer">Copyright © 2011-2020版权所有 : </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  import {arrayFunc, loading} from "./assets/js/common";
+  import {dialog} from "./assets/js/dialog";
+  import emphasisList from "./views/pd/emphasisList";
+  export default {
+    name: 'app',
+    provide() {
+      return {
+        reload: this.reload
+      }
+    },
+    computed: {
+      showSidebar() {
+        return !this.isHome || this.isHome && this.expanded
+      }
+    },
+    data() {
+      return {
+        menuItems: [
+          // 循环实现 左边展示效果
+                    {
+            name: '首页',
+            path: '/home',
+            icon: 'yc-icon-home',
+            needParam: false,
+            active: false,
+            show: true
+          },
+          {
+            name: '重点人员管控',
+            code: 'emphasis',
+            path: '/pd/emphasisList',
+            icon: 'yc-icon-credit',
+            needParam: false,
+            active: true,
+            show: true
+          },
+          {
+            name: '布控任务',
+            code: 'deploy',
+            path: '/pd/deploy',
+            icon: 'yc-icon-credit',
+            needParam: false,
+            active: true,
+            show: true
+          },
+          {
+            name: '布控库',
+            code: 'monitor',
+            path: '/pd/monitor',
+            icon: 'yc-icon-credit',
+            needParam: false,
+            active: true,
+            show: true
+          },
+          {
+            name: '相机列表',
+            code: 'camera',
+            path: '/pd/cameraList',
+            icon: 'yc-icon-credit',
+            needParam: false,
+            active: true,
+            show: true
+          },
+          {
+            name: '系统管理',
+            code: 'system',
+            // path: '/#',
+            icon: 'yc-icon-setting',
+            needParam: false,
+            active: false,
+            show: true,
+            children: [
+              {
+                name: '用户管理',
+                path: '/setting/user',
+                needParam: false,
+                active: false
+              },
+              {
+                name: '角色管理',
+                path: '/setting/role',
+                needParam: false,
+                active: false
+              },
+            ]
+          }
+        ],
+        companyName: '',
+        isRouterAlive: true,
+        //左侧菜单是否展开
+        expanded: true,
+        //是否是首页
+        isHome: true,
+        //是否切换菜单的展示折叠状态
+        toggleMenu: false
+      }
+    },
+    watch: {
+      '$route'(to, from) {
+        const path = to.path;
+        let params = to.params;
+        let companyName = params.companyName;
+        if (companyName) {
+          this.companyName = companyName;
+        }
+        //如果是首页就将左侧菜单折叠
+        let flag = path.indexOf('/home') === -1 && path !== '/';
+        this.expanded = flag;
+        this.isHome = !flag;
+        this.menuItems.forEach((item, index) => {
+          item.active = path.indexOf(item.path) !== -1;
+          if (!arrayFunc.isEmpty(item.children)) {
+            item.children.forEach((subItem, subIndex) => {
+              subItem.active = path === subItem.path;
+            })
+          }
+        })
+      }
+    },
+    created() {
+      let companyName = this.$route.params.companyName;
+      if (companyName) {
+        this.companyName = companyName;
+      }
+      let authorities = JSON.parse(sessionStorage.getItem('authorities'));
+      this.menuItems.forEach((item, index) => {
+        if (index > 0) {
+          item.show = arrayFunc.contains(authorities, item, 'code');
+        }
+      });
+    },
+    mounted() {
+      loading.hideLoading('pdf-download');
+      const path = this.$route.path;
+      //如果是首页就将左侧菜单折叠
+      let flag = path.indexOf('/home') === -1 && path !== '/';
+      this.expanded = flag;
+      this.isHome = !flag;
+      this.menuItems.forEach((item, index) => {
+        item.active = path.indexOf(item.path) !== -1;
+        if (!arrayFunc.isEmpty(item.children)) {
+          item.children.forEach((subItem, subIndex) => {
+            subItem.active = path === subItem.path;
+          })
+        }
+      });
+    },
+    methods: {
+      onClickMenu(item) {
+        if (item.path) {
+          if (item.needParam) {
+            if (!this.companyName) {
+              // dialog.info('请先搜索您要关注的企业');
+              //  dialog.info('');
+              return false;
+            } else {
+              this.$router.push(item.path + '/' + this.companyName);
+            }
+          } else {
+            this.$router.push(item.path)
+          }
+        }
+      },
+      reload() {
+        this.isRouterAlive = false;
+        this.$nextTick(() => {
+          this.isRouterAlive = true;
+        });
+      },
+      onClickMenuIcon() {
+        this.expanded = true;
+        this.toggleMenu = !this.toggleMenu;
+      }
+    }
+  }
+</script>
+<style lang="scss" scoped>
+  .menu-icon {
+    position: absolute;
+    top: 100px;
+    left: 5px;
+    font-size: 20px;
+    color: #ef7a3c;
+    cursor: pointer;
+    z-index: 999;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all .3s;
+  }
+
+  .fade-leave-active, .fade-enter {
+    width: 0 !important;
+  }
+
+  .fade-leave, .fade-enter-active {
+    width: 350px;
+  }
+</style>

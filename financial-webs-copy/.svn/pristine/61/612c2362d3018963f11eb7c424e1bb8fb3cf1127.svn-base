@@ -1,0 +1,332 @@
+import xhr from './axiosConfig';
+import {
+  dialog
+} from "../assets/js/dialog";
+
+/**
+ * 系统用户管理相关接口
+ * @type {{getUserAll(): *}}
+ */
+export const user = {
+  /**
+   * 获取用户列表
+   * @returns {Promise<T | never>}
+   */
+  getUserAll(params) {
+    return xhr.request({
+      url: 'user/selectUserAll',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('获取用户列表失败')
+    })
+  },
+  /**
+   * 新增用户
+   * @returns {Promise<T | never>}
+   */
+  addUser(params) {
+    return xhr.request({
+      url: 'user/saveUser',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('新增用户失败')
+    })
+  },
+  /**
+   * 查看用户详情
+   * @returns {Promise<T | never>}
+   */
+  selectUserById(params) {
+    return xhr.request({
+      url: 'user/selectUserById',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('查看用户详情失败')
+    })
+  },
+  /**
+   * 更改用户信息
+   * @returns {Promise<T | never>}
+   */
+  updateUser(params) {
+    return xhr.request({
+      url: 'user/updateUser',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('更改用户信息失败')
+    })
+  },
+  /**
+   * 更改用户启用和禁用信息
+   * @returns {Promise<T | never>}
+   */
+  updateUserStatus(params) {
+    return xhr.request({
+      url: 'user/updateUserStatus',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('更改用户信息失败')
+    })
+  },
+  /**
+   * 删除用户
+   * @returns {Promise<T | never>}
+   */
+  deleteUser(params) {
+    return xhr.request({
+      url: 'user/deleteUser',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('删除用户失败')
+    })
+  },
+  /**
+   * 查询新增用户时角色下拉选择
+   * @returns {Promise<T | never>}
+   */
+  selectDropDown(params) {
+    return xhr.request({
+      url: 'role/selectDropDown',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('查询角色失败')
+    })
+  },
+  /**
+   * 重置用户密码
+   * @returns {Promise<T | never>}
+   */
+  resetPassword(params) {
+    return xhr.request({
+      url: 'user/resetPassword',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('重置用户密码失败')
+    })
+  }
+}
+
+/**
+ * 系统角色管理相关接口
+ * @type {{getRoleAll(): *}}
+ */
+export const role = {
+  /**
+   * 查询角色
+   * @returns {Promise<T | never>}
+   */
+  selectRoleAll(params) {
+    return xhr.request({
+      url: 'role/selectRoleAll',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('查询角色信息失败')
+    })
+  },
+  /**
+   * 保存角色
+   * @returns {Promise<T | never>}
+   */
+  saveRole(params) {
+    return xhr.request({
+      url: 'role/saveRole',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('保存角色失败')
+    })
+  },
+  /**
+   * 更改角色状态
+   * @returns {Promise<T | never>}
+   */
+  updateRoleStatus(params) {
+    return xhr.request({
+      url: 'role/updateRoleStatus',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('更改角色状态失败')
+    })
+  },
+  /**
+   * 删除角色
+   * @returns {Promise<T | never>}
+   */
+  deleteRole(params) {
+    return xhr.request({
+      url: 'role/deleteRole',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('删除角色失败')
+    })
+  },
+  /**
+   * 查询角色菜单
+   * @returns {Promise<T | never>}
+   */
+  selectRoleMenuAll(params) {
+    return xhr.request({
+      url: 'menu/selectRoleMenuAll',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('查询角色菜单失败')
+    })
+  },
+}
+
+/**
+ * 系统日志相关接口
+ * @type {{getRoleAll(): *}}
+ */
+export const log = {
+  /**
+   * 查询操作日志列表
+   * @returns {Promise<T | never>}
+   */
+  selectLogAll(params) {
+    return xhr.request({
+      url: 'log/selectLogAll',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('获取操作日志列表失败')
+    })
+  },
+}
+
+/**
+ * 算分配置相关接口
+ * @type {{getRoleAll(): *}}
+ */
+export const conf = {
+  /**
+   * 查询算分配置项
+   * @returns {Promise<T | never>}
+   */
+  selectAllConfigBean(params) {
+    return xhr.request({
+      url: 'analysisConfig/selectAllConfigBean',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('查询算分配置项失败')
+    })
+  },
+  /**
+   * 新增配置
+   * @returns {Promise<T | never>}
+   */
+  addConfig(params) {
+    return xhr.request({
+      url: 'analysisConfig/saveConfig',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('新增算分配置失败')
+    })
+  },
+
+  /**
+   * 新增配置
+   * @returns {Promise<T | never>}
+   */
+  getConfigBeanById(params) {
+    return xhr.request({
+      url: 'analysisConfig/getConfigBeanById',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('获取单个算分配置失败')
+    })
+  },
+
+  /**
+   * 查询一级指标
+   * @returns {Promise<T | never>}
+   */
+  selectAllScorePointsFirstIndex(params) {
+    return xhr.request({
+      url: 'analysisConfig/selectAllScorePointsFirstIndex',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('获取算分所有一级权重')
+    })
+  },
+
+    /**
+   * 提交一级指标
+   * @returns {Promise<T | never>}
+   */
+  saveScorePointsFirstIndex(params) {
+    return xhr.request({
+      url: 'analysisConfig/saveScorePointsFirstIndex',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('获取算分所有一级权重')
+    })
+  },
+
+
+      /**
+   * 查询单个一级指标
+   * @returns {Promise<T | never>}
+   */
+  getScorePointsFirstIndexById(params) {
+    return xhr.request({
+      url: 'analysisConfig/getScorePointsFirstIndexById',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('获取算分所有一级权重')
+    })
+  },
+}
+
+/**
+ * 查询算分相关接口
+ * @type {{getRoleAll(): *}}
+ */
+export const score = {
+  /**
+   * 查询算分
+   * @returns {Promise<T | never>}
+   */
+  doScorePoints(params) {
+    return xhr.request({
+      url: 'analysisConfig/doScorePoints',
+      method: 'post',
+      data: params
+    }).catch(err => {
+      dialog.error('查询算分失败')
+    })
+  },
+    /**
+   * 实时抽数。调用desp
+   * @returns {Promise<T | never>}
+   */
+  doRealTimeKettleDate(params) {
+    return xhr.request({
+      url: 'http://rzpt.winpow.com/desp/realTimeKettleDate/execute',
+      // url: 'http://10.0.154.217:8080/desp/realTimeKettleDate/execute',
+      // url: 'http://localhost:8080/desp/realTimeKettleDate/execute',
+      method: 'post',
+      data: params,
+    }).catch(err => {
+      dialog.error('实时更新数据失败')
+    })
+  },
+}

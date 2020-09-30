@@ -1,0 +1,1523 @@
+<template>
+  <div class="financing-credit-report">
+    <!--公司信息-->
+    <el-row>
+      <div class="company-base-info">
+        <el-col :span="16">
+          <p class="name">{{companyName}}</p>
+          <div class="company-label">
+            <span class="yc-label green" v-if="baseInfo.operateStatus!==null && baseInfo.operateStatus!==''">
+              {{baseInfo.operateStatus}}
+            </span>
+            <el-tooltip
+                class="item"
+                v-if="item!==null"
+                v-for="(item,index) in baseInfo.cognizance"
+                :key="'label_1_'+index"
+                :content="item.cognizance">
+              <span class="yc-label blue">{{item.cognizance}}</span>
+            </el-tooltip>
+            <el-tooltip class="item"
+                        v-for="(item,index) in baseInfo.policies"
+                        effect="dark" :key="'label_2_'+index"
+                        placement="right">
+              <div slot="content">时<span
+                  class="blank_1"></span>间：{{item.dateCreated}}<br/>操作人：{{item.createBy}}<br/><span>原<span
+                  class="blank_1"></span>因</span>：{{item.describe}}
+              </div>
+              <span
+                  class="yc-label info">{{item.greyName}}<i class="icon el-icon-warning"></i></span>
+            </el-tooltip>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="operation" v-if="showDownloadBtn">
+            <el-tooltip placement="left-end" v-if="baseInfo.totalScore === null">
+              <div slot="content">
+                <span>企业暂未申请政策性贷款产品，暂不支持报告下载</span>
+              </div>
+              <el-button class="btn download"
+                         icon="el-icon-download"
+                         :class="{disabled: baseInfo.totalScore === null}"
+              >下载报告
+              </el-button>
+            </el-tooltip>
+            <el-button class="btn download"
+                       icon="el-icon-download"
+                       @click="download()"
+                       v-else>下载报告
+            </el-button>
+          </div>
+        </el-col>
+      </div>
+    </el-row>
+    <!--分析评价-->
+    <el-row>
+      <div class="box evaluate">
+        <i class="yc-icon yc-icon-evaluate "></i>
+        <div class="summary">
+          <p>融资信用基础评价（仅针对融资基础信用分）</p>
+          <p>{{analyze.RZ==='' || analyze.RZ===null||analyze.RZ.length===0 || analyze.RZ[0].evaluation==='' ? "暂无数据" :
+            analyze.RZ[0].evaluation}}</p>
+        </div>
+      </div>
+    </el-row>
+    <!--融资信用评价体系-->
+    <el-row>
+      <div class="content-box">
+        <!--公司信息-->
+        <div class="content-box-title company-info">
+          融资信用评价体系
+          <span class="desc">（更新日期：{{baseInfo.generateTime?baseInfo.generateTime:'暂无数据'}}）</span>
+          <span class="fr">
+            <el-button v-if="baseInfo.totalScore" class="btn default my-btn"
+                       @click="showCreditDisDialog=true">信用分分布</el-button>
+            <el-tooltip placement="left-end" v-else>
+              <div slot="content">
+                <span>暂无信用分</span>
+              </div>
+              <el-button class="btn disabled my-btn">
+                信用分分布
+              </el-button>
+            </el-tooltip>
+            <span v-if="showSupportBtn">
+              <el-button v-if="baseInfo.totalScore"  class="btn default my-btn" @click="checkSupportStatus()">扶持 </el-button>
+              <el-tooltip placement="left-end" v-else>
+              <div slot="content">
+                <span>暂无信用分</span>
+              </div>
+              <el-button class="btn disabled my-btn">
+                扶持
+              </el-button>
+            </el-tooltip>
+            </span>
+            <el-button class="btn default my-btn" v-if="!grayListStatus && showAddGrayListBtn"
+                         @click="grayListData.flag='Y';showGrayListDialog=true">加入灰名单
+            </el-button>
+            <el-button class="btn default my-btn" v-if="grayListStatus && showRemoveGrayListBtn"
+                       @click="grayListData.flag='N';showGrayListDialog=true">移除灰名单
+            </el-button>
+          </span>
+        </div>
+        <!--雷达图-->
+        <div class="content-box-body evaluate-info" style="height:430px;overflow: hidden">
+          <el-col :span="12">
+            <div class="mark-info ml10">
+              <p class="tx-p">
+                <span class="info-title">融资信用基础分</span><span class="number">{{baseInfo.totalScore ? baseInfo.totalScore : '暂无数据'}}</span>
+              </p>
+              <p v-if="false" class="tx-p">
+                <span class="info-title">信用分整体排名</span><span class="number">{{baseInfo.ranking && baseInfo.ranking !== 0 ? baseInfo.ranking : '暂无数据'}}</span>
+              </p>
+              <p v-if="false">
+                <span class="info-title">信用分行业比较</span><span class="number">{{baseInfo.rankingDescribe?baseInfo.rankingDescribe:'暂无数据'}}</span>
+              </p>
+            </div>
+            <div id="radar-chart" style="height:300px;">
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="radar-info">
+              <div v-for="(item, index) in randarRatingInfo" :key="index" @click="showRadarInfoDialog(index)">
+                <div class="radar-info-title">
+                  <p>
+                    <span class="radar-info-name">{{item.title}}</span><span
+                      class="radar-info-number">{{item.score}}分</span>
+                  </p>
+                </div>
+                <div class="radar-info-text">
+                  <ul :class="{'center-line-ts':  item.title === '财务信用'}">
+                    <li v-for="(childItem, index) in item.content" :key="index+'_label_'">
+                      <span>{{childItem.title}}</span>
+                      <span>{{childItem.value}}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </el-col>
+        </div>
+        <!--数据分析-->
+        <div class="analyze content-box">
+          <div class="content-box-body">
+            <div class="sub-content-box-1 merit-defect">
+              <el-row v-if="baseInfo.totalScore">
+                <div class="content-box">
+                  <div class="content-box-title">
+                    <div class="title-content">数据分析</div>
+                  </div>
+                  <div class="content-box-body list"
+                       :class="{nodata:  creditAnalysis==='' || creditAnalysis===null || creditAnalysis.length === 0}">
+                    <ul class="center-line">
+                      <li v-for="(item, index) in creditAnalysis" :key="index">
+                        <i class="yc-icon" :class="item.icon"></i>
+                        <div>
+                          <p>{{item.name}}</p>
+                          {{item.evaluation ? item.evaluation : '暂无数据'}}
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </el-row>
+              <el-row v-else>
+                <div class="content-box">
+                  <div class="content-box-title">
+                    <div class="title-content">数据分析</div>
+                  </div>
+                  <div class="content-box-body list nodata">
+                  </div>
+                </div>
+              </el-row>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-row>
+    <!--贷款项目-->
+    <el-row v-if="loanInfo !==null && loanInfo.length !== 0 && loanInfo !== ''">
+      <div class="content-box loan"
+           v-for="(item, index) in loanInfo"
+           :key="index+'label_6_'">
+        <div class="content-box-body loan-info">
+          <el-col :span="3">
+            <div class="loan-info-name">{{item.applyName}}</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="loan-info-state">
+              <p>{{item.applyStatus}}</p>
+              <p>申请状态</p>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div class="loan-info-money">
+              <p>{{item.applyMoney}}</p>
+              <p>申请金额</p>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div class="loan-info-score">
+              <p>{{item.financingTotalScore !== null ? item.financingTotalScore : '-'}}分</p>
+              <p>融资信用基础分</p>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div class="loan-info-condition">
+              <p>{{item.entryScore !== null ? item.entryScore : "-"}}</p>
+              <!-- <p @click="showLoanCorrection(item.applyName,item.productStatus)">贷款准入条件修正<i
+                  class="yc-icon yc-icon-search2 ml5"></i></p> -->
+                      <p>加分证明</p>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div class="loan-info-special">
+              <p
+                  :class="[item.colorStatus==='1' ? 'pass' : item.colorStatus==='2' ? 'no-pass' : item.colorStatus==='3' ? 'pass-but' : 'no-pass-but']">
+                {{item.specialScore}}
+              </p>
+              <p>贷款产品专项分</p>
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <el-button class="btn download" v-if="item.applyStatus == '已申请' && item.financingTotalScore !== null" @click="download2(item.applyName,item.id)">产品报告下载</el-button>
+            <el-tooltip v-else-if="item.applyStatus == '未申请'" effect="dark" content="企业未申请该产品，暂不提供报告下载" placement="top">
+              <el-button class="btn download disabled">产品报告下载</el-button>
+            </el-tooltip>
+            <el-tooltip v-else-if="item.financingTotalScore === null" effect="dark" content="企业暂无融资信用基础分，暂不提供报告下载" placement="top">
+              <el-button class="btn download disabled">产品报告下载</el-button>
+            </el-tooltip>
+          </el-col>
+        </div>
+        <div class="content-box-body loan-info-evaluate">
+          <span>贷款产品专项评价：</span>
+          <span
+              :class="[item.colorStatus==='1' ? 'pass' : item.colorStatus==='2' ? 'no-pass' : item.colorStatus==='3' ? 'pass-but' : 'no-pass-but']">
+            {{item.evaluateContent}}
+          </span>
+        </div>
+      </div>
+    </el-row>
+    <el-row v-else>
+      <div class="content-box loan nodata"></div>
+    </el-row>
+    <!--加入移除灰名单-->
+    <switch-gray-list-status :show-dialog="showGrayListDialog" :data="grayListData"
+                             @success="handleSwitchGrayListStatus" @cancel="showGrayListDialog=false"/>
+    <!--企业扶持优先级-->
+    <el-dialog
+        id="support-priority"
+        title="企业扶持优先级"
+        :visible.sync="showSupportDialog"
+        width="30%">
+      <el-slider
+          v-model="supportStatus"
+          :show-tooltip="false"
+          :min=1
+          :max=3>
+      </el-slider>
+      <div style="text-align: center;overflow: hidden">
+        <span style="float: left">正常</span>
+        <span>优先扶持</span>
+        <span style="float: right">重点扶持</span>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="btn cancel" @click="showSupportDialog = false">取 消</el-button>
+        <el-button class="btn submit" :class="{disabled:disableSupportBtn}" :disabled="disableSupportBtn"
+                   @click="getUpdateTotalScore()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!--雷达图详细信息弹窗-->
+    <el-dialog
+        v-for="(item, index) in randarRatingInfo" :key="index+'label_3_'"
+        class="radar-info-all"
+        :title="item.title+'参数'"
+        :visible.sync="item.showRadarInfoDialog"
+        width="735px">
+      <div class="block">
+        <div class="content-box" v-for="(childItem, index) in item.content" :key="index+'label_4_'">
+          <div class="content-box-title">
+            {{childItem.externalTitle}}
+          </div>
+          <div class="content-box-body">
+            <ul>
+              <li v-for="(childrenItem, index) in childItem.commonObject" :key="index+'label_5_'">
+                <span>{{childrenItem.label}}：</span><span class="radar-info-value">{{childrenItem.value}}</span>
+              </li>
+            </ul>
+            <p class="desc mt10" v-if="item.score">{{childItem.informationDate ? childItem.informationDate.label :
+              '数据时间'}}：<span>{{childItem.informationDate ? childItem.informationDate.value : '-'}}</span>
+            </p>
+            <p class="desc" v-if="item.score">{{childItem.informationConclusion ? childItem.informationConclusion.label
+              : '数据结论'}}：<span>{{childItem.informationConclusion ? childItem.informationConclusion.value : '-'}}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </el-dialog>
+    <!--贷款修正参数项弹出层-->
+    <el-dialog
+        id="loan-correction"
+        title="修正参数项"
+        :visible="showLoanCorrectionDialog"
+        :before-close="handleCloseCorrectionDialog"
+        width="30%">
+      <div class="content-box" v-if="loanCorrection2.valid_item && loanCorrection2.valid_item.length !== 0">
+        <div class="content-box-title">
+          系统有效修正项
+        </div>
+        <div class="content-box-body">
+          <ul>
+            <li v-for="(item, index) in loanCorrection2.valid_item"
+                :key="index+'_pjf1_'">
+              <i class="yc-icon"
+                 :class="[item.accessStatus==='1' ? 'yc-icon-check' :item.accessStatus==='2'?'yc-icon-disabled': 'yc-icon-question']"></i><span>{{item.accessContent}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content-box" v-if="loanCorrection2.invalid_items && loanCorrection2.invalid_items.length !== 0">
+        <div class="content-box-title">
+          系统无效修正项
+        </div>
+        <div class="content-box-body">
+          <ul>
+            <li v-for="(item, index) in loanCorrection2.invalid_items"
+                :key="index+'_pjf2_'">
+              <i class="yc-icon yc-icon-question"></i><span>{{item.accessContent}}</span>
+              <el-radio-group style="text-indent: 10px" v-if="item.invalidItemResult.value==='0'"
+                              v-model="item.submitResult">
+                <el-radio label="1">符合</el-radio>
+                <el-radio label="2">不符合</el-radio>
+              </el-radio-group>
+              <p v-else>
+                <el-tooltip class="item" effect="dark" placement="right">
+                  <div slot="content">时<span
+                      class="blank_1"></span>间：{{item.invalidItemResult.updateDate}}<br/>操作人：{{item.invalidItemResult.updater}}<br/>
+                  </div>
+                  <span class="correction-tag">{{item.invalidItemResult.value==='1'?'符合':'不符合'}}<i
+                      class="yc-icon yc-icon-warning"></i></span>
+                </el-tooltip>
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content-box">
+        <div class="content-box-title">
+          企业未来判断
+        </div>
+        <div class="content-box-body" style="text-indent: 10px">
+          <el-radio-group v-model="prediction" v-if="loanCorrection2.ent_future_judge.value==='0'">
+            <el-radio :label="3">优秀</el-radio>
+            <el-radio :label="2">良好</el-radio>
+            <el-radio :label="1">一般</el-radio>
+          </el-radio-group>
+          <p v-else>
+            <el-tooltip class="item" effect="dark" placement="right">
+              <div slot="content">时<span
+                  class="blank_1"></span>间：{{loanCorrection2.ent_future_judge.updateDate}}<br/>操作人：{{loanCorrection2.ent_future_judge.updater}}<br/>
+              </div>
+              <span class="correction-tag">{{loanCorrection2.ent_future_judge.value==='1'?'一般':loanCorrection2.ent_future_judge.value==='2'?'良好':'优秀'}}<i
+                  class="yc-icon yc-icon-warning"></i></span>
+            </el-tooltip>
+          </p>
+        </div>
+      </div>
+      <div class="loan-footer">
+        <span><i class="yc-icon yc-icon-check"></i><span>指企业当前符合的贷款准入条件项</span></span>
+        <span><i class="yc-icon yc-icon-question"></i><span>指企业当前无法确认是否符合的贷款准入条件项</span></span>
+        <span><i class="yc-icon yc-icon-disabled"></i><span>指企业当前不符合的贷款准入条件项</span></span>
+      </div>
+      <div v-if="showCorrectBtn && showCorrectBtn2" slot="footer" class="dialog-footer" style="text-align: center !important;">
+        <el-button class="btn cancel" @click="handleCloseCorrectionDialog">取 消</el-button>
+        <el-button class="btn submit" :class="{disabled:disableCorrectBtn}" :disabled="disableCorrectBtn"
+                   @click="updateCorrection">确 定
+        </el-button>
+      </div>
+    </el-dialog>
+    <credit-distribution :company-name="companyName" v-model="showCreditDisDialog" :on-size="onSize"/>
+  </div>
+</template>
+
+<script>
+  import {ycChart} from "../../assets/js/chart";
+  import {dialog} from "../../assets/js/dialog";
+  import {arrayFunc, getMinAndMax, loading} from "../../assets/js/common";
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {financing} from "../../api/api-financing-credit-report";
+  import SwitchGrayListStatus from "../Common/switchGrayListStatus";
+  import {policyDeclaration} from "../../api/api-policy-declare";
+  import xhr from '../../api/axiosConfig';
+  import creditDistribution from './creditDistribution';
+
+  export default {
+    name: "FinancingCreditReport",
+    components: {
+      SwitchGrayListStatus,
+      creditDistribution
+    },
+    props: {
+      toggleMenu: {
+        type: Boolean,
+        default: false
+      }
+    },
+    watch: {
+      toggleMenu(newVal) {
+        setTimeout(() => {
+          $('#radar-chart').trigger('windowResize');
+        }, 500);
+      }
+    },
+    inject: ['reload'],
+    data() {
+      return {
+        // 企业名称
+        companyName: '',
+        // 企业基本信息
+        baseInfo: {},
+        // 雷达图信息
+        indicator: {},
+        // 雷达图评分详细信息
+        randarRatingInfo: [
+          {
+            title: '基础势能',
+            showRadarInfoDialog: false,
+            url: 'creditEvaluation/selectFundamentalPotentialEnergy',
+            score: 0,
+            content: []
+          },
+          {
+            title: '资产信用',
+            showRadarInfoDialog: false,
+            url: 'creditEvaluation/selectAssetsCredit',
+            score: 0,
+            content: []
+          },
+          {
+            title: '创新发展',
+            showRadarInfoDialog: false,
+            url: 'creditEvaluation/selectInnovationDevelop',
+            score: 0,
+            content: []
+          },
+          {
+            title: '财务信用',
+            showRadarInfoDialog: false,
+            url: 'creditEvaluation/selectFinancialCredit',
+            score: 0,
+            content: []
+          },
+          {
+            title: '公共信用',
+            showRadarInfoDialog: false,
+            url: 'creditEvaluation/selectPublicCredit',
+            score: 0,
+            content: []
+          },
+        ],
+        //分析总结 优缺点分析,后台返回的XNZ，我也不想
+        analyze: {
+          Y: [],
+          N: [],
+          RZ: [{evaluation: ""}]
+        },
+        //是否显示灰名单操作弹出层
+        grayListStatus: false,
+        showGrayListDialog: false,
+        grayListData: {
+          type: 2,
+          behaviorType: '贷款申请',
+          flag: 'N'
+        },
+        //企业优先扶持数据
+        supportStatus: 1,
+        //是否显示企业扶持优先级弹出层
+        showSupportDialog: false,
+        //是否禁用弹出框中的企业扶持优先级的确认按钮
+        disableSupportBtn: false,
+        // 是否显示贷款修正项弹出层
+        showLoanCorrectionDialog: false,
+        // 贷款信息数据
+        loanInfo: [],
+        // 贷款修正项数据
+        loanCorrection: {},
+        // 贷款修正项数据
+        loanCorrection2: {
+          valid_item: [],
+          invalid_item: [],
+          ent_future_judge: {}
+        },
+        //状态标识
+        hasGetBaseInfo: true,
+        showDownloadBtn: false,
+        showAddGrayListBtn: false,
+        showRemoveGrayListBtn: false,
+        showSupportBtn: false,
+        //企业来不判断
+        prediction: '0',
+        //贷款名字
+        applyName: '',
+        //是否禁用提交修改项参数的提交按钮
+        disableCorrectBtn: false,
+        //是否展示贷款修正项的保存按钮
+        showCorrectBtn: false,
+        showCorrectBtn2: false,
+        //是否显示信用分布弹出层
+        showCreditDisDialog: false,
+        //监听窗口变化
+        onSize: 1,
+        //是否可点击信用分布
+        clickDistribution: true,
+        //信用分析
+        creditAnalysis: [],
+      }
+    },
+    beforeRouteUpdate(to, from, next) {
+      let params = to.params;
+      let companyName = params.companyName;
+      if (companyName) {
+        this.companyName = companyName;
+      }
+      next();
+      this.reload();
+    },
+    methods: {
+      /**
+       * 获取企业的基本信息
+       *
+       */
+      getBaseInfo() {
+        let params = {
+          companyName: this.companyName
+        }
+        this.hasGetBaseInfo = false;
+        financing.selectFinancingCreditEnt(params).then(res => {
+          if (res.code === '200') {
+            this.baseInfo = res.data;
+            this.hasGetBaseInfo = true;
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      // 雷达图
+      drwaRadar() {
+        let el = document.getElementById('radar-chart');
+        let params = {
+          companyName: this.companyName
+        }
+        financing.selectCreditScore(params).then(res => {
+          if (res.code === '200') {
+            let indicator = [];
+            let data = res.data;
+            if (!arrayFunc.isEmpty(data.name) && !arrayFunc.isEmpty(data.value)) {
+              $(el).removeClass('nodata');
+              data.name.forEach((item, index) => {
+                indicator.push({
+                  name: item
+                });
+              });
+              let minAndMax = getMinAndMax(data.value);
+              let max = minAndMax.max;
+              let min = minAndMax.min;
+              min = min >= 0 ? 0 : min;
+              indicator.forEach((item, index) => {
+                item.max = max;
+                item.min = min;
+              });
+              let myChart = ycChart.renderRadar(el, indicator, data.value, '融资信用评价');
+              $(el).on('resize windowResize', () => {
+                myChart.resize();
+              });
+            } else {
+              $(el).html(data.content).css(
+                  {
+                    'text-align': 'center',
+                    'font-size': '18px',
+                    "font-weight": "bold",
+                    'color': '#ff6c1c',
+                    'line-height': '300px'
+                  }
+              )
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      /**
+       * 获取企业行为数据、灰名单相关信息
+       *
+       */
+      getGrayListInfo() {
+        enterpriseCredit.getGrayListInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            let behaviors = res.data;
+            if (!arrayFunc.isEmpty(behaviors)) {
+              let grayListInfo = behaviors.filter((item) => {
+                return item.type === 2
+              })[0];
+              this.grayListStatus = grayListInfo.greyflag === 1;
+              this.grayListData.companyName = this.companyName;
+              this.grayListData.describe = grayListInfo.describe;
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 点击显示雷达图弹窗详细信息
+       */
+      showRadarInfoDialog(index) {
+        this.randarRatingInfo[index].showRadarInfoDialog = true;
+      },
+      /**
+       * 点击查看企业扶持状态
+       */
+      checkSupportStatus() {
+        if (this.hasGetBaseInfo === true) {
+          this.supportStatus = this.baseInfo.supportStatus;
+          this.showSupportDialog = true;
+        }
+      },
+      /**
+       * 修改企业扶持基础分
+       */
+      getUpdateTotalScore() {
+        let params = {
+          companyName: this.companyName,
+          type: this.supportStatus
+        }
+        this.disableSupportBtn = true;
+        financing.updateTotalScore(params).then((res) => {
+          if (res.code === "200") {
+            this.getBaseInfo();
+            this.getFinancingCreditListInfo();
+            this.getAccessConditionsInfo();
+            this.disableSupportBtn = false;
+            this.showSupportDialog = false;
+            // dialog.success(res.message)
+          } else {
+            dialog.error(res.message)
+          }
+        })
+      },
+      /**
+       * 切换灰名单的成功回调
+       */
+      handleSwitchGrayListStatus() {
+        this.showGrayListDialog = false;
+        this.getGrayListInfo();
+        this.getBaseInfo();
+      },
+      /**
+       * 获取企业优缺点分析数据
+       * appNum 区分是1：政策申报分析还是2：融资信用报告
+       */
+      getAdvantagesAndDisadvantages() {
+        let params = {
+          enName: this.companyName,
+          appNum: "2"
+        }
+        policyDeclaration.advantagesAndDisadvantages(params).then((res) => {
+          let data = res.data;
+          if (res.code === "200") {
+            this.analyze = data;
+          } else {
+            dialog.error(res.message)
+          }
+        })
+      },
+      /**
+       * 获取雷达图评分详细信息
+       *
+       */
+      getRandarRating() {
+        this.randarRatingInfo.forEach((item, index) => {
+          this.getRandarInfo(item);
+        })
+      },
+      getRandarInfo: function (item) {
+        xhr.request({
+          url: item.url,
+          method: 'post',
+          data: {
+            companyName: this.companyName
+          }
+        }).then(res => {
+          if (res.code === '200') {
+            const data = res.data;
+            if (data !== null) {
+              item.title = data.title;
+              item.score = data.score;
+              item.content = [...data.content];
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        }).catch(err => {
+          dialog.error('获取企业的' + item.title + '对比数据失败');
+        });
+      },
+      /**
+       * 获取融资信用贷款列表信息
+       *
+       */
+      getFinancingCreditListInfo() {
+        let params = {
+          enName: this.companyName,
+        }
+        financing.financingCreditListInfo(params).then((res) => {
+          if (res.code === "200") {
+            let data = res.data;
+            if (data !== null && data !== "") {
+              this.loanInfo = [...data];
+            }
+          } else {
+            dialog.error(res.message)
+          }
+        })
+      },
+      /**
+       * 获取准入条件有效和无效项信息
+       *
+       */
+      getAccessConditionsInfo() {
+        let params = {
+          enName: this.companyName,
+        }
+        financing.accessConditionsInfo(params).then((res) => {
+          if (res.code === "200") {
+            let data = res.data;
+            if (data !== null && data !== "") {
+              this.loanCorrection = data;
+            }
+          } else {
+            dialog.error(res.message)
+          }
+        })
+      },
+      /**
+       * 点击显示贷款修正条件
+       */
+      showLoanCorrection(applyName, productStatus) {
+        this.showCorrectBtn2 = false;
+        this.applyName = applyName;
+        this.loanCorrection2 = {...this.loanCorrection[productStatus]};
+        let invaliditems = this.loanCorrection2.invalid_items;
+        if (invaliditems && invaliditems.length > 0) {
+          invaliditems.forEach((item, index) => {
+            //用于提交数据
+            this.$set(item, 'submitResult', item.invalidItemResult.value);
+            // item.submitResult = item.invalidItemResult.value;
+            if (item.invalidItemResult.value == '0') {
+              this.showCorrectBtn2 = true;
+            }
+          })
+        }
+        if (this.loanCorrection2.ent_future_judge.value == '0') {
+          this.showCorrectBtn2 = true;
+        }
+        this.prediction = this.loanCorrection2.ent_future_judge.value;
+        this.showLoanCorrectionDialog = true;
+      },
+      /**
+       * 报告下载
+       */
+      download() {
+        let params = {
+          companyName: this.companyName,
+          type: 2
+        }
+        loading.showLoading('pdf-download');
+        enterpriseCredit.getEnterpriseCreditReport(params).then(res => {
+          let fileName = '融资信用报告(' + this.companyName + ').pdf';
+          const blob = new Blob([res]);
+          if ('download' in document.createElement('a')) { // 非IE下载
+            const elink = document.createElement('a');
+            elink.download = fileName;
+            elink.style.display = 'none';
+            elink.href = URL.createObjectURL(blob);
+            document.body.appendChild(elink);
+            elink.click();
+            URL.revokeObjectURL(elink.href); // 释放URL 对象
+            document.body.removeChild(elink);
+          } else { // IE10+下载
+            navigator.msSaveBlob(blob, fileName);
+          }
+          loading.hideLoading('pdf-download');
+        }).catch(err => {
+          dialog.error('下载融资信用报告失败');
+        })
+      },
+      download2(loanName,id) {
+        let params = {
+          companyName: this.companyName,
+          type: 3,
+          loanName,
+          id,
+        }
+        loading.showLoading('pdf-download');
+        enterpriseCredit.getEnterpriseCreditReport(params).then(res => {
+          let fileName = '大数据征信报告(' +'“'+loanName+'”'+ '评议报告)_'+this.companyName+'.pdf';
+          const blob = new Blob([res]);
+          if ('download' in document.createElement('a')) { // 非IE下载
+            const elink = document.createElement('a');
+            elink.download = fileName;
+            elink.style.display = 'none';
+            elink.href = URL.createObjectURL(blob);
+            document.body.appendChild(elink);
+            elink.click();
+            URL.revokeObjectURL(elink.href); // 释放URL 对象
+            document.body.removeChild(elink);
+          } else { // IE10+下载
+            navigator.msSaveBlob(blob, fileName);
+          }
+          loading.hideLoading('pdf-download');
+        }).catch(err => {
+          dialog.error('下载'+loanName+'信用报告失败');
+        })
+      },
+      /**
+       * 更新贷款修正项参数
+       */
+      updateCorrection() {
+        dialog.confirm(this, '是否确认您本次校验内容？', () => {
+          let invalidItems = [];
+          this.loanCorrection2.invalid_items.forEach((item, index) => {
+            invalidItems.push({
+              invalidItemResult: item.submitResult,
+              itemName: item.itemName
+            });
+          });
+          let params = {
+            companyName: this.companyName,
+            applyName: this.applyName,
+            ent_future_judge: this.prediction,
+            invalid_items: invalidItems
+          };
+          this.disableCorrectBtn = true;
+          financing.updateConditionsInfo(params).then(res => {
+            if (res.code === '200') {
+              dialog.success('更新成功');
+              this.handleCloseCorrectionDialog();
+            } else {
+              dialog.error(res.message)
+            }
+            this.disableCorrectBtn = false;
+          });
+        });
+      },
+      /**
+       * 关闭修正参数项窗口
+       */
+      handleCloseCorrectionDialog() {
+        this.prediction = '0';
+        this.getFinancingCreditListInfo();
+        this.getAccessConditionsInfo();
+        this.showLoanCorrectionDialog = false;
+      },
+      /**
+       * 数据分析
+       */
+      queryInformationConclusion() {
+        let params = {
+          companyName: this.companyName
+        }
+        financing.InformationConclusion(params).then(res => {
+          if (res.code === '200') {
+            if (res.data && res.data.length > 0) {
+              this.creditAnalysis = [...res.data]
+            }
+          } else {
+            dialog.error(res.message)
+          }
+        })
+      }
+    },
+    created: function () {
+      this.companyName = this.$route.params.companyName;
+      this.showDownloadBtn = this.hasAuthority('report_pdf_downlode');
+      this.showAddGrayListBtn = this.hasAuthority('report_add_greyList');
+      this.showRemoveGrayListBtn = this.hasAuthority('report_remove_greyList');
+      this.showSupportBtn = this.hasAuthority('report_help_employee');
+      this.showCorrectBtn = this.hasAuthority('report_define');
+      this.getBaseInfo();
+      this.getGrayListInfo();
+      this.getAdvantagesAndDisadvantages();
+      this.getRandarRating();
+      this.getFinancingCreditListInfo();
+      this.getAccessConditionsInfo();
+      this.queryInformationConclusion();
+    },
+    mounted() {
+      window.onresize = () => {
+        $('#radar-chart').trigger('windowResize');
+        this.onSize++;
+      };
+      this.$nextTick(() => {
+        this.drwaRadar();
+      });
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  .correction-tag {
+    width: auto !important;
+    margin-left: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #e64e00;
+
+    i {
+      margin-left: 5px;
+      color: #b7b7b7;
+    }
+  }
+
+  .evaluate {
+    position: relative;
+
+    i {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 44px;
+      color: #ec8767;
+    }
+
+    .summary {
+      min-height: 44px;
+      padding-left: 60px;
+      font-size: 14px;
+      color: #666;
+
+      p:nth-of-type(2) {
+        margin-top: 6px;
+        font-size: 16px;
+        color: #e95906;
+        font-weight: bold;
+        line-height: 1.3;
+      }
+    }
+  }
+
+  .content-box {
+    .content-box-title {
+      .my-btn {
+        margin: 5px;
+
+        &:nth-of-type(3) {
+          margin-right: 30px;
+        }
+      }
+    }
+  }
+
+  .nodata:after {
+    content: '暂无数据';
+    position: absolute;
+    margin-left: -40px;
+    left: 50%;
+    top: 50%;
+  }
+
+  .evaluate-info {
+    > div {
+      position: relative;
+      height: 100%;
+    }
+  }
+
+  .mark-info {
+    position: relative;
+    height: 100px;
+    @media screen and (max-width: 1400px) {
+      .tx-p {
+        display: block !important;
+      }
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 30px;
+    }
+
+    .tx-p {
+      display: inline-block;
+    }
+
+    .info-title {
+      display: inline-block;
+      margin-right: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .number {
+      margin-right: 100px;
+      font-size: 18px;
+      /*font-weight: bold;*/
+      color: #ef7a3c;
+    }
+
+    .desc {
+      color: #999;
+
+      &.emphasis {
+        margin-right: 50px;
+        font-size: 18px;
+        /*font-weight: bold;*/
+        color: #ef7a3c;
+      }
+    }
+  }
+
+  .radar-info {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-right: 70px;
+    @media screen and (max-width: 1500px) {
+      margin-right: 0px;
+    }
+
+    > div {
+      flex: none;
+      height: 175px;
+      width: 150px;
+      margin-left: 30px;
+      border: 1px solid #eee;
+      color: #333;
+      @media screen and (max-width: 1400px) {
+        margin-left: 15px;
+        &:nth-of-type(4) {
+          width: 319px !important;
+        }
+      }
+
+      &:nth-of-type(1), &:nth-of-type(4) {
+        margin-left: 0px;
+      }
+
+      &:nth-of-type(4), &:nth-of-type(5) {
+        margin-top: 30px;
+      }
+
+      &:nth-of-type(4) {
+        position: relative;
+        width: 334px;
+
+        .radar-info-text {
+
+          ul {
+            position: relative;
+
+            li {
+              float: left;
+              width: 50%;
+              box-sizing: border-box;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        border: 1px solid #e95906;
+      }
+
+      .radar-info-title {
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+        background-color: #eee;
+        font-size: 14px;
+        font-weight: 500;
+
+        p {
+          display: flex;
+          justify-content: space-between;
+          margin: 0px 10px 0px;
+        }
+
+        .radar-info-number {
+          color: #e95906;
+        }
+      }
+
+      .radar-info-text {
+        width: 100%;
+        font-size: 14px;
+
+        ul {
+          margin-top: 10px;
+
+          li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0px 10px 0px;
+            line-height: 30px;
+
+            span:nth-of-type(2) {
+              color: #999;
+              font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .analyze {
+    overflow: hidden;
+    border: none;
+
+    .merit-defect {
+      .list {
+        /*border-right: 1px solid #eeeeee;*/
+
+        ul {
+          overflow: hidden;
+          margin-left: 15px;
+
+          li {
+            display: flex;
+            float: left;
+            margin-top: 5px;
+            width: 50%;
+            position: relative;
+            box-sizing: border-box;
+
+            &:nth-of-type(1), &:nth-of-type(2) {
+              margin-top: 0;
+            }
+
+            &:nth-of-type(even) {
+              padding-left: 60px;
+
+              i {
+                left: 60px;
+              }
+            }
+
+            i {
+              font-size: 32px;
+              color: #ff9411;
+            }
+
+            div {
+              flex: 1;
+              height: 60px;
+              padding-left: 10px;
+              padding-right: 20px;
+              font-size: 14px;
+              color: #333;
+              word-break: break-all;
+              line-height: 1.4;
+
+              p {
+                color: #999;
+              }
+            }
+          }
+        }
+      }
+
+      .defect {
+        border: none;
+
+        ul {
+          li {
+            i {
+              color: #66bce4;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .content-box {
+    .content-box-title {
+      font-size: 15px;
+      color: #333;
+      font-weight: bold;
+    }
+  }
+
+  .loan {
+    position: relative;
+    height: 190px;
+    margin-bottom: 20px;
+    transition: all .3s;
+    border: 1px solid #eee;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:hover {
+      border: 1px solid #FFA576;
+    }
+
+    .loan-info {
+      position: relative;
+      padding-left: 0;
+      height: 130px;
+      margin-left: 40px;
+      margin-right: 20px;
+      border-bottom: 1px solid #eee;
+      color: #333;
+      font-size: 14px;
+
+      > div {
+        height: 100%;
+        position: relative;
+
+        > div {
+          position: absolute;
+          top: 40%;
+          left: 0;
+        }
+      }
+
+      .loan-info-name {
+        font-size: 22px;
+      }
+
+      .loan-info-state {
+        text-align: center;
+
+        p:nth-of-type(1) {
+          margin-bottom: 10px;
+          font-size: 18px;
+
+        }
+      }
+
+      .loan-info-money {
+        text-align: center;
+
+        p:nth-of-type(1) {
+          font-size: 22px;
+          margin-bottom: 10px;
+          color: #ff5d68;
+        }
+      }
+
+      .loan-info-score {
+        text-align: center;
+
+        p:nth-of-type(1) {
+          font-size: 22px;
+          margin-bottom: 10px;
+        }
+      }
+
+      .loan-info-condition {
+        text-align: center;
+
+        p:nth-of-type(1) {
+          font-size: 22px;
+          margin-bottom: 10px;
+        }
+
+        p:nth-of-type(2) {
+          cursor: pointer;
+        }
+
+        .yc-icon {
+          font-size: 18px;
+          color: #999;
+        }
+      }
+
+      .loan-info-special {
+        text-align: center;
+
+        p:nth-of-type(1) {
+          font-size: 22px;
+          margin-bottom: 10px;
+        }
+      }
+
+      .download {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        //transform: translate(0,-50%);
+      }
+
+      .gray {
+        background: #d7d7d7 !important;
+        cursor: not-allowed;
+
+        &:hover, &:focus {
+          background: #d7d7d7 !important;
+        }
+      }
+    }
+
+    .loan-info-evaluate {
+      padding: 0;
+      height: 60px;
+      line-height: 60px;
+      text-align: right;
+    }
+  }
+
+  .pass {
+    color: #42c985;
+  }
+
+  .no-pass {
+    color: #8c9bdb;
+  }
+
+  .pass-but {
+    color: #31bdf1;
+  }
+
+  .no-pass-but {
+    color: #999;
+  }
+
+  #add-gray-list,
+  #remove-gray-list {
+    p.company-name {
+      line-height: 28px;
+      color: #333;
+      font-weight: bold;
+    }
+  }
+
+  #remove-gray-list {
+    p.desc {
+      color: #999;
+    }
+  }
+
+  .radar-info-all {
+    .el-dialog__body {
+      .block {
+        margin-top: -30px;
+        max-height: 700px;
+        overflow-y: auto
+      }
+
+      .content-box {
+        border-top: none;
+        border-right: none;
+        border-left: none;
+
+        &:nth-of-type(1) {
+          // margin-top: -30px;
+        }
+
+        &:last-of-type {
+          border: none;
+        }
+
+        .content-box-body {
+          padding-top: 0;
+
+          ul {
+            overflow: hidden;
+            font-size: 0;
+
+            li {
+              width: 50%;
+              text-align: center;
+              float: left;
+              font-size: 14px;
+              color: #666;
+              line-height: 30px;
+              word-break: break-word;
+
+              span {
+                display: inline-block;
+                width: 35%;
+                text-align: left;
+                vertical-align: bottom;
+
+                &:nth-of-type(1) {
+                  width: 65%;
+                  text-align: right;
+                }
+              }
+
+              .value {
+                color: #333;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    p.desc {
+      line-height: 1.5em;
+      font-size: 12px;
+      color: #999;
+    }
+  }
+
+  #loan-correction {
+    i {
+      font-size: 16px;
+    }
+
+    .yc-icon-check {
+      color: #7fc6a7;
+    }
+
+    .yc-icon-question {
+      color: #6bd5fc;
+    }
+
+    .yc-icon-disabled {
+      color: #8c9bdb;
+    }
+
+    .el-dialog__body {
+      margin-top: 0;
+
+      .content-box {
+        border: none;
+        border-bottom: 1px solid #eee;
+
+        &:nth-of-type(1) {
+          margin-top: -30px;
+        }
+
+        .content-box-body {
+          padding-top: 0;
+
+          ul {
+            width: 100%;
+            margin-left: 10px;
+            font-size: 0;
+
+            li {
+              width: 100%;
+              line-height: 30px;
+              font-size: 14px;
+              color: #666;
+
+              i {
+                display: inline-block;
+                width: 16px;
+                line-height: 30px;
+              }
+
+              span {
+                display: inline-block;
+                width: 80%;
+                padding-left: 5px;
+                vertical-align: top;
+              }
+            }
+          }
+        }
+      }
+
+      .loan-footer {
+        font-size: 12px;
+        color: #999;
+        vertical-align: middle;
+
+        > span {
+          display: inline-block;
+          width: 50%;
+          line-height: 30px;
+
+          i {
+            display: inline-block;
+            vertical-align: middle;
+          }
+
+          span {
+            display: inline-block;
+            vertical-align: middle;
+            padding-left: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  .company-info {
+    &::after {
+      content: "";
+      clear: both;
+    }
+  }
+
+  .center-line:after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background-color: #eeeeee;
+    left: 50%;
+  }
+
+  .center-line-ts {
+    overflow: hidden;
+
+    &:after {
+      content: '';
+      position: absolute;
+      width: 1px;
+      height: 100%;
+      background-color: #eeeeee;
+      left: 50%;
+    }
+  }
+
+</style>

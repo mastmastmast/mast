@@ -1,0 +1,22 @@
+<script type="text/html" id="note-info-tp2">
+  <div class="content-box-body2">
+    <!--报告编码规则-->
+    <div class="reportCode-rules content-box-body3 watermark">
+      <p class="title process">报告编码规则</p>
+      <div class="content-box-body4">
+        <div class="report-code-rule process">
+          <div class="code" style="width:350px">{{title}}
+            <div class="desc">{{desc}}字样的拼音首字母，固定字段
+            </div>
+          </div>
+          <div class="code">YYYYMMDD
+            <div class="desc" style="line-height:84px;">8位生成日期</div>
+          </div>
+          <div class="code">0001
+            <div class="desc">4位报告生成流水号</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>

@@ -1,0 +1,433 @@
+<template>
+  <div>
+    <el-row class="mt10">
+      <div class="nav-wrapper">
+        <div class="nav">
+          <span class="title">基本信息</span>
+          <a @click="pointJump('commercial-ifno')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">工商信息</a>
+          <a @click="pointJump('share-info')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">股东信息</a>
+          <a @click="pointJump('principals-info')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">主要人员</a>
+          <a @click="pointJump('branch-info')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">分支机构</a>
+          <a @click="pointJump('change-info')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">变更记录</a>
+        </div>
+        <div class="nav">
+          <span class="title">注册资本</span>
+          <div class="yc-label default ml10" v-if="registerCapitalInfo.activityLevel !== null">
+            企业活跃度
+            <div class="desc">{{registerCapitalInfo.activityLevel}}</div>
+          </div>
+        </div>
+      </div>
+    </el-row>
+    <el-row>
+      <div id="commercial-ifno" class="content-box">
+        <div class="content-box-title">工商信息</div>
+        <div class="content-box-body">
+          <vertical-table :table-data="commercialInfo" :data-item-count-per-row="2" label-width="160px"
+                          :fill-label="true"/>
+        </div>
+      </div>
+    </el-row>
+    <el-row>
+      <div id="share-info" class="content-box">
+        <div class="content-box-title">股东信息</div>
+        <div class="content-box-body">
+          <el-table id="share-info-table" class="yc-table default"
+                    :data="tableData.shareInfo.data"
+                    border>
+            <el-table-column
+                prop="name"
+                :show-overflow-tooltip="true"
+                label="股东名称（或姓名）"
+            >
+            </el-table-column>
+            <el-table-column
+                width="150px"
+                :show-overflow-tooltip="true"
+                prop="investmentProportion"
+                label="持股比例"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="shoudCapi"
+                label="认缴出资额（万元）"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="realCapi"
+                label="实缴出资额（万元）"
+            >
+            </el-table-column>
+            <el-table-column
+                width="150px"
+                :show-overflow-tooltip="true"
+                prop="capiProportion"
+                label="实缴出资比例"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="risk"
+                label="风险信息标签"
+            >
+              <template slot-scope="scope">
+                <span class="yc-label info" v-for="(label,index) in scope.row.risk" :key="'risk_label_'+index">{{label.risklabel}}</span>
+                <span v-if="scope.row.risk===null || scope.row.risk.length===0">当前数据下无风险标签</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.shareInfo.pagination" :container="tableData.shareInfo.container"
+                      @changePage="handleChangePage($event,'shareInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <el-row>
+      <div id="principals-info" class="content-box">
+        <div class="content-box-title">主要人员</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default" id="principals-info-table"
+                    :data="tableData.principalsInfo.data"
+                    border>
+            <el-table-column
+                prop="name"
+                :show-overflow-tooltip="true"
+                label="姓名"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="jobTitle"
+                label="职务"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.principalsInfo.pagination" :container="tableData.principalsInfo.container"
+                      @changePage="handleChangePage($event,'principalsInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <el-row>
+      <div id="branch-info" class="content-box">
+        <div class="content-box-title">分支机构</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default" id="branch-info-table"
+                    :data="tableData.branchInfo.data"
+                    border>
+            <el-table-column
+                prop="companyName"
+                :show-overflow-tooltip="true"
+                label="名称"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="foundingDate"
+                width="150px"
+                label="成立时间"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="withinOneYear"
+                width="180px"
+                label="是否最近一年内成立"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="withinThreeYear"
+                width="180px"
+                label="是否最近三年内成立"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.branchInfo.pagination" :container="tableData.branchInfo.container"
+                      @changePage="handleChangePage($event,'branchInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <el-row>
+      <div id="change-info" class="content-box">
+        <div class="content-box-title">变更记录</div>
+        <div class="content-box-body">
+          <el-table id="change-info-table" class="yc-table auto"
+                    :data="tableData.changeInfo.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="changeDate"
+                :show-overflow-tooltip="true"
+                width="150px"
+                label="变更日期"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                width="200px"
+                prop="changeItem"
+                label="变更事项"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="beforeContent"
+                label="变更前"
+            >
+              <template slot-scope="scope">
+                <div class="change-before">{{scope.row.beforeContent}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="afterContent"
+                label="变更后"
+            >
+              <template slot-scope="scope">
+                <div class="change-after">{{scope.row.afterContent}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="risk"
+                label="风险标签"
+            >
+              <template slot-scope="scope">
+                <span class="yc-label info" v-for="(label,index) in scope.row.risk" :key="'risk_label_3_'+index">{{label.riskLabel}}</span>
+                <span v-if="scope.row.risk===null || scope.row.risk.length===0">当前数据下无风险标签</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.changeInfo.pagination" :container="tableData.changeInfo.container"
+                      @changePage="handleChangePage($event,'changeInfo')"/>
+        </div>
+      </div>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+  import VerticalTable from "../../components/verticalTable";
+  import xhr from '../../api/axiosConfig';
+  import {CompareTxt} from "../../assets/js/compare";
+
+  export default {
+    //企业资质
+    name: "enterpriseQualification",
+    components: {VerticalTable},
+    props: ['companyName'],
+    data() {
+      return {
+        //注册资本信息
+        registerCapitalInfo: {
+          paidInCapital: null,
+          totalAnnualGrowth: null,
+          activityLevel: null,
+          personnelRisk: '暂无数据'
+        },
+        //工商信息
+        commercialInfo: [],
+        //分页列表相关数据
+        tableData: {
+          //股东信息
+          shareInfo: {
+            desc: "股东信息",
+            //列表数据
+            data: [],
+            //分页对象
+            pagination: {
+              pageNum: 1,
+              pageSize: 5,
+              total: 0,
+              url: 'enterpriseInfo/selectShareholderInformation',
+              method: 'post'
+            },
+            containerId: 'share-info-table',
+            container: null
+          },
+          //主要人员信息
+          principalsInfo: {
+            desc: "主要人员信息",
+            //列表数据
+            data: [],
+            //分页对象
+            pagination: {
+              pageNum: 1,
+              pageSize: 5,
+              total: 0,
+              url: 'enterpriseInfo/selectEntEmployees',
+              method: 'post'
+            },
+            containerId: 'principals-info-table',
+            container: null
+          },
+          //分支机构
+          branchInfo: {
+            desc: "分支机构信息",
+            //列表数据
+            data: [],
+            //分页对象
+            pagination: {
+              pageNum: 1,
+              pageSize: 5,
+              total: 0,
+              url: 'enterpriseInfo/selectAffiliates',
+              method: 'post'
+            },
+            containerId: 'branch-info-table',
+            container: null
+          },
+          changeInfo: {
+            desc: "变更记录信息",
+            //列表数据
+            data: [],
+            //分页对象
+            pagination: {
+              pageNum: 1,
+              pageSize: 5,
+              total: 0,
+              url: 'enterpriseInfo/selectChangeRecord',
+              method: 'post'
+            },
+            containerId: 'change-info-table',
+            container: null
+          }
+        }
+      }
+    },
+    mounted() {
+      this.getInfo();
+    },
+    methods: {
+      getInfo() {
+        this.getRegisterCapitalInfo();
+        this.getCommercialInfo();
+        for (let key in this.tableData) {
+          if (this.tableData.hasOwnProperty(key)) {
+            let item = this.tableData[key];
+            let containerId = item.containerId;
+            if (containerId) {
+              item.container = document.getElementById(containerId);
+            }
+            this.getListData(item);
+          }
+        }
+      },
+      /**
+       * 获取企业的注册资本信息
+       */
+      getRegisterCapitalInfo() {
+        enterpriseCredit.qualification.getRegisterCapitalInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            if (res.data !== null) {
+              this.registerCapitalInfo = res.data;
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 获取企业的工商信息
+       */
+      getCommercialInfo() {
+        enterpriseCredit.qualification.getCommercialInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            this.commercialInfo = res.data;
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 通用获取相关列表数据的方法
+       * @param itemConfig tableData中的一个配置项
+       * @returns {Promise<T | never>}
+       */
+      getListData(itemConfig) {
+        let pagination = itemConfig.pagination;
+        let params = {
+          pageNum: pagination.pageNum,
+          pageSize: pagination.pageSize,
+          companyName: this.companyName
+        };
+        return xhr.request({
+          url: pagination.url,
+          method: 'post',
+          data: params
+        }).then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            itemConfig.data = data.listData;
+            pagination.total = data.total;
+            pagination.params = params;
+            if (itemConfig.desc === '变更记录信息') {
+              this.$nextTick(() => {
+                $.each($('#change-info-table tbody tr'), (index, item) => {
+                  let $tr = $(item);
+                  CompareTxt($tr.find('.change-before')[0], $tr.find('.change-after')[0]);
+                })
+
+              });
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        }).catch(err => {
+          dialog.error('获取企业的' + itemConfig.desc + '失败');
+        });
+      },
+      handleChangePage($event, target) {
+        if (this.tableData[target].desc === '变更记录信息') {
+          this.tableData[target].data = [];
+          this.$nextTick(() => {
+            this.tableData[target].data = $event.tableData;
+            this.tableData[target].pagination = $event.pagination;
+            this.$nextTick(() => {
+              $.each($('#change-info-table tbody tr'), (index, item) => {
+                let $tr = $(item);
+                CompareTxt($tr.find('.change-before')[0], $tr.find('.change-after')[0]);
+              })
+
+            });
+          });
+        } else {
+          this.tableData[target].data = $event.tableData;
+          this.tableData[target].pagination = $event.pagination;
+        }
+      },
+      /**
+       * 锚点悬浮提示
+       */
+      hintShow(text) {
+        let el = event.currentTarget;
+        this.$emit('hintChangeTrue');
+        this.$nextTick(()=>{
+          $('.tool-tip-div')
+              .css({'top':$(el).position().top-$(el).outerHeight(true)-10+77+'px',
+                'left':$(el).position().left+25+'px',})
+              .html(text);
+        })
+      },
+      hintHide() {
+        this.$emit('hintChangeFalse');
+      },
+      pointJump(id) {
+        document.getElementById(id).scrollIntoView({behavior: 'smooth',block: 'start'})
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  @import "../../assets/css/enterprise-credit";
+
+</style>

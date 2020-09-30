@@ -1,0 +1,522 @@
+<template>
+  <div>
+    <el-row :gutter="gutter">
+      <el-col :span="8">
+        <div class="content-box statistics">
+          <div class="content-box-body">
+            <div class="info">
+              <p class="title">平台入库企业总量</p>
+              <p class="desc"><em>{{statistics[0]}}</em>个
+                <span class="note">单位：（万个）</span>
+              </p>
+            </div>
+            <div class="chart" id="total-enterprise-count"></div>
+
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="content-box statistics">
+          <div class="content-box-body">
+            <div class="info">
+              <p class="title">平台融资总额</p>
+              <p class="desc"><em>{{statistics[1]}}</em>万元
+                <span class="note">单位：（万元）</span>
+              </p>
+            </div>
+            <div class="chart" id="finance-amount"></div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="content-box statistics">
+          <div class="content-box-body">
+            <div class="info">
+              <p class="title">平台服务企业数量</p>
+              <p class="desc"><em>{{statistics[2]}}</em>个
+                <span class="note">单位：（万个）</span>
+              </p>
+            </div>
+            <div class="chart" id="serviced-enterprise-count"></div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="gutter">
+      <el-col :span="8">
+        <div class="content-box">
+          <div class="content-box-title">
+            <span class="title-content">平台扶持企业</span>
+            <div class="operation">
+              <router-link to="/enterprise/list">查看全部 >></router-link>
+            </div>
+          </div>
+          <div class="content-box-body">
+            <div :style="{height:msgListHeight+'px'}" class="msg-wrapper">
+              <ul id="enterprise-list-1" class="msg-list" :class="{anim:enterpriseList[0].animate}">
+                <li v-for="(msg,index) in enterpriseList[0].list" :key="'1-'+index" v-if="(index+1)<=msgCount"
+                    @click="goToEnterpriseCredit(msg.name)">
+                  <div class="msg-content">
+                    <el-tooltip class="item" effect="dark" :content="msg.name" placement="bottom">
+                      <span>{{msg.name}}</span></el-tooltip>
+                  </div>
+                  <div class="desc">
+                    <el-tooltip class="item" effect="dark" :content="msg.title" placement="bottom">
+                      <span>{{msg.title}}</span></el-tooltip>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="content-box">
+          <div class="content-box-title">
+            <span class="title-content">政策申报扶持企业</span>
+            <div class="operation">
+              <router-link :to="{path:'/enterprise/list',query:{behaviorType:1,jumpType:2}}">查看全部 >></router-link>
+            </div>
+          </div>
+          <div class="content-box-body">
+            <div :style="{height:msgListHeight+'px'}" class="msg-wrapper">
+              <ul id="enterprise-list-2" class="msg-list" :class="{anim:enterpriseList[1].animate}">
+                <li v-for="(msg,index) in enterpriseList[1].list" :key="'2-'+index" v-if="(index+1)<=msgCount"
+                    @click="goToEnterpriseCredit(msg.name)">
+                  <div class="msg-content">
+                    <el-tooltip class="item" effect="dark" :content="msg.name" placement="bottom">
+                      <span>{{msg.name}}</span></el-tooltip>
+                  </div>
+                  <div class="desc">
+                    <el-tooltip class="item" effect="dark" :content="msg.title" placement="bottom">
+                      <span>{{msg.title}}</span></el-tooltip>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="content-box">
+          <div class="content-box-title">
+            <span class="title-content"> 政策性贷款扶持企业</span>
+            <div class="operation">
+              <router-link :to="{path:'/enterprise/list',query:{behaviorType:2,jumpType:2}}">查看全部 >></router-link>
+            </div>
+          </div>
+          <div class="content-box-body">
+            <div :style="{height:msgListHeight+'px'}" class="msg-wrapper">
+              <ul id="enterprise-list-3" class="msg-list" :class="{anim:enterpriseList[2].animate}">
+                <li v-for="(msg,index) in enterpriseList[2].list" :key="'3-'+index" v-if="(index+1)<=msgCount"
+                    @click="goToEnterpriseCredit(msg.name)">
+                  <div class="msg-content">
+                    <el-tooltip class="item" effect="dark" :content="msg.name" placement="bottom">
+                      <span>{{msg.name}}</span></el-tooltip>
+                  </div>
+                  <div class="desc">
+                    <el-tooltip class="item" effect="dark" :content="msg.title" placement="bottom">
+                      <span>{{msg.title}}</span></el-tooltip>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  import {ycChart} from "../../assets/js/chart";
+  import {home} from "../../api/api";
+  import {dialog} from "../../assets/js/dialog";
+
+  export default {
+    name: "home",
+    components: {},
+    data() {
+      return {
+        //消息列表中最少的消息数
+        minMsgCount: 5,
+        //消息列表中的消息数
+        msgCount: 5,
+        //消息列表的高度
+        msgListHeight: 320,
+        statistics: [0, 0, 0],
+        enterpriseList: [
+          {
+            //平台扶持企业
+            list: [],
+            scroll: true,
+            //定时器标识
+            interval: '',
+            el: 'enterprise-list-1',
+            animate: false
+          },
+          {
+            //政策申报扶持企业
+            list: [],
+            scroll: true,
+            //定时器标识
+            interval: '',
+            el: 'enterprise-list-2',
+            animate: false
+          },
+          {
+            //政策性贷款扶持企业
+            list: [],
+            scroll: true,
+            //定时器标识
+            interval: '',
+            el: 'enterprise-list-3',
+            animate: false
+          },
+        ]
+      }
+    },
+    created() {
+      this.listEnterprise();
+
+    },
+    mounted() {
+      this.computeMsgCount(this);
+      this.drawEnterpriseCountChart();
+      this.drawFinanceAmount();
+      this.drawServicedEnterpriseCount();
+      const vm = this;
+      window.onresize = function () {
+        vm.computeMsgCount(vm);
+      };
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) {   //处于当前页面
+          vm.scrollEnterpriseList();
+        } else {
+          vm.clearScroll();
+        }
+      });
+      this.scrollEnterpriseList();
+    },
+    beforeDestroy() {
+      this.clearScroll();
+    },
+    methods: {
+      /**
+       * 平台入库企业总量面积图
+       */
+      drawEnterpriseCountChart() {
+        let el = document.getElementById('total-enterprise-count');
+        home.getEnterpriseCountStatistics().then(res => {
+          const code = res.code;
+          if (code === '200') {
+            const data = res.data;
+            this.$set(this.statistics, 0, data.total);
+            let myChart = ycChart.renderAreaChart(el, '平台入库企业总量', data.date, data.value);
+            let zr = myChart.getZr();
+            let storage = zr.storage;
+            let finished = false;
+            //如果跨年了，就在12月与1月之间画一条分隔线
+            if (data.year) {
+              myChart.on('finished', () => {
+                if (!finished) {
+                  finished = true;
+                  let displayList = storage.getDisplayList();
+                  let textList = displayList.filter((item) => {
+                    return item instanceof this.$echarts.graphic.Text;
+                  });
+                  let text1 = textList.filter((item) => {
+                    return item.style.text === '1月'
+                  })[0];
+                  let text12 = textList.filter((item) => {
+                    return item.style.text === '12月'
+                  })[0];
+                  if (text1 && text12) {
+                    var chartHeight = 140;
+                    let position12 = text12.position;
+                    let position1 = text1.position;
+                    let x_start = (position1[0] + position12[0]) / 2;
+                    let y_start = position12[1] - 10;
+                    let y_end = y_start - chartHeight + 40;
+                    let splitLine = new this.$echarts.graphic.Line({
+                      shape: {
+                        x1: x_start,
+                        y1: y_start,
+                        x2: x_start,
+                        y2: y_end
+                      },
+                      style: {
+                        stroke: '#ccc',
+                        lineDash: [4, 2]
+                      }
+                    });
+                    let note = new this.$echarts.graphic.Text({
+                      position: [x_start - 15, y_end - 15],
+                      style: {
+                        text: data.year,
+                        textFill: '#666'
+                      }
+                    });
+                    zr.add(splitLine);
+                    zr.add(note);
+                  }
+                }
+              });
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 平台融资总额柱状图
+       */
+      drawFinanceAmount() {
+        let el = document.getElementById('finance-amount');
+        home.getFinanceAmountStatistics().then(res => {
+          const code = res.code;
+          if (code === '200') {
+            const data = res.data;
+            this.$set(this.statistics, 1, data.total);
+            let myChart = ycChart.renderBar(el, '平台融资总额', data.date, data.value);
+            let zr = myChart.getZr();
+            let storage = zr.storage;
+            let finished = false;
+            //如果跨年了，就在12月与1月之间画一条分隔线
+            if (data.year) {
+              myChart.on('finished', () => {
+                if (!finished) {
+                  finished = true;
+                  let displayList = storage.getDisplayList();
+                  let textList = displayList.filter((item) => {
+                    return item instanceof this.$echarts.graphic.Text;
+                  });
+                  let text1 = textList.filter((item) => {
+                    return item.style.text === '1月'
+                  })[0];
+                  let text12 = textList.filter((item) => {
+                    return item.style.text === '12月'
+                  })[0];
+                  if (text1 && text12) {
+                    var chartHeight = 140;
+                    let position12 = text12.position;
+                    let position1 = text1.position;
+                    let x_start = (position1[0] + position12[0]) / 2;
+                    let y_start = position12[1] - 10;
+                    let y_end = y_start - chartHeight + 40;
+                    let splitLine = new this.$echarts.graphic.Line({
+                      shape: {
+                        x1: x_start,
+                        y1: y_start,
+                        x2: x_start,
+                        y2: y_end
+                      },
+                      style: {
+                        stroke: '#ccc',
+                        lineDash: [4, 2]
+                      }
+                    });
+                    let note = new this.$echarts.graphic.Text({
+                      position: [x_start - 15, y_end - 15],
+                      style: {
+                        text: data.year,
+                        textFill: '#666'
+                      }
+                    });
+                    zr.add(splitLine);
+                    zr.add(note);
+                  }
+                }
+              });
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+
+      },
+      /**
+       * 平台服务企业数的折线图
+       */
+      drawServicedEnterpriseCount() {
+        let el = document.getElementById('serviced-enterprise-count');
+        home.getServicedEnterpriseStatistics().then(res => {
+          const code = res.code;
+          if (code === '200') {
+            const data = res.data;
+            this.$set(this.statistics, 2, data.total);
+            let myChart = ycChart.renderLine(el, '平台服务企业数量', data.date, data.value);
+            let zr = myChart.getZr();
+            let storage = zr.storage;
+            let finished = false;
+            //如果跨年了，就在12月与1月之间画一条分隔线
+            if (data.year) {
+              myChart.on('finished', () => {
+                if (!finished) {
+                  finished = true;
+                  let displayList = storage.getDisplayList();
+                  let textList = displayList.filter((item) => {
+                    return item instanceof this.$echarts.graphic.Text;
+                  });
+                  let text1 = textList.filter((item) => {
+                    return item.style.text === '1月'
+                  })[0];
+                  let text12 = textList.filter((item) => {
+                    return item.style.text === '12月'
+                  })[0];
+                  if (text1 && text12) {
+                    var chartHeight = 140;
+                    let position12 = text12.position;
+                    let position1 = text1.position;
+                    let x_start = (position1[0] + position12[0]) / 2;
+                    let y_start = position12[1] - 10;
+                    let y_end = y_start - chartHeight + 40;
+                    let splitLine = new this.$echarts.graphic.Line({
+                      shape: {
+                        x1: x_start,
+                        y1: y_start,
+                        x2: x_start,
+                        y2: y_end
+                      },
+                      style: {
+                        stroke: '#ccc',
+                        lineDash: [4, 2]
+                      }
+                    });
+                    let note = new this.$echarts.graphic.Text({
+                      position: [x_start - 15, y_end - 15],
+                      style: {
+                        text: data.year,
+                        textFill: '#666'
+                      }
+                    });
+                    zr.add(splitLine);
+                    zr.add(note);
+                  }
+                }
+              });
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      computeMsgCount(vm) {
+        vm.msgCount = vm.minMsgCount;
+        let bodyHeight = $('body').height();
+        //一条消息的高度
+        let perMsgHeight = 48;
+        let minHeight = 720;
+        if (bodyHeight > minHeight) {
+          vm.msgCount += parseInt((bodyHeight - minHeight) / perMsgHeight);
+        }
+        vm.msgListHeight = perMsgHeight * vm.msgCount;
+
+      },
+      /**
+       * 获取企业列表数据
+       */
+      listEnterprise() {
+        home.getEnterpriseList().then(res => {
+          if (res.code === '200') {
+            const data = res.data;
+            this.enterpriseList[0].list = data.platformSupport;
+            this.enterpriseList[1].list = data.policySupport;
+            this.enterpriseList[2].list = data.policyLoan;
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      /**
+       *
+       * 滚动显示3个企业列表数据
+       **/
+      scrollEnterpriseList() {
+        this.clearScroll();
+        const vm = this;
+        this.enterpriseList.forEach((item, index) => {
+          let $msgList = $('#' + item.el);
+          item.interval = setInterval(function () {
+            scroll(item, $msgList);
+          }, 2000);
+          $msgList.on('mouseover', function () {
+            item.scroll = false;
+          });
+          $msgList.on('mouseout', function () {
+            item.scroll = true;
+          });
+        });
+
+        function scroll(item, $el) {
+          if (item.list !== null && item.list.length > vm.msgCount) {
+            //一条消息的高度
+            if (item.scroll) {
+              item.animate = true;
+              setTimeout(() => {
+                item.list.push(item.list[0]);
+                item.list.shift();
+                item.animate = false;
+              }, 500);
+            }
+          }
+
+        }
+      },
+      /**
+       * 跳转到企业公共信用页面
+       * @param name 企业名字
+       */
+      goToEnterpriseCredit(name) {
+        this.$router.push('/enterprise/credit/' + name);
+      },
+      /**
+       * 清除企业列表的定时滚动效果
+       */
+      clearScroll() {
+        this.enterpriseList.forEach((item, index) => {
+          if (item.interval) {
+            clearInterval(item.interval);
+          }
+        });
+      }
+    }
+  };
+</script>
+<style scoped lang="scss">
+  .statistics {
+    height: 230px;
+    .info {
+      height: 60px;
+      padding: 0 20px;
+      box-sizing: border-box;
+      .title {
+        margin-bottom: 5px;
+        line-height: 25px;
+      }
+      .desc {
+        font-size: 24px;
+        color: #999;
+        em {
+          margin-right: 5px;
+          font-weight: bold;
+          color: #333;
+        }
+        .note {
+          float: right;
+          font-size: 10px;
+          color: #333;
+        }
+      }
+
+    }
+    .chart {
+      height: 140px;
+    }
+  }
+
+  .msg-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,571 @@
+<template>
+  <div>
+    <div style="text-align: left" class="navbar-back">
+      <navbar :data="navbar" />
+    </div>
+    <div class="box mt20 user-list">
+      <!-- 头部新增、搜索 -->
+      <el-row class>
+        <el-button class="btn add fl" @click="addScorePointsFirstIndex()">新增一级权重</el-button>
+        <el-button class="btn add fl" @click="addWindow()">新增配置</el-button>
+        <el-button class="btn add fl" @click="goScorePoints()">查询算分</el-button>
+        <!-- {{this.tableData.length}} -->
+        <div class="fr search-user">
+          <el-input v-model="input" placeholder="请输入关键词" class="select fl"></el-input>
+          <el-button class="btn green fr" @click="selectAllConfigBean()">查询</el-button>
+        </div>
+      </el-row>
+      <el-table
+        :data="tableData"
+        :span-method="cellMerge"
+        :cell-style="cellStyle"
+        :header-cell-style="rowClass"
+        border
+        style="width: 100%; margin-top: 20px;"
+      >
+        <el-table-column prop="firstIndex.firstIndex" label="一级指标" width="80"></el-table-column>
+        <el-table-column prop="secondIndex" label="二级指标" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="secondName" label="二级指标名称" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="threeIndex" label="三级指标" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="threeName" label="三级指标名称" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column v-if="false" prop="gradeRule" label="打分规则" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="firstIndex.firstWeight" label="一级权重" width="80"></el-table-column>
+        <el-table-column prop="secondWeight" label="二级权重" width="80"></el-table-column>
+        <el-table-column prop="threeWeight" label="三级权重" width="80"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="100">
+          <template slot-scope="conf">
+            <el-button
+              v-if="conf.row.sSwitch"
+              @click="handleClick(conf.row,1)"
+              type="text"
+              size="small"
+            >查看</el-button>
+            <el-button @click="handleClick(conf.row,2)" type="text" size="small">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!--新增配置弹出层-->
+      <el-dialog
+        v-if="hasReload"
+        title="新增配置"
+        :visible.sync="dialogVisible"
+        width="55%"
+        :before-close="handleClose"
+      >
+        <el-form
+          status-icon
+          ref="addConfigForm"
+          label-width="120px"
+          class="demo-ruleForm"
+          :model="addConfigForm"
+          :rules="rules"
+        >
+          <el-input type="text" v-model="addConfigForm.id" v-if="false"></el-input>
+
+          <el-row type="flex" class="row-bg">
+            <el-col :span="12">
+              <el-form-item label="一级指标：">
+                <el-select
+                  size="small"
+                  v-model="addConfigForm.firstIndex.firstIndex"
+                  placeholder="请选择"
+                  @change="bindfirstWeight"
+                >
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12" v-if="false">
+              <el-form-item label="一级权重：" prop="firstWeight">
+                <el-input-number
+                  v-model="addConfigForm.firstWeight"
+                  :precision="2"
+                  :step="0.1"
+                  :max="1"
+                  disabled="disabled"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="12">
+              <el-form-item label="二级指标：" prop="secondIndex">
+                <el-input type="text" v-model="addConfigForm.secondIndex" placeholder="3-25位字符"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="二级权重：" prop="secondWeight">
+                <el-input-number
+                  v-model="addConfigForm.secondWeight"
+                  :precision="2"
+                  :step="0.01"
+                  :max="1"
+                  :min="0.01"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="二级指标名称：" prop="secondName">
+            <el-input type="text" v-model="addConfigForm.secondName" placeholder="3-25位字符"></el-input>
+          </el-form-item>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="12">
+              <el-form-item label="三级指标：" prop="threeIndex">
+                <el-input
+                  type="text"
+                  v-model="addConfigForm.threeIndex"
+                  placeholder="3-25位字符"
+                  aria-required="true"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="三级权重：" prop="threeWeight">
+                <el-input-number
+                  v-model="addConfigForm.threeWeight"
+                  :precision="2"
+                  :step="0.01"
+                  :max="1"
+                  :min="0.00"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="三级指标名称：" prop="threeName">
+            <el-input type="textarea" v-model="addConfigForm.threeName" placeholder="三级指标名称"></el-input>
+          </el-form-item>
+          <el-form-item label="打分规则：" prop="gradeRule">
+            <el-input
+              type="textarea"
+              :rows="5"
+              v-model="addConfigForm.gradeRule"
+              placeholder="打分规则"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="是否开启：" prop="sSwitch">
+            <el-switch v-model="addConfigForm.sSwitch"></el-switch>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button
+            class="btn cancel"
+            v-if="addConfigCancel"
+            @click="dialogVisible = false,noAddConfig()"
+          >取 消</el-button>
+          <el-button
+            class="btn submit"
+            v-if="addConfigSubmit"
+            @click="submitForm()"
+            :disabled="disabled"
+          >确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+  </div>
+</template>
+
+<script>
+import { dialog } from "../../assets/js/dialog";
+import { conf } from "../../api/api-setting";
+
+export default {
+  data() {
+    return {
+      navbar: {
+        prevs: [
+          {
+            name: "系统管理",
+            path: ""
+          }
+        ],
+        current: "算分配置"
+      },
+      //  合并列
+      spanArr: [],
+      pos: 0,
+      //  所有配置项
+      tableData: [],
+      //是否弹出新增配置页面
+      hasReload: true,
+      dialogVisible: false,
+      //新增确认按钮状态
+      disabled: false,
+      //新增窗口取消按钮
+      addConfigCancel: true,
+      //新增窗口确定按钮
+      addConfigSubmit: true,
+      //查询输入框
+      input: "",
+      addConfigForm: {
+        firstIndex: {
+          id: 0,
+          firstIndex: ""
+        },
+        secondIndex: "",
+        secondWeight: 0.01,
+        secondName: "",
+        threeWeight: 0.01,
+        threeIndex: "",
+        threeName: "",
+        gradeRule: "",
+        sSwitch: true
+      },
+      rules: {
+        secondIndex: [
+          { required: true, message: "二级指标不能为空", trigger: "blur" },
+          {
+            min: 3,
+            max: 25,
+            message: "请输入二级指标(15字以内)",
+            trigger: "blur"
+          }
+        ],
+        secondName: [
+          { required: true, message: "二级指标名称不能为空", trigger: "blur" },
+          {
+            min: 3,
+            max: 25,
+            message: "请输入二级指标名称(25字以内)",
+            trigger: "blur"
+          }
+        ],
+        threeIndex: [
+          { required: true, message: "三级指标不能为空", trigger: "blur" },
+          {
+            min: 3,
+            max: 25,
+            message: "请输入三级指标(25字以内)",
+            trigger: "blur"
+          }
+        ],
+        threeName: [
+          { required: true, message: "三级指标名称不能为空", trigger: "blur" },
+          {
+            min: 3,
+            max: 500,
+            message: "请输入三级指标名称(500字以内)",
+            trigger: "blur"
+          }
+        ],
+        gradeRule: [
+          { required: true, message: "打分规则不能为空", trigger: "blur" },
+          {
+            message: "请输入打分规则",
+            trigger: "blur"
+          }
+        ]
+      },
+      //  一级指标下拉
+      options: []
+    };
+  },
+  mounted() {},
+  created() {
+    this.selectAllConfigBean();
+  },
+  methods: {
+    selectAllConfigBean() {
+      //去除首尾空格
+      if (this.input) {
+        // this.input = this.input.replace(/\s*/g, "");
+        this.input = this.input.replace(/(^\s*)|(\s*$)/g, "");
+      }
+      var params = { keyWord: this.input };
+      conf.selectAllConfigBean(params).then(res => {
+        if (res.code === "200") {
+          this.tableData = res.data;
+          this.getSpanArr();
+        }
+      });
+    },
+    bindfirstWeight(event) {
+      this.options.forEach(item => {
+        if (event == item.value) {
+          // this.addConfigForm.firstIndex.firstWeight = item.value;
+          this.addConfigForm.firstIndex.id = item.value;
+          return;
+        }
+      });
+    },
+    //新增配置
+    addConfig() {
+      let params = {
+        id: this.addConfigForm.id,
+        firstIndex: {
+          id: this.addConfigForm.firstIndex.id
+        },
+        secondIndex: this.addConfigForm.secondIndex,
+        secondWeight: this.addConfigForm.secondWeight,
+        secondName: this.addConfigForm.secondName,
+        threeWeight: this.addConfigForm.threeWeight,
+        threeIndex: this.addConfigForm.threeIndex,
+        threeName: this.addConfigForm.threeName,
+        gradeRule: this.addConfigForm.gradeRule,
+        sSwitch: this.addConfigForm.sSwitch
+      };
+      conf.addConfig(params).then(res => {
+        if (res.code === "200") {
+          this.objEmpty(this.addConfigForm);
+          this.dialogVisible = false;
+          dialog.success("操作成功");
+          this.selectAllConfigBean();
+          this.hasReload = false;
+          this.$nextTick(() => {
+            this.hasReload = true;
+          });
+        } else {
+          //失败则不隐藏对话框
+          dialog.error(res.message);
+          this.dialogVisible = true;
+        }
+        this.disabled = false;
+      });
+    },
+    //每次取消新增,清空新增表单数据/清空表单验证
+    noAddConfig() {
+      this.objEmpty(this.addConfigForm);
+      this.hasReload = false;
+      this.addConfigSubmit = true;
+      this.$nextTick(() => {
+        this.hasReload = true;
+      });
+    },
+    //清空对象
+    objEmpty(obj) {
+      for (let k of Object.keys(obj)) {
+        if (k === "secondWeight") {
+          this.addConfigForm.secondWeight = 0.01;
+        } else if (k === "threeWeight") {
+          this.addConfigForm.threeWeight = 0.01;
+        } else if (k === "sSwitch") {
+          this.addConfigForm.sSwitch = true;
+        } else if (k === "firstIndex") {
+          this.addConfigForm.firstIndex.firstIndex = "";
+          this.addConfigForm.firstIndex.id = 0;
+        } else {
+          obj[k] = "";
+        }
+      }
+    },
+    //  新增窗口
+    addWindow() {
+      this.selectAllScorePointsFirstIndex();
+    },
+    //  获取一级权重集合
+    selectAllScorePointsFirstIndex() {
+      let params = {
+        flag: true
+      };
+      conf.selectAllScorePointsFirstIndex(params).then(res => {
+        if (res.code === "200") {
+          this.options = [];
+          for (let d of res.data) {
+            this.options.push({ value: d.id, label: d.firstIndex });
+          }
+          this.addConfigForm.firstIndex.firstIndex = this.options[0].label;
+          this.addConfigForm.firstIndex.id = this.options[0].value;
+          this.dialogVisible = true;
+        } else {
+          //失败则不隐藏对话框
+          dialog.error(res.message);
+          this.dialogVisible = false;
+        }
+      });
+    },
+    //新增用户表单验证
+    submitForm() {
+      this.$refs["addConfigForm"].validate(valid => {
+        this.rule1 = true;
+        if (valid) {
+          //验证成功后发送ajax,ajax结束前禁用按钮
+          this.disabled = true;
+          this.addConfig();
+        } else {
+          //验证失败,对话框继续显示
+          return false;
+        }
+      });
+    },
+    //  查看 编辑
+    handleClick(row, num) {
+      let cSubmit = true;
+      if (num === 1) {
+        //查看
+        cSubmit = false;
+      } else {
+        //编辑
+      }
+      var params = {
+        id: row.id
+      };
+      conf.getConfigBeanById(params).then(res => {
+        if (res.code === "200") {
+          this.addConfigForm = res.data;
+          this.addConfigSubmit = cSubmit;
+          let params = {
+            flag: true
+          };
+          conf.selectAllScorePointsFirstIndex(params).then(res => {
+            if (res.code === "200") {
+              this.options = [];
+              for (let d of res.data) {
+                this.options.push({ value: d.id, label: d.firstIndex });
+                if (this.addConfigForm.firstIndex.id == d.id) {
+                  this.addConfigForm.firstIndex.firstIndex = d.firstIndex;
+                  this.addConfigForm.firstIndex.id = d.id;
+                }
+              }
+              this.dialogVisible = true;
+            } else {
+              //失败则不隐藏对话框
+              dialog.error(res.message);
+            }
+          });
+        } else {
+          //失败则不显示
+          dialog.error(res.message);
+        }
+      });
+    },
+    //before-close 关闭前的回调，会暂停 Dialog 的关闭function(done)，done 用于关闭 Dialog
+    handleClose(done) {
+      this.objEmpty(this.addConfigForm);
+      this.hasReload = false;
+      this.addConfigSubmit = true;
+      this.$nextTick(() => {
+        this.hasReload = true;
+      });
+
+      done();
+    },
+
+    // //  对请求到的数据排序，合并列
+    // getSpanArr() {
+    //   var data = this.tableData;
+    //   this.spanArr = [];
+    //   this.pos = 0;
+    //   for (var i = 0; i < data.length; i++) {
+    //     if (i === 0) {
+    //       this.spanArr.push(1);
+    //       this.pos = 0;
+    //     } else {
+    //       // 判断当前元素与上一个元素是否相同
+    //       if (data[i].firstIndex.id === data[i - 1].firstIndex.id) {
+    //         this.spanArr[this.pos] += 1;
+    //         this.spanArr.push(0);
+    //       } else {
+    //         this.spanArr.push(1);
+    //         this.pos = i;
+    //       }
+    //     }
+    //   }
+    // },
+    // // 表格用函数
+    // cellMerge({ row, column, rowIndex, columnIndex }) {
+    //   if (columnIndex === 0 || columnIndex === 6) {
+    //     const _row = this.spanArr[rowIndex];
+    //     const _col = _row > 0 ? 1 : 0;
+    //     return {
+    //       rowspan: _row,
+    //       colspan: _col
+    //     };
+    //   }
+    // },
+
+    //  对请求到的数据排序，合并列
+    getSpanArr() {
+      var data = this.tableData;
+      this.spanArr = [];
+      this.secondArr = [];
+      this.pos = 0;
+      this.posT = 0;
+      for (var i = 0; i < data.length; i++) {
+        if (i === 0) {
+          this.spanArr.push(1);
+          this.pos = 0;
+          this.secondArr.push(1);
+          this.posT = 0;
+        } else {
+          // 判断当前元素与上一个元素是否相同
+          if (data[i].firstIndex.id === data[i - 1].firstIndex.id) {
+            this.spanArr[this.pos] += 1;
+            this.spanArr.push(0);
+            if (data[i].secondWeight === data[i - 1].secondWeight) {
+              this.secondArr[this.posT] += 1;
+              this.secondArr.push(0);
+            } else {
+              this.secondArr.push(1);
+              this.posT = i;
+            }
+          } else {
+            this.spanArr.push(1);
+            this.pos = i;
+            this.secondArr.push(1);
+            this.posT = i;
+          }
+        }
+      }
+    },
+    // 表格用函数
+    cellMerge({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0 || columnIndex === 5) {
+        const _row = this.spanArr[rowIndex];
+        const _col = _row > 0 ? 1 : 0;
+        return {
+          rowspan: _row,
+          colspan: _col
+        };
+      }
+      //    if (columnIndex === 7) {
+      //   const _row = this.secondArr[rowIndex];
+      //   const _col = _row > 0 ? 1 : 0;
+      //   return {
+      //     rowspan: _row,
+      //     colspan: _col
+      //   };
+      //  }
+    },
+
+    //  行内容剧中
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      return "text-align:center;";
+    },
+    //  表头居中
+    rowClass({ row, rowIndex }) {
+      return "text-align:center";
+    },
+    //  查询算分
+    goScorePoints() {
+      this.$router.push({ path: "/setting/scorePoints" });
+    },
+    //  新增一级权重
+    addScorePointsFirstIndex() {
+      this.$router.push({ path: "/setting/ScorePointsFirstIndex" });
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.user-list {
+  height: 100%;
+}
+.search-user {
+  width: 326px;
+  .select {
+    width: 250px;
+    height: 32px;
+  }
+  .btn {
+    margin-left: 10px;
+    width: 66px;
+    height: 36px;
+    vertical-align: top;
+  }
+}
+</style>

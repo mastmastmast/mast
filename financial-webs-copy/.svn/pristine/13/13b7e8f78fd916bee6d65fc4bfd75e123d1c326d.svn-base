@@ -1,0 +1,262 @@
+<template>
+  <div>
+    <div style="text-align: left" class="navbar-back">
+      <navbar :data="navbar" />
+    </div>
+    <div class="box mt20 user-list">
+      <!-- 头部新增、搜索 -->
+      <el-row class>
+        <el-button class="btn add fl" @click="dialogVisible=true">新增一级权重</el-button>
+      </el-row>
+      <el-table
+        :data="tableData"
+        :cell-style="cellStyle"
+        :header-cell-style="rowClass"
+        border
+        style="width: 100%; margin-top: 20px"
+      >
+        <el-table-column prop="firstIndex" label="一级指标"></el-table-column>
+        <el-table-column prop="firstWeight" label="一级权重"></el-table-column>
+        <el-table-column prop="correctedValue" label="修正值"></el-table-column>
+        <el-table-column prop="divideValue" label="修正值(除以)"></el-table-column>
+        <el-table-column prop="multiplyValue" label="修正值(乘以)"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="100">
+          <template slot-scope="conf">
+            <el-button @click="handleClick(conf.row)" type="text" size="small">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!--新增配置弹出层-->
+      <el-dialog
+        v-if="hasReload"
+        title="新增一级权重"
+        :visible.sync="dialogVisible"
+        width="40%"
+        :before-close="handleClose"
+      >
+        <el-form
+          status-icon
+          ref="addFirstIndex"
+          label-width="120px"
+          class="demo-ruleForm"
+          :model="firstIndexForm"
+          :rules="rules"
+        >
+          <el-input type="text" v-model="firstIndexForm.id" v-if="false"></el-input>
+          <el-form-item label="一级指标：" prop="firstIndex">
+            <el-input type="text" v-model="firstIndexForm.firstIndex" placeholder="2-10位字符"></el-input>
+          </el-form-item>
+          <el-form-item label="一级权重：">
+            <el-input-number
+              v-model="firstIndexForm.firstWeight"
+              :precision="2"
+              :step="0.1"
+              :max="1"
+              :min="0"
+            ></el-input-number>
+          </el-form-item>
+          <el-form-item label="修正值：">
+            <el-input-number v-model="firstIndexForm.correctedValue" :step="1" :max="50" :min="-50"></el-input-number>
+            <label class="hintLabel">可设置成正负自然数，计算分数前进行加减修正</label>
+          </el-form-item>
+          <el-form-item label="修正值(除以)：">
+            <el-input-number v-model="firstIndexForm.divideValue" :step="1" :max="100" :min="1"></el-input-number>
+            <label class="hintLabel">可设置成正整数，计算分数前进行除法修正</label>
+          </el-form-item>
+          <el-form-item label="修正值(乘以)：">
+            <el-input-number v-model="firstIndexForm.multiplyValue" :step="1" :max="100" :min="1"></el-input-number>
+            <label class="hintLabel">可设置成正整数，计算分数前进行乘法修正</label>
+          </el-form-item>
+          <el-form-item label="是否开启：">
+            <el-switch v-model="firstIndexForm.sSwitch"></el-switch>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button
+            class="btn cancel"
+            v-if="addFirstIndexCancel"
+            @click="dialogVisible = false,noAddFirstIndex()"
+          >取 消</el-button>
+          <el-button class="btn submit" @click="submitForm()" :disabled="disabled">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+  </div>
+</template>
+
+<script>
+import { dialog } from "../../assets/js/dialog";
+import { conf } from "../../api/api-setting";
+
+export default {
+  data() {
+    return {
+      navbar: {
+        prevs: [
+          {
+            name: "系统管理",
+            path: ""
+          }
+        ],
+        current: "一级权重"
+      },
+      //  所有一级权重
+      tableData: [],
+      //是否弹出新增配置页面
+      hasReload: true,
+      dialogVisible: false,
+      //新增确认按钮状态
+      disabled: false,
+      //新增窗口取消按钮
+      addFirstIndexCancel: true,
+      firstIndexForm: {
+        id: "",
+        firstIndex: "",
+        firstWeight: 0.1,
+        correctedValue: 0,
+        divideValue: 100,
+        multiplyValue: 100,
+        sSwitch: true
+      },
+      rules: {
+        firstIndex: [
+          { required: true, message: "一级指标不能为空", trigger: "blur" },
+          {
+            min: 2,
+            max: 10,
+            message: "请输入一级指标(2~10字)",
+            trigger: "blur"
+          }
+        ]
+      }
+    };
+  },
+  mounted() {},
+  created() {
+    this.selectAllFirstIndex();
+  },
+  methods: {
+    selectAllFirstIndex() {
+      var params = { flag: false };
+      conf.selectAllScorePointsFirstIndex(params).then(res => {
+        if (res.code === "200") {
+          this.tableData = res.data;
+        }
+      });
+    },
+    //新增配置
+    addFirstIndex() {
+      let params = {
+        id: this.firstIndexForm.id,
+        firstIndex: this.firstIndexForm.firstIndex,
+        firstWeight: this.firstIndexForm.firstWeight,
+        correctedValue: this.firstIndexForm.correctedValue,
+        divideValue: this.firstIndexForm.divideValue,
+        multiplyValue: this.firstIndexForm.multiplyValue,
+        sSwitch: this.firstIndexForm.sSwitch
+      };
+      conf.saveScorePointsFirstIndex(params).then(res => {
+        if (res.code === "200") {
+          this.objEmpty(this.firstIndexForm);
+          this.dialogVisible = false;
+          dialog.success("操作成功");
+          this.selectAllFirstIndex();
+          this.hasReload = false;
+          this.$nextTick(() => {
+            this.hasReload = true;
+          });
+        } else {
+          //失败则不隐藏对话框
+          dialog.error(res.message);
+          this.dialogVisible = true;
+        }
+        this.disabled = false;
+      });
+    },
+    //每次取消新增,清空新增表单数据/清空表单验证
+    noAddFirstIndex() {
+      this.objEmpty(this.firstIndexForm);
+      this.hasReload = false;
+      this.$nextTick(() => {
+        this.hasReload = true;
+      });
+    },
+    //清空对象
+    objEmpty(obj) {
+      for (let k of Object.keys(obj)) {
+        if (k === "firstWeight") {
+          this.firstIndexForm.firstWeight = 0.1;
+        } else if (k === "correctedValue") {
+          this.firstIndexForm.correctedValue = 0;
+        } else if (k === "divideValue") {
+          this.firstIndexForm.divideValue = 100;
+        } else if (k === "multiplyValue") {
+          this.firstIndexForm.multiplyValue = 100;
+        } else if (k === "sSwitch") {
+          this.firstIndexForm.sSwitch = true;
+        } else {
+          obj[k] = "";
+        }
+      }
+    },
+    //新增表单验证
+    submitForm() {
+      this.$refs["addFirstIndex"].validate(valid => {
+        this.rule1 = true;
+        if (valid) {
+          //验证成功后发送ajax,ajax结束前禁用按钮
+          this.disabled = true;
+          this.addFirstIndex();
+        } else {
+          //验证失败,对话框继续显示
+          return false;
+        }
+      });
+    },
+    //  编辑
+    handleClick(row) {
+      var params = {
+        id: row.id
+      };
+      conf.getScorePointsFirstIndexById(params).then(res => {
+        if (res.code === "200") {
+          this.firstIndexForm = res.data;
+          this.dialogVisible = true;
+        } else {
+          //失败则不显示
+          dialog.error(res.message);
+        }
+      });
+    },
+    //before-close 关闭前的回调，会暂停 Dialog 的关闭function(done)，done 用于关闭 Dialog
+    handleClose(done) {
+      this.objEmpty(this.firstIndexForm);
+      this.hasReload = false;
+      this.$nextTick(() => {
+        this.hasReload = true;
+      });
+      done();
+    },
+
+    //  行内容剧中
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      return "text-align:center";
+    },
+    //  表头居中
+    rowClass({ row, rowIndex }) {
+      return "text-align:center";
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.user-list {
+  height: 720px;
+}
+.hintLabel {
+  font-size: smaller;
+  float: right;
+  color: red;
+}
+</style>

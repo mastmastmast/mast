@@ -1,0 +1,148 @@
+<template>
+  <el-dialog
+      title="信用分分布"
+      :visible.sync="dialogVisible"
+      width="50%"
+      :before-close="handleClose">
+    <div class="content-box">
+      <div class="content-box-title"><span class="title-content">信用分整体分布</span></div>
+      <div class="content-box-body">
+        <div class="chart" id="chart-1"></div>
+        <p class="desc">{{entiretyDesc}}</p>
+      </div>
+    </div>
+    <div class="content-box">
+      <div class="content-box-title"><span class="title-content">信用分行业分布</span></div>
+      <div class="content-box-body">
+        <div class="chart" id="chart-2"></div>
+        <p class="desc">{{tradeDesc}}</p>
+      </div>
+    </div>
+  </el-dialog>
+</template>
+
+<script>
+  import {ycChart} from "../../assets/js/chart";
+  import {financing} from "../../api/api-financing-credit-report";
+  import {dialog} from "../../assets/js/dialog";
+  import {arrayFunc} from "../../assets/js/common";
+
+  export default {
+    //信用分布
+    name: "creditDistribution",
+    model: {
+      prop: 'dialogVisible',
+      event: 'changeDialogVisible'
+    },
+    props: {
+      dialogVisible: {
+        type: Boolean,
+        default: false
+      },
+      companyName: '',
+      onSize: '',
+    },
+    watch: {
+      dialogVisible(newVal) {
+        if (newVal) {
+          setTimeout(() => {
+            this.drawOverallDis();
+          }, 100);
+        }
+      },
+      onSize(newVal) {
+        $('#chart-1').trigger('windowResize');
+        $('#chart-2').trigger('windowResize');
+      }
+    },
+    data() {
+      return {
+        entiretyDesc: '',
+        tradeDesc: '',
+      }
+    },
+    mounted() {
+    },
+    methods: {
+      /**
+       * 信用分整体分布
+       */
+      drawOverallDis() {
+        //信用分整体分布
+        let chart1 = document.getElementById('chart-1');
+        let chart1Category = [];
+        let chart1Value = [];
+        let chart1Pos = '';
+        //信用分行业分布
+        let chart2 = document.getElementById('chart-2');
+        let chart2Category = [];
+        let chart2Value = [];
+        let chart2Pos = '';
+        let params = {
+          companyName: this.companyName
+        }
+        financing.creditScoreDistribution(params).then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            if (data) {
+              if (!arrayFunc.isEmpty(data.entirety.category) && !arrayFunc.isEmpty(data.entirety.value)) {
+                $(chart1).removeClass('nodata');
+                chart1Category = [...data.entirety.category];
+                chart1Value = [...data.entirety.value];
+                chart1Pos = data.entirety.pos;
+                this.entiretyDesc = data.entirety.desc;
+                let myChart1 = ycChart.renderBar2(chart1, '信用分整体分布', chart1Category, chart1Value, chart1Pos);
+                $(chart1).on('resize windowResize', () => {
+                  myChart1.resize();
+                });
+              } else {
+                $(chart1).addClass('nodata');
+              }
+
+              if (!arrayFunc.isEmpty(data.trade.category) && !arrayFunc.isEmpty(data.trade.value)) {
+                $(chart2).removeClass('nodata');
+                chart2Category = [...data.trade.category];
+                chart2Value = [...data.trade.value];
+                chart2Pos = data.trade.pos;
+                this.tradeDesc = data.trade.desc;
+                let myChart2 = ycChart.renderBar2(chart2, '信用分行业分布', chart2Category, chart2Value, chart2Pos);
+                $(chart2).on('resize windowResize', () => {
+                  myChart2.resize();
+                });
+              } else {
+                $(chart2).addClass('nodata');
+              }
+            } else {
+              $(chart1).addClass('nodata');
+              $(chart2).addClass('nodata');
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      /**l
+       * 信用分行业分布
+       */
+      handleClose() {
+        this.$emit('changeDialogVisible', false)
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  .content-box {
+    border: none;
+
+    &:first-child {
+      margin-top: -30px;
+      margin-bottom: 20px;
+    }
+
+    .chart {
+      height: 220px;
+      margin-bottom: 35px;
+    }
+  }
+</style>

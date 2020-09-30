@@ -1,0 +1,546 @@
+<template>
+  <div>
+    <div style="text-align: left" class="navbar-back">
+      <navbar :data="navbar"/>
+    </div>
+    <div class="box mt20 role-list">
+      <!--头部新增、搜索-->
+      <el-row class="">
+        <el-button class="btn add fl" @click="dialogVisible1=true,selectRoleMenuAll()">新增角色</el-button>
+        <div class="fr search-role">
+          <el-input v-model="input" placeholder="请输入角色名" class="select fl">管理员</el-input>
+          <el-button class="btn green fr" @click="selectRoleAll(1)">查询</el-button>
+        </div>
+      </el-row>
+      <!--新增角色弹出框-->
+      <el-dialog
+          v-if="hasReload1"
+          title="新增角色"
+          :visible.sync="dialogVisible1"
+          width="30%"
+          :before-close="handleClose" class="limited">
+        <el-form status-icon ref="ruleForm2" label-width="100px" class="demo-ruleForm" :model="ruleForm2"
+                 :rules="rules">
+          <el-form-item label="角色名：" prop="roleName">
+            <el-input type="text" maxlength="15" v-model="ruleForm2.roleName" style="width: 300px"
+                      placeholder="请输入角色名(15字以内)"></el-input>
+          </el-form-item>
+          <el-form-item label="描述：" style="width: 400px" prop="describe">
+            <el-input type="textarea" maxlength="25" v-model="ruleForm2.describe" :autosize="{ minRows: 2, maxRows: 4}"
+                      placeholder="请输入描述信息(25字以内)"></el-input>
+          </el-form-item>
+          <el-form-item label="权限选择：" style="width: 400px" prop="menuId">
+            <el-tree
+                :data="menuId"
+                show-checkbox
+                node-key="id"
+                ref="addTree"
+                :default-expand-all="true"
+                :check-strictly="true"
+                :props="defaultProps"
+                :check-on-click-node="true"
+                @check="handleCheckForAdd"
+            >
+            </el-tree>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button class="btn cancel" @click="dialogVisible1 = false,noSaveRole()">取 消</el-button>
+          <el-button class="btn submit" @click="submitForm1()" :disabled="disabled1">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!--角色列表-->
+      <el-row>
+        <el-table class="yc-table default update-status"
+                  id="role-data-table"
+                  :data="roleData"
+                  border
+                  style="width: 100%">
+          <el-table-column
+              :show-overflow-tooltip="true"
+              type="index"
+              label="序列"
+              width="60">
+          </el-table-column>
+          <el-table-column
+              :show-overflow-tooltip="true"
+              prop="roleName"
+              label="角色名称"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              :show-overflow-tooltip="true"
+              prop="describe"
+              label="描述">
+          </el-table-column>
+          <el-table-column
+              :show-overflow-tooltip="true"
+              prop="createBy"
+              label="创建人"
+              width="120">
+          </el-table-column>
+          <el-table-column
+              :show-overflow-tooltip="true"
+              prop="dateCreated"
+              label="创建时间"
+              width="200">
+          </el-table-column>
+          <el-table-column
+              :show-overflow-tooltip="true"
+              prop="updateBy"
+              label="更改人"
+              width="120">
+          </el-table-column>
+          <el-table-column
+              :show-overflow-tooltip="true"
+              prop="dateUpdated"
+              label="更改时间"
+              width="200">
+          </el-table-column>
+          <el-table-column
+              :show-overflow-tooltip="true"
+              prop="disableEnable"
+              label="是否可用"
+              width="100">
+            <template slot-scope="scope">
+              <el-switch
+                  v-model="scope.row.disableEnable"
+                  @click.native="updateRoleStatus(scope.row)"
+                  active-color="#e95906">
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column
+              :show-overflow-tooltip="true"
+              label="操作"
+              width="150">
+            <template slot-scope="scope">
+              <i class="yc-icon yc-icon-assign-authority mr10" style="font-size: 20px"
+                 @click="dialogVisible3=true,roleId=scope.row.id,saveRoleInfo(scope.row)"></i>
+              <i class="yc-icon yc-icon-edit mr10" style="font-size: 20px"
+                 @click="dialogVisible2=true,roleId=scope.row.id,saveRoleInfo(scope.row)"></i>
+              <i class="yc-icon yc-icon-delete mr10" style="font-size: 20px" @click="deleteRole(scope.row)"></i>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-row>
+
+      <!--修改角色弹出框-->
+      <el-dialog
+          v-if="hasReload1"
+          title="修改角色"
+          :visible.sync="dialogVisible2"
+          width="30%"
+          :before-close="handleClose" class="limited">
+        <el-form status-icon ref="updateRuleForm2" label-width="100px" class="demo-ruleForm" :model="updateRuleForm2"
+                 :rules="rules">
+          <el-form-item label="角色名：" prop="roleName">
+            <el-input type="text" maxlength="15" v-model="updateRuleForm2.roleName" style="width: 300px"
+                      placeholder="请输入角色名(15字以内)"></el-input>
+          </el-form-item>
+          <el-form-item label="描述：" style="width: 400px" prop="describe">
+            <el-input type="textarea" maxlength="25" :autosize="{ minRows: 2, maxRows: 4}"
+                      v-model="updateRuleForm2.describe" placeholder="请输入描述信息(25字以内)"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button class="btn cancel" @click="dialogVisible2 = false,noSaveRole()">取 消</el-button>
+          <el-button class="btn submit" @click="submitForm2()" :disabled="disabled2">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!--修改角色权限弹出框-->
+      <el-dialog
+          v-if="hasReload1"
+          title="修改角色权限"
+          :visible.sync="dialogVisible3"
+          width="30%"
+          :before-close="handleClose" class="limited">
+        <el-form status-icon ref="updateRuleForm2" label-width="100px" class="demo-ruleForm" :model="updateRuleForm2"
+                 :rules="rules">
+          <el-form-item label="权限选择：" style="width: 400px" prop="menuId">
+            <el-tree
+                :data="menuId"
+                show-checkbox
+                node-key="id"
+                ref="tree"
+                :check-strictly="true"
+                :default-expand-all="true"
+                :props="defaultProps"
+                :default-checked-keys="updateRuleForm2.menuId"
+                :check-on-click-node="true"
+                @check="handleCheck"
+            >
+            </el-tree>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button class="btn cancel" @click="dialogVisible3 = false,noSaveRole()">取 消</el-button>
+          <el-button class="btn submit" @click="submitForm2()" :disabled="disabled3">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!--分页-->
+      <el-row>
+        <pagination :pagination="paginationData"
+                    :container="container"
+                    @changePage="handlePageChange"/>
+      </el-row>
+    </div>
+  </div>
+</template>
+
+<script>
+  import {role} from "../../api/api-setting";
+  import {dialog} from "../../assets/js/dialog";
+
+  export default {
+    name: "RoleManagement",
+    data() {
+      return {
+        roleId: '', //角色id
+        menuId: [],//修改用户菜单数据是否传输完成
+        disabled1: false,//新增确认按钮状态
+        disabled2: false,//修改确认按钮状态
+        disabled3: false,//权限修改确认按钮
+        dialogVisible1: false,
+        dialogVisible2: false,
+        dialogVisible3: false,
+        input: '',
+        navbar: {
+          prevs: [
+            {
+              name: '系统管理',
+              path: ''
+            }
+          ],
+          current: '角色管理'
+        },
+        roleData: [],
+        rules: {
+          roleName: [{required: true, message: '角色名不能为空', trigger: 'blur'},
+            {min: 1, max: 15, message: '请输入角色名(15字以内)', trigger: 'blur'}],
+          describe: [{required: true, message: '描述不能为空', trigger: 'blur'},
+            {min: 1, max: 25, message: '请输入描述信息(25字以内)', trigger: 'blur'}],
+          menuId: [{type: 'array', required: false, message: '请至少选择一个权限', trigger: 'change'},]
+        },
+        ruleForm2: {
+          roleName: '',
+          describe: '',
+          menuId: []
+        },
+        updateRuleForm2: {
+          roleName: '',
+          describe: '',
+          menuId: []
+        },
+        paginationData: {
+          pageNum: 1,
+          pageSize: 10,
+          total: 0,
+          url: 'role/selectRoleAll',
+          params: {}
+        },
+        container: null,
+        //是否刷新弹出页面
+        hasReload1: true,
+        defaultProps: {
+          label: 'menuName',
+          children: 'childrenMenuList'
+        }
+      }
+    },
+
+    methods: {
+      //新增角色表单验证
+      submitForm1() {
+        this.$refs['ruleForm2'].validate((valid) => {
+          if (valid) {
+            this.disabled1 = true
+            this.roleId = '';
+            this.saveRole();
+          } else {
+            return false;
+          }
+        })
+      },
+      //修改角色表单验证
+      submitForm2() {
+        this.$refs['updateRuleForm2'].validate((valid) => {
+          if (valid) {
+            this.disabled2 = true
+            this.disabled3 = true
+            this.saveRole();
+          } else {
+            return false;
+          }
+        })
+      },
+      handleClose(done) {
+        this.objEmpty(this.ruleForm2);
+        this.ruleForm2.menuId = [];
+        this.hasReload1 = false;
+        this.$nextTick(() => {
+          this.hasReload1 = true;
+        });
+        done();
+      },
+      //清空对象
+      objEmpty(obj) {
+        for (let k of Object.keys(obj)) {
+          obj[k] = '';
+        }
+      },
+      //分页事件
+      handlePageChange(data) {
+        this.paginationData = data.pagination;
+        data.tableData.map((item) => {
+          if (!item.describe) {
+            item.describe = '无';
+          }
+          if (!item.createBy) {
+            item.createBy = '无';
+          }
+          if (!item.updateBy) {
+            item.updateBy = '无';
+          }
+          if (!item.phone) {
+            item.phone = '无';
+          }
+          item.disableEnable = item.disableEnable === '1';
+        })
+        this.roleData = data.tableData;
+      },
+      //获取角色列表
+      selectRoleAll(pageNum) {
+        if (pageNum) {
+          this.paginationData.pageNum = pageNum
+        }
+        //去除空格
+        if (this.input) {
+          this.input = this.input.replace(/\s*/g, '')
+        }
+        let params = {
+          roleName: this.input,
+          pageNum: this.paginationData.pageNum,
+          pageSize: this.paginationData.pageSize
+        }
+        role.selectRoleAll(params).then((res) => {
+          if (res.code === '200') {
+            let data = res.data;
+            this.paginationData.total = data.total;
+            this.paginationData.params = params;
+            let roleData = data.listData;
+            roleData.map((item) => {
+              if (!item.describe) {
+                item.describe = '无';
+              }
+              if (!item.createBy) {
+                item.createBy = '无';
+              }
+              if (!item.updateBy) {
+                item.updateBy = '无';
+              }
+              if (!item.phone) {
+                item.phone = '无';
+              }
+              item.disableEnable = item.disableEnable === '1';
+            })
+            this.roleData = roleData;
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      //修改角色前数据处理,把数据传入对话框
+      saveRoleInfo(row) {
+        //先获取菜单ID
+        this.selectRoleMenuAll(row.id);
+        this.updateRuleForm2.roleName = row.roleName;
+        this.updateRuleForm2.describe = row.describe;
+      },
+      //新增保存角色
+      saveRole() {
+        let params = {};
+        let menuId = '';
+        //如果没有id,就是新增角色,有角色id,则是修改角色信息
+        if (this.roleId===null ||this.roleId==='') {
+          //新增
+          this.ruleForm2.menuId=this.$refs.addTree.getCheckedKeys();
+          menuId = this.ruleForm2.menuId.join(',');
+          params.roleName = this.ruleForm2.roleName;
+          params.describe = this.ruleForm2.describe;
+          params.id = this.roleId;
+          params.menuId = menuId;
+        } else {
+          this.updateRuleForm2.menuId=this.$refs.tree.getCheckedKeys();
+          menuId = this.updateRuleForm2.menuId.join(',');
+          params.roleName = this.updateRuleForm2.roleName;
+          params.describe = this.updateRuleForm2.describe;
+          params.id = this.roleId;
+          params.menuId = menuId;
+        }
+        role.saveRole(params).then((res) => {
+          if (res.code === '200') {
+            //成功清空新增角色\修改角色表单数据,隐藏对话框
+            if (this.roleId!==null && this.roleId!=='') {
+              this.$refs.tree.setCheckedKeys([]);
+            } else {
+              this.$refs.addTree.setCheckedKeys([]);
+            }
+            this.roleId = '';
+            this.objEmpty(this.ruleForm2);
+            this.objEmpty(this.updateRuleForm2);
+            this.ruleForm2.menuId = [];
+            this.updateRuleForm2.menuId = [];
+            this.dialogVisible1 = false;
+            this.dialogVisible2 = false;
+            this.dialogVisible3 = false;
+            this.disabled1 = false;
+            this.disabled2 = false;
+            this.disabled3 = false;
+            dialog.success('保存角色成功');
+            this.selectRoleAll();
+            this.hasReload1 = false;
+            this.$nextTick(() => {
+              this.hasReload1 = true;
+            });
+          } else {
+            dialog.error(res.message);
+            this.disabled1 = false;
+            this.disabled2 = false;
+            this.disabled3 = false;
+          }
+        })
+      },
+      //点击取消新增保存清空缓存数据
+      noSaveRole() {
+        this.roleId = '';
+        this.objEmpty(this.ruleForm2);
+        this.objEmpty(this.updateRuleForm2);
+        this.ruleForm2.menuId = [];
+        this.updateRuleForm2.menuId = [];
+        this.hasReload1 = false;
+        this.$nextTick(() => {
+          this.hasReload1 = true;
+        });
+      },
+      //更改角色状态
+      updateRoleStatus(row) {
+        let params = {};
+        if (row.disableEnable) {
+          params.disableEnable = '1';
+        } else {
+          params.disableEnable = '0';
+        }
+        params.id = row.id;
+        role.updateRoleStatus(params).then((res) => {
+          if (res.code === '200') {
+            dialog.success('状态更改成功');
+            this.selectRoleAll();
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      //删除角色
+      deleteRole(row) {
+        let params = {};
+        params.id = row.id;
+        dialog.confirm(this, '确认删除角色', () => {
+          role.deleteRole(params).then((res) => {
+            if (res.code === '200') {
+              dialog.success('删除角色成功');
+              this.selectRoleAll();
+            } else {
+              dialog.error(res.message);
+            }
+          })
+        }, () => {
+          return false;
+        })
+      },
+      //查询角色菜单
+      selectRoleMenuAll(id) {
+        let roleId = '';
+        if (id!==null && id!=='') {
+          roleId = id;
+        }
+        let params = {
+          roleId: roleId
+        }
+        role.selectRoleMenuAll(params).then((res) => {
+          if (res.code === '200') {
+            let data = res.data;
+            this.menuId = [...data.rootMenu];
+            if (id!==null && id!=='') {
+              this.updateRuleForm2.menuId = [...data.selectionList];
+              // this.$refs['tree'].setCheckedKeys(this.updateRuleForm2.menuId);
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      handleCheckForAdd(data, data2) {
+        let checkedKeys=data2.checkedKeys;
+        let checked = checkedKeys.indexOf(data.id)!==-1;
+        let children = data.childrenMenuList;
+        let elTree = this.$refs.addTree;
+        if (children !== null && children.length > 0) {
+          children.forEach((childNode, index) => {
+            elTree.setChecked(childNode.id, checked,true);
+          })
+        }
+      },
+      handleCheck(data, data2) {
+        let checkedKeys=data2.checkedKeys;
+        let checked = checkedKeys.indexOf(data.id)!==-1;
+        let children = data.childrenMenuList;
+        let elTree = this.$refs.tree;
+        if (children !== null && children.length > 0) {
+          children.forEach((childNode, index) => {
+            elTree.setChecked(childNode.id, checked,true);
+          })
+        }
+      }
+    },
+    created() {
+      this.selectRoleAll();
+    },
+    mounted() {
+      this.container = document.getElementById("role-data-table")
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  .role-list {
+    height: 720px;
+  }
+
+  .search-role {
+    width: 326px;
+    .select {
+      width: 250px;
+      height: 32px;
+    }
+    .btn {
+      margin-left: 10px;
+      width: 66px;
+      height: 36px;
+      vertical-align: top;
+    }
+  }
+
+  .update-status {
+    .el-switch.is-disabled {
+      .el-switch__core {
+        cursor: pointer;
+      }
+    }
+    .yc-icon {
+      cursor: pointer;
+    }
+  }
+
+
+</style>

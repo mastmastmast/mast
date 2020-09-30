@@ -1,0 +1,304 @@
+@import "../lib-variable";
+//content-box的背景色
+$boxBg: #fff;
+//content-box中的按钮背景色
+$boxBtnBg: #6d7494;
+//描述信息字体颜色
+$descColor: #999;
+//content-tab底部颜色
+$tabBottomBorder: 1px solid #eee;
+$btnHoverBg: #858fb7;
+$msgHoverBg: #373c52;
+$contentTabMinWidthList: ('null':120px, '1280px':120px, '1500px':140px);
+
+//菜单margin-left
+@mixin contentTabMinWidth($list) {
+  @each $screen,
+  $minWidth in $list {
+    @if $screen=='null' {
+      min-width: $minWidth;
+    } @else {
+      @media(min-width: $screen) {
+        min-width: $minWidth;
+      }
+    }
+  }
+}
+
+.content-box {
+  background-color: $boxBg;
+  border: 1px solid #eee;
+  box-sizing: border-box;
+  .content-box-title {
+    position: relative;
+    margin-top: 5px;
+    height: 50px;
+    line-height: 50px;
+    background-color: #fff;
+    font-size: 14px;
+    text-indent: 25px;
+    .btn {
+      text-indent: 0px;
+    }
+    &::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 17px;
+      width: 4px;
+      height: 16px;
+      background: #E64e00;
+    }
+    span.title-content {
+      display: inline-block;
+      position: absolute;
+      right: 92px;
+      left: 0;
+      color: #333;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    span.desc {
+      display: inline-block;
+      margin-left: 5px;
+      color: $descColor;
+      font-weight: normal;
+      text-indent: 0;
+      .icon {
+        margin-right: 5px;
+        color: #999;
+        font-size: 19px;
+      }
+    }
+    em {
+      color: #CF2D14;
+    }
+    button {
+      margin: 10px 25px;
+    }
+    .operation {
+      position: absolute;
+      margin: 0 5px;
+      top: 0;
+      right: 25px;
+      height: 50px;
+      text-indent: 0;
+      .el-select {
+        width: 90px;
+        .el-input__inner {
+          height: 30px !important;
+          line-height: 30px !important;
+          //background: #8e919e;
+          color: $mainColor;
+        }
+      }
+      .desc {
+        display: inline-block;
+        height: 35px;
+        line-height: 35px;
+        color: $mainColor;
+        font-size: 14px;
+        margin-right: 5px;
+      }
+      a {
+        font-size: 13px;
+        color: $mainColor;
+      }
+    }
+  }
+  &.tab {
+    position: relative;
+    .tool-tip-div {
+      position: absolute;
+      z-index: 10;
+      width: auto;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 30px 0 15px;
+      font-size: 14px;
+      border: 1px solid #e95906;
+      border-radius: 15px;
+      background-color: #FFFFFF;
+      pointer-events: none;
+      &:before,&:after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 15px;
+        bottom: -20px;
+        width: 0;
+        height: 0;
+        border-width: 10px;
+        border-style: solid;
+        border-color: #e95906 transparent transparent;
+        font-size: 0;
+        line-height: 0;
+      }
+      &:after {
+        bottom: -19px;
+        border-color: #fff transparent transparent;
+      }
+    }
+    .tablist {
+      //padding: 15px 15px 0;
+      height: 50px;
+      background: #f9f9f9;
+      border-bottom: $tabBottomBorder;
+      box-sizing: border-box;
+      li {
+        position: relative;
+        float: left;
+        @include contentTabMinWidth($contentTabMinWidthList);
+        height: 100%;
+        line-height: 50px;
+        color: $mainColor;
+        text-align: center;
+        border-right: 1px solid #eee;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        cursor: pointer;
+        &:last-child {
+          border-right: none;
+        }
+        &.active {
+          background: #fff;
+          color: $highLightColor;
+          a {
+            color: $highLightColor;
+          }
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: $highLightColor;
+          }
+        }
+        &:hover {
+          color: $highLightColor;
+        }
+      }
+    }
+    .tab-content {
+      display: none;
+      &.active {
+        display: block;
+      }
+    }
+  }
+  .content-box-body {
+    position: relative;
+    padding: 15px;
+    overflow: hidden;
+    box-sizing: border-box;
+    color: $mainColor;
+    .operation {
+      margin: 5px 0;
+      height: 35px;
+      .el-select {
+        width: 90px;
+        .el-input__inner {
+          height: 30px !important;
+          line-height: 30px !important;
+          background: #8e919e;
+          color: #fff;
+        }
+      }
+      button {
+        margin: 10px 0 0 10px;
+        padding: 7px 10px;
+        min-width: 50px;
+        height: 30px;
+        background: $boxBtnBg;
+        color: $mainColor;
+        font-size: $mainFontSize;
+        border: none;
+        &:hover {
+          background: $btnHoverBg;
+          color: $mainColor;
+          border: none;
+        }
+      }
+      .desc {
+        display: inline-block;
+        height: 35px;
+        line-height: 35px;
+        color: #999;
+      }
+    }
+    .msg {
+      margin: 15px 30px;
+      li {
+        position: relative;
+        margin: 15px 0;
+        height: 35px;
+        text-indent: 10px;
+        cursor: pointer;
+        &:hover {
+          background: $msgHoverBg;
+          .msg-summary,
+          .msg-date {
+            color: #fff !important;
+          }
+        }
+        &::before {
+          content: '';
+          position: absolute;
+          margin-top: -2px;
+          top: 50%;
+          width: 4px;
+          height: 4px;
+          background: $mainColor;
+          border-radius: 2px;
+        }
+        span {
+          display: inline-block;
+          overflow: hidden;
+          height: 100%;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          line-height: 35px;
+          text-indent: 0;
+          &.msg-summary {
+            padding-left: 165px;
+            width: 100%;
+            color: #525252;
+            box-sizing: border-box;
+          }
+          &.msg-date {
+            position: absolute;
+            left: 20px;
+            color: $descColor;
+          }
+        }
+      }
+    }
+    > .sub-content-box-1 {
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+    > .sub-content-box-2 {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    .content-box {
+      border: none;
+    }
+    .content-box.gray-head {
+      border: 1px solid #eee;
+    }
+  }
+  &.gray-head {
+    .content-box-title {
+      margin-top: 0;
+      background-color: #eee;
+      text-indent: 15px;
+      &::before {
+        content: none;
+      }
+    }
+  }
+}

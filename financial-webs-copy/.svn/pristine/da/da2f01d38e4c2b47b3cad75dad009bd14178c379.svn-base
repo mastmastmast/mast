@@ -1,0 +1,122 @@
+import Vue from "vue";
+import Router from "vue-router";
+
+const Pagination = () => import(/* webpackChunkName: "app" */ "./components/pagination.vue")
+const RoleManagement = () => import(/* webpackChunkName: "app" */ "./views/Management/RoleManagement")
+const UserManagement = () => import(/* webpackChunkName: "app" */ "./views/Management/UserManagement")
+const LogList = () => import(/* webpackChunkName: "app" */ "./views/Management/LogList")
+const ScorePointsConfigPage = () => import(/* webpackChunkName: "app" */ "./views/Management/ScorePointsConfigPage")
+const ScorePointsFirstIndex= () => import(/* webpackChunkName: "app" */ "./views/Management/ScorePointsFirstIndex")
+const ScorePoints = () => import(/* webpackChunkName: "app" */ "./views/Management/ScorePoints")
+const PolicyDeclarationAnalysis = () => import(/* webpackChunkName: "app" */ "./views/PolicyDeclarationAnalysis/PolicyDeclarationAnalysis")
+const RealTimeData = () => import(/* webpackChunkName: "app" */ "./views/Management/RealTimeData")
+const FinancingCreditReport = () => import(/* webpackChunkName: "app" */ "./views/FinancingCreditReport/FinancingCreditReport")
+const PolicyEffectTrace = () => import(/* webpackChunkName: "app" */ "./views/PolicyEffectTrace/PolicyEffectTrace")
+
+const HomeNew = () => import(/* webpackChunkName: "app" */ "./views/Home/indexNew.vue")
+const EnterpriseSearchList = () => import(/* webpackChunkName: "app" */ "./views/Home/enterpriseSearchList.vue")
+const EnterpriseList = () => import(/* webpackChunkName: "app" */ "./views/Home/enterpriseList.vue")
+const EnterpriseCreditIndex = () => import(/* webpackChunkName: "app" */ "./views/EnterpriseCredit/creditIndex.vue")
+const About = () => import(/* webpackChunkName: "about" */ "./views/About/index.vue")
+const Demo = () => import('./views/Demo/demo.vue')
+Vue.use(Router);
+Vue.component('pagination', Pagination)
+export default new Router({
+  // mode: "history",
+  base: process.env.BASE_URL,
+  routes: [
+    {
+      path: "/",
+      // name: "home",
+      component: HomeNew
+    },
+    {
+      path: "/home",
+      name: "home",
+      component: HomeNew,
+    },
+    {
+      path: '/enterprise/search/:q',
+      name: 'enterpriseSearchList',
+      component: EnterpriseSearchList
+    },
+    {
+      path: '/enterprise/list',
+      name: 'enterpriseList',
+      component: EnterpriseList
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: About
+    },
+    {
+      path: '/demo',
+      name: 'demo',
+      component: Demo
+    },
+    {
+      path: '/setting/role',
+      name: 'RoleManagement',
+      component: RoleManagement,
+    },
+    {
+      path: '/setting/user',
+      name: 'UserManagement',
+      component: UserManagement
+    },
+    {
+      path: '/setting/log',
+      name: 'LogList',
+      component: LogList
+    },
+    {
+      path: '/setting/scorePointsConfigPage',
+      name: 'ScorePointsConfigPage',
+      component: ScorePointsConfigPage
+    },
+    {
+      path: '/setting/scorePoints',
+      name: 'ScorePoints',
+      component: ScorePoints
+    },
+    {
+      path: '/setting/scorePointsFirstIndex',
+      name: 'ScorePointsFirstIndex',
+      component: ScorePointsFirstIndex
+    },
+    {
+      path: '/setting/realTimeData',
+      name: 'RealTimeData',
+      component: RealTimeData
+    },
+    {
+      path: '/policydeclaration/analysis/:companyName',
+      name: 'policyDeclarationAnalysis',
+      component: PolicyDeclarationAnalysis
+    },
+    {
+      path: '/financing/creditreport/:companyName',
+      name: 'financingCreditReport',
+      component: FinancingCreditReport
+    },
+    {
+      path: '/enterprise/credit/:companyName',
+      name: 'enterpriseCreditIndex',
+      component: EnterpriseCreditIndex
+    },
+    {
+      path: '/policyeffect/trace/:companyName',
+      name: 'policyEffectTrace',
+      component: PolicyEffectTrace
+    }
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    if (!savedPosition) {
+      let el = document.getElementsByClassName('content')[0].getElementsByTagName('div')[0];
+      if (el) {
+        el.scrollIntoView({behavior: 'smooth',block: 'start'});
+      }
+    }
+  }
+});

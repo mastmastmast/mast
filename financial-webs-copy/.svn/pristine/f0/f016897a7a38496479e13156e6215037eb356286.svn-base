@@ -1,0 +1,122 @@
+import xhr from './axiosConfig';
+import {dialog} from "../assets/js/dialog";
+
+/**
+ * 政策效果追踪相关接口
+ * @type {{ post*}}
+ */
+export const policyEffect = {
+  /**
+   * 查询政策性贷款申请记录
+   * @param companyName 公司名称
+   * @param range 查询的时间段
+   * @returns {*}
+   */
+  selectLoanRecord(params) {
+    return xhr.request({
+      url: 'effectTrace/selectLoanRecord',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取政策性贷款申请记录失败")
+    });
+  },
+  /**
+   * 查询政策申报记录
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectPolicyRecord(params) {
+    return xhr.request({
+      url: 'effectTrace/selectPolicyRecord',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取政策申报记录失败")
+    });
+  },
+  /**
+   * 注册资本趋势追踪
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectRegistCapital(params) {
+    return xhr.request({
+      url: 'effectTrace/selectRegistCapital',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取注册资本趋势数据记录失败")
+    });
+  },
+  /**
+   * 人力资源趋势追踪
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectHumanResource(params) {
+    return xhr.request({
+      url: 'effectTrace/selectHumanResource',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取人力资源趋势追踪数据失败")
+    });
+  },
+  /**
+   * 财务资产趋势追踪
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectFinancialAssets(params) {
+    return xhr.request({
+      url: 'effectTrace/selectFinancialAssets',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取财务资产趋势追踪数据失败")
+    });
+  },
+  /**
+   * 知识产权趋势追踪
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectIntellectualProperty(params) {
+    return xhr.request({
+      url: 'effectTrace/selectIntellectualProperty',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取知识产权趋势追踪数据失败")
+    });
+  },
+  /**
+   * 查询风险投资列表
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectPartners(params) {
+    return xhr.request({
+      url: 'effectTrace/selectPartners',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("获取风险投资列表失败")
+    });
+  },
+  /**
+   * 查询政策效果分析
+   * @param companyName 公司名称
+   * @returns {*}
+   */
+  selectPolicyEffectAnalyze(params) {
+    return xhr.request({
+      url: 'effectTrace/selectPolicyEffectAnalyze',
+      method: 'post',
+      data: params
+    }).catch((err)=>{
+      dialog.error("查询政策效果分析失败")
+    });
+  },
+};

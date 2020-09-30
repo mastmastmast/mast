@@ -1,0 +1,550 @@
+<template>
+  <div class="policy-effect">
+    <!--公司信息-->
+    <el-row>
+      <div class="company-base-info">
+        <el-col :span="24">
+          <p class="name">{{companyName}}</p>
+          <div class="company-label">
+            <span class="yc-label green" v-if="baseInfo.operateStatus!==null && baseInfo.operateStatus!==''">{{baseInfo.operateStatus}}</span>
+            <el-tooltip
+                class="item"
+                v-if="item!==null"
+                v-for="(item,index) in baseInfo.cognizance"
+                :key="'label_1_'+index"
+                :content="item.cognizance">
+              <span class="yc-label blue">{{item.cognizance}}</span>
+            </el-tooltip>
+            <el-tooltip class="item" v-for="(item,index) in baseInfo.policies" effect="dark" :key="'label_2_'+index"
+                        placement="right">
+              <div slot="content">时<span
+                  class="blank_1"></span>间：{{item.dateCreated}}<br/>操作人：{{item.createBy}}<br/><span>原<span
+                  class="blank_1"></span>因</span>：{{item.describe}}
+              </div>
+              <span
+                  class="yc-label info">{{item.greyName}}<i class="icon el-icon-warning"></i></span>
+            </el-tooltip>
+          </div>
+        </el-col>
+      </div>
+    </el-row>
+    <!--分析总结-->
+    <el-row>
+      <div class="box evaluate">
+        <i class="yc-icon yc-icon-evaluate "></i>
+        <div class="summary">
+          <p>政策效果分析</p>
+          <p>{{analyzeDesc !== "" && analyzeDesc !== null? analyzeDesc : "暂无数据"}}</p>
+        </div>
+      </div>
+    </el-row>
+    <!--风险投资-->
+    <el-row>
+      <div class="content-box">
+        <div class="content-box-title">
+          风险投资
+        </div>
+        <div class="content-box-body risk-invest">
+          <div class="time-line" v-if="timeLine.length !== 0">
+            <div class="time-line-start">
+              <span></span>
+            </div>
+            <div class="time-line-content" v-for="(item,index) in timeLine" :key="'_label'+index">
+              <span></span>
+              <div class="time-line-text">
+                <p>{{item.year}}</p>
+                <p @click="goTo(item)" class="go-to">{{item.name}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="time-line nodata" v-else></div>
+        </div>
+      </div>
+    </el-row>
+    <!--申报记录-->
+    <el-row>
+      <div class="content-box">
+        <div class="content-box-title">
+          申报记录
+        </div>
+        <div class="content-box-body dec-record">
+          <div class="time-select">
+            <ul>
+              <li v-for="(item, index) in timeItems"
+                  :key="index+'label_1_'"
+                  :class="{active:activeTimeIndex===index}"
+                  @click="switchTab(item)">
+                {{item.time}}
+              </li>
+            </ul>
+          </div>
+          <!--记录表格-->
+          <div class="record-policy">
+            <el-col :span="12" class="record-col">
+              <el-table class="yc-table default"
+                        :data="policyLoanApplicationRecords"
+                        height="220"
+                        style="width: 100%">
+                <el-table-column label="政策性贷款申请记录">
+                  <el-table-column
+                      :show-overflow-tooltip="true"
+                      prop="date"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                      :show-overflow-tooltip="true"
+                      prop="prodName"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                      :show-overflow-tooltip="true"
+                      prop="amt"
+                  >
+                  </el-table-column>
+                </el-table-column>
+              </el-table>
+            </el-col>
+            <el-col :span="12" class="record-col">
+              <el-table class="yc-table default"
+                        :data="policyDeclarationRecords"
+                        height="220"
+                        style="width: 100%">
+                <el-table-column label="政策申报记录">
+                  <el-table-column
+                      :show-overflow-tooltip="true"
+                      prop="checkDate"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                      :show-overflow-tooltip="true"
+                      prop="policyName"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                      :show-overflow-tooltip="true"
+                      prop="amt"
+                  >
+                  </el-table-column>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </div>
+          <!--折线图-->
+          <div class="chart-line">
+            <el-col :span="12" style="height: 332px;overflow: hidden;" class="record-col my-charts">
+              <div class="draw-line">
+                <DrawLine
+                    style="height: 330px"
+                    id="register-Capital"
+                    :option="registerCapital">
+                </DrawLine>
+              </div>
+            </el-col>
+            <el-col :span="12" style="height: 332px;overflow: hidden;" class="record-col my-charts">
+              <div class="draw-line">
+                <div class="charts-tooltip" >
+                  <el-tooltip class="item" effect="dark" content="企业部分数据无法获取，图形未达到最优" placement="bottom">
+                    <i class="yc-icon yc-icon-warning"></i>
+                  </el-tooltip>
+                </div>
+                <DrawLine
+                    style="height: 330px"
+                    id="human-Resource"
+                    :option="humanResource">
+                </DrawLine>
+              </div>
+            </el-col>
+          </div>
+          <div class="chart-line">
+            <el-col :span="12" style="height: 332px;overflow: hidden;" class="record-col my-charts">
+              <div class="draw-line">
+                <div class="charts-tooltip">
+                  <el-tooltip class="item" effect="dark" content="企业部分数据无法获取，图形未达到最优" placement="bottom">
+                    <i class="yc-icon yc-icon-warning"></i>
+                  </el-tooltip>
+                </div>
+                <DrawLine
+                    style="height: 330px"
+                    id="financial-asset"
+                    :option="financialAsset">
+                </DrawLine>
+              </div>
+            </el-col>
+            <el-col :span="12" style="height: 332px;overflow: hidden;" class="record-col my-charts">
+              <div class="draw-line">
+                <DrawLine
+                    style="height: 330px"
+                    id="intellectual-property"
+                    :option="intellectualProperty">
+                </DrawLine>
+              </div>
+            </el-col>
+          </div>
+        </div>
+      </div>
+    </el-row>
+    <!--<el-row>-->
+      <!--<div class="content-box-body">-->
+        <!--<div id="test" style="height: 100px;width: 50%"></div>-->
+      <!--</div>-->
+    <!--</el-row>-->
+  </div>
+</template>
+
+<script>
+  import DrawLine from '../Common/DrawLine';
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+  import {policyEffect} from "../../api/api-policy-effect-trace";
+  import echarts from 'echarts';
+
+  export default {
+    name: "PolicyEffectTracking",
+    inject: ['reload'],
+    components: {
+      DrawLine,
+    },
+    data() {
+      return {
+        companyName: '',
+        // 企业基本信息
+        baseInfo: {},
+        // 企业投资风险时间线
+        timeLine: [],
+        // 风险投资时间段选择
+        timeItems: [
+          {index: 0, time: '近一年'},
+          {index: 1, time: '近两年'},
+          {index: 2, time: '全部'},
+        ],
+        // 时间选择活动下标
+        activeTimeIndex: 0,
+        // 政策性贷款申请记录数据
+        policyLoanApplicationRecords: [{date:'',prodName:'',amt:''}],
+        // 政策申报记录数据
+        policyDeclarationRecords: [{checkDate:'',policyName:'',amt:''}],
+        // 注册资本数据
+        registerCapital: {},
+        // 人力资源数据
+        humanResource: {},
+        // 财务资产数据
+        financialAsset: {},
+        // 知识产权数据
+        intellectualProperty: {},
+        // 分析总结
+        analyzeDesc: '',
+      }
+    },
+    beforeRouteUpdate(to, from, next) {
+      let params = to.params;
+      let companyName = params.companyName;
+      if (companyName) {
+        this.companyName = companyName;
+      }
+      next();
+      this.reload();
+    },
+    created() {
+      let companyName = this.$route.params.companyName;
+      this.companyName = companyName;
+      this.getBaseInfo();
+      this.getSelectRegistCapital();
+      this.getSelectHumanResource();
+      this.getSelectFinancialAssets();
+      this.getSelectIntellectualProperty();
+      this.getSelectPolicyEffectAnalyze();
+    },
+    mounted() {
+      this.getSelectLoanRecord();
+      this.getSelectPolicyRecord();
+      this.getSelectPartners();
+      // this.$nextTick(() => {
+      //   this.test();
+      // });
+    },
+    methods: {
+      /**
+       * 切换timeItem
+       * @param tabItem
+       */
+      switchTab(timeItem) {
+        this.activeTimeIndex = timeItem.index;
+        this.getSelectLoanRecord();
+        this.getSelectPolicyRecord();
+      },
+
+      /**
+       * 获取企业的基本信息
+       *
+       */
+      getBaseInfo() {
+        enterpriseCredit.getBaseInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            this.baseInfo = res.data;
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 获取政策性贷款申请记录
+       */
+      getSelectLoanRecord() {
+        //默认null为近一年
+        let range = null;
+        //近一年
+        if (this.activeTimeIndex === 0) {
+          range = 1;
+        }
+        //近两年
+        if (this.activeTimeIndex === 1) {
+          range = 2;
+        }
+        //全部
+        if (this.activeTimeIndex === 2) {
+          range = 0;
+        }
+        let params = {
+          companyName: this.companyName,
+          range: range
+        }
+        policyEffect.selectLoanRecord(params).then(res=>{
+          if (res.code === "200") {
+            if (res.data !== null) {
+              this.policyLoanApplicationRecords = [...res.data]
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      /**
+       * 获取政策申报记录
+       */
+      getSelectPolicyRecord() {
+        //默认null为近一年
+        let range = null;
+        //近一年
+        if (this.activeTimeIndex === 0) {
+          range = 1;
+        }
+        //近两年
+        if (this.activeTimeIndex === 1) {
+          range = 2;
+        }
+        //全部
+        if (this.activeTimeIndex === 2) {
+          range = 0;
+        }
+        let params = {
+          companyName: this.companyName,
+          range: range
+        }
+        policyEffect.selectPolicyRecord(params).then(res=>{
+          if (res.code === "200") {
+            if (res.data !== null) {
+              this.policyDeclarationRecords = [...res.data]
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        })
+      },
+      /**
+       * 查询注册资本趋势追踪
+       */
+      getSelectRegistCapital() {
+        let params = {
+          companyName: this.companyName
+        }
+        policyEffect.selectRegistCapital(params).then((res)=>{
+          if (res.code==="200") {
+            this.registerCapital = res.data;
+          } else {
+            dialog.error(res.error);
+          }
+        })
+      },
+      /**
+       * 查询人力资源趋势追踪
+       */
+      getSelectHumanResource() {
+        let params = {
+          companyName: this.companyName
+        }
+        policyEffect.selectHumanResource(params).then((res)=>{
+          if (res.code === "200") {
+            this.humanResource = res.data;
+          } else {
+            dialog.error(res.error);
+          }
+        })
+      },
+      /**
+       * 查询财务资产趋势追踪
+       */
+      getSelectFinancialAssets() {
+        let params = {
+          companyName: this.companyName
+        }
+        policyEffect.selectFinancialAssets(params).then((res)=>{
+          if (res.code === "200") {
+            this.financialAsset = res.data;
+          } else {
+            dialog.error(res.error);
+          }
+        })
+      },
+      /**
+       * 查询知识产权趋势追踪
+       */
+      getSelectIntellectualProperty() {
+        let params = {
+          companyName: this.companyName
+        }
+        policyEffect.selectIntellectualProperty(params).then((res)=>{
+          if (res.code === "200") {
+            this.intellectualProperty = res.data;
+          } else {
+            dialog.error(res.error);
+          }
+        })
+      },
+      /**
+       * 查询风险投资列表
+       */
+      getSelectPartners() {
+        let params = {
+          companyName: this.companyName
+        }
+        policyEffect.selectPartners(params).then((res)=>{
+          if (res.code === "200") {
+            let data = res.data;
+            if (data !== "" && data !==null) {
+              this.timeLine = [...data];
+            }
+          } else {
+            dialog.error(res.error);
+          }
+        })
+      },
+      /**
+       * 查询政策效果分析
+       */
+      getSelectPolicyEffectAnalyze() {
+        let params = {
+          companyName: this.companyName
+        }
+        policyEffect.selectPolicyEffectAnalyze(params).then(res=>{
+          if (res.code === '200') {
+            let data = res.data
+            if (data !== null && data !== "") {
+              this.analyzeDesc = data.analyzeDesc;
+            }
+          } else {
+            dialog.error(res.error);
+          }
+        })
+      },
+      /**
+       * 时间线公司跳转页面
+       */
+      goTo(item) {
+        if (item.jump === 1) {
+          this.$router.push('/enterprise/credit/' + item.name);
+        }
+        else {
+          dialog.error("系统暂未收录该公司")
+        }
+      },
+      test() {
+        let el = document.getElementById('test');
+        let xData = [350,550,600,650,700,950];
+        let qj = 600;
+        let colorList = [
+            // ['#fff','#fff'],
+            ['#37BBF8','#ff00ff'],
+            ['#BCEE68','#B2DFEE'],
+            ['#8B8B00','#8B7765'],
+            ['#7B68EE','#7FFF00'],
+            ['#0000EE','#FFA500'],
+            // ['#fff','#fff'],
+        ];
+        var sectionList = ['较差','中等','良好','优秀','极好'];
+        let option = {
+          legend: {
+          },
+          grid: {
+
+          },
+          xAxis: {
+            type: 'category',
+            show: true,
+            data: xData,
+            axisTick: {
+              show: false
+            },
+            axisLine: {
+              show: false,
+            },
+            boundaryGap: true,
+            axisLabel: {
+              color: '#666',
+              interval: 0,
+              fontSize: 18,
+              padding:[0,120,0,0],
+            },
+          },
+          yAxis: {
+            type: 'value',
+            max: 40,
+            show: false,
+          },
+          series: [
+            {
+              data: [20,20,20,20,20],
+              type: 'bar',
+              barWidth: '100%',
+              itemStyle: {
+                normal: {
+                  color: function (params) {
+                      return new echarts.graphic.LinearGradient(
+                          0, 0, 1, 0,
+                          [
+                            {offset: 0, color: colorList[params.dataIndex][0]},
+                            {offset: 1, color: colorList[params.dataIndex][1]}
+                          ]
+                      )
+                  },
+                }
+              },
+              label: {
+                show: true,
+                position: 'top',
+                distance: 10,
+                color: '#222333',
+                fontSize: 16,
+                formatter: function(params) {
+                  if (params.name == qj) {
+                    return sectionList[params.dataIndex]+'ok'
+                  } else {
+                    return sectionList[params.dataIndex]
+                  }
+                },
+                rich: {
+
+                }
+              },
+            }
+          ],
+        }
+        let myChart = echarts.init(el)
+        myChart.setOption(option);
+      },
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  @import "../../assets/css/policyeffect-trace";
+</style>

@@ -1,0 +1,210 @@
+<script type="text/html" id="report-summary-tp2">
+  <div class="company-base-info watermark">
+    <p class="name">{{baseInfo.companyName}}</p>
+    <div class="company-label">
+              <span class="yc-label green">
+                {{baseInfo.operateStatus}}
+              </span>
+      {{each baseInfo.cognizance value index}}
+      {{if (value !== null && value !== "")}}
+      <span class="yc-label blue {{value.cognizance.length > 42 ? 'yc-label2' : ''}}">
+                  {{value.cognizance}}
+                </span>
+      {{/if}}
+      {{/each}}
+      {{each baseInfo.policies value index}}
+      {{if (value !== null && value !== "")}}
+      <span class="yc-label info">
+                  {{value.greyName}}<i class="yc-icon yc-icon-warning"></i>
+              </span>
+      {{/if}}
+      {{/each}}
+    </div>
+  </div>
+  <div class="company-info-table watermark">
+    <table style="width: 100%;">
+      <tbody>
+      <tr>
+        <td style="width: 40%;padding:25px 0.5em 25px 6.5em;position: relative;vertical-align: top;border: 1px solid #999">
+          <i style="position: absolute;left: 0px;top: 25px;margin-left: 0.5em">法定代表人：</i>
+          {{baseInfo.operName ? baseInfo.operName : '-'}}
+        </td>
+        <td style="width: 60%;padding:25px 0.5em 25px 5.5em;position: relative;vertical-align: top;border: 1px solid #999">
+          <i style="position: absolute;left: 0px;top: 25px;margin-left: 0.5em">成立日期：</i>
+          {{baseInfo.foundingDate ? baseInfo.foundingDate : '-'}}
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 40%;padding:25px 0.5em 25px 5.5em;position: relative;vertical-align: top;border: 1px solid #999">
+          <i style="position: absolute;left: 0px;top: 25px;margin-left: 0.5em">注册资本：</i>
+          {{baseInfo.registeredCapital ? baseInfo.registeredCapital : '-'}}
+        </td>
+        <td style="width: 60%;padding:25px 0.5em 25px 9.5em;position: relative;vertical-align: top;border: 1px solid #999">
+          <i style="position: absolute;left: 0px;top: 25px;margin-left: 0.5em">统一社会信用代码：</i>
+          {{baseInfo.unifiedSocialCreditCode ? baseInfo.unifiedSocialCreditCode : '-'}}
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:25px 0.5em 25px 5.5em;position: relative;vertical-align: top;border: 1px solid #999" colspan="2">
+          <i style="position: absolute;left: 0px;top: 25px;margin-left: 0.5em">注册地址：</i>
+          {{baseInfo.enterpriseAddress ? baseInfo.enterpriseAddress : '-'}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--综合评价-->
+  <div class="summary-evaluate content-box-body3 watermark">
+    <p class="title">综合评价</p>
+    <div class="content-box-body4">
+      <div class="summary-evaluate-radar" style="height: 650px;overflow: hidden;page-break-before: always;page-break-after: always;page-break-inside: avoid;">
+        <!--雷达图-->
+        <div id="radar-chart" style="height: 650px;width: 50%;float: left">
+        </div>
+        <div>
+          <div class="mark-info" style="width: 50%;display: inline-block">
+            <p>
+              <span class="info-title">
+                盈创信用分
+              </span>
+              <span class="number">
+                {{baseInfo.totalScore?baseInfo.totalScore:'暂无数据'}}
+              </span>
+            </p>
+            <p>
+              <span class="info-title">
+                天府之星
+              </span>
+              <span class="number" id="score-star">
+              </span>
+            </p>
+            <p v-if="false" style="position: relative;padding-left: 9em">
+              <span class="info-title" style="position: absolute;top: 0px;left: 0px">
+                信用分整体排名
+              </span>
+              <span class="number">
+                {{baseInfo.ranking? baseInfo.ranking:'暂无数据'}}
+              </span>
+            </p>
+            <p v-if="false" style="position: relative;padding-left: 9em">
+              <span class="info-title" style="position: absolute;top: 0px;left: 0px">
+                信用分行业比较
+              </span>
+              <span class="number">
+                {{baseInfo.rankingDescribe?baseInfo.rankingDescribe:'暂无数据'}}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <p class="summary-evaluate-text1">
+        通过依法采集政府、信息主体、第三方机构、公开信息等数据，依据合理的技术规范、评价体系、大数据信用模型，从企业资质、经营行为、经营风险、关联关系、涉诉行为五方面，分析得出：
+      </p>
+      <p class="summary-evaluate-text2">{{baseInfo.comprehensiveEvaluation?baseInfo.comprehensiveEvaluation:'暂无数据'}}</p>
+    </div>
+  </div>
+  <!--企业评价-->
+  {{if evaluation && evaluation.length > 0 }}
+  {{each evaluation item}}
+  <div class="company-advantage content-box-body3 watermark">
+    <p class="title">{{item.title}}</p>
+    <!--测试-->
+    <div class="content-box-body4" style="padding-top: 0px">
+      <table style="width: 100%">
+        <tbody>
+        {{each item.content value index}}
+        <tr>
+          <td style="padding-top: 30px;position: relative;padding-left: {{value.label.length+2}}em">
+            <i style="position: absolute;
+                      top: 33px;
+                      left: 0;
+                      display: inline-block;
+                      width: 48px;
+                      height: 48px;
+                      margin-right: 1em;
+                      background-color: #749EDF;
+                      color: #FFFFFF;
+                      line-height: 48px;
+                      text-align: center;
+                      border-radius: 50%;">{{index+1}}</i>
+              <span style="position: absolute;top: 30px;left: 2em;text-indent: 0;">{{value.label}}：</span>
+              {{value.value ? value.value : '暂无数据'}}
+          </td>
+        </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {{/each}}
+  {{else}}
+  <div class="company-advantage content-box-body3 watermark">
+    <p class="title">企业评价</p>
+    <table style="width: 100%">
+      <tbody>
+      <tr>
+        <td style="padding-top: 30px;position: relative;padding-left: 2em">
+          暂无数据
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  {{/if}}
+  <!--政策申报记录-->
+  <div class="declaration-record content-box-body3 watermark">
+    <p class="title">政策申报记录</p>
+    <p class="text">{{policyInfo.countContent}}</p>
+    <div class="content-box-body4">
+      {{if policyInfo.pdfPolicyInfo.length<1 || policyInfo.pdfPolicyInfo === null}}
+      <div class="time-line">
+        <div class="time-line-top"></div>
+        <div class="time-line-text process">
+          <i class="ball"></i>
+          <span>暂无数据</span>
+          <div class="time-line-bottom"></div>
+        </div>
+      </div>
+      {{else}}
+      <div class="time-line">
+        <div class="time-line-top"></div>
+        {{each policyInfo.pdfPolicyInfo value index}}
+        <div class="time-line-text process">
+          <i class="ball"></i>
+          <span>{{value}}</span>
+          <div class="time-line-bottom"></div>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  <!--政策性贷款申请记录-->
+  <div class="declaration-record content-box-body3 watermark">
+    <p class="title">政策性贷款申请记录</p>
+    <p class="text">{{policyLoanInfo.countContent}}</p>
+    <div class="content-box-body4">
+      {{if policyLoanInfo.pdfPolicyInfo.length<1 || policyLoanInfo.pdfPolicyInfo === null}}
+      <div class="time-line">
+        <div class="time-line-top"></div>
+        <div class="time-line-text process">
+          <i class="ball"></i>
+          <span>暂无数据</span>
+          <div class="time-line-bottom"></div>
+        </div>
+      </div>
+      {{else}}
+      <div class="time-line">
+        <div class="time-line-top"></div>
+        {{each policyLoanInfo.pdfPolicyInfo value index}}
+        <div class="time-line-text process">
+          <i class="ball"></i>
+          <span>{{value}}</span>
+          <div class="time-line-bottom"></div>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</script>

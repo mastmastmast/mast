@@ -1,0 +1,1180 @@
+<template>
+  <div>
+    <el-row>
+      <div class="search">
+        <el-col :span="7" style="height:100%"></el-col>
+        <el-col :span="10">
+          <div class="search-input-wrapper">
+            <el-autocomplete
+                class="inline-input search-input" style="width:100%"
+                v-model="queryString"
+                placeholder="请输入企业名称或统一社会信用代码"
+                :fetch-suggestions="querySearch"
+                @select="handleSelect"
+            >
+              <el-button slot="append" icon="el-icon-search" @click="clickSearch"></el-button>
+            </el-autocomplete>
+          </div>
+        </el-col>
+        <el-col :span="7" style="height:100%"></el-col>
+      </div>
+    </el-row>
+    <el-row class="statistics">
+      <el-col :span="4" v-for="(item,index) in statistics" :key="'statistics-'+index">
+        <div class="item">
+          <i :class="item.icon" class="yc-icon"></i>
+          <div class="info">
+            <p><span class="number">{{item.value}}</span><span class="unit">{{item.unit}}</span></p>
+            <p class="item-title">{{item.title}}</p>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="gutter">
+      <el-col :span="8">
+        <div class="chart">
+          <div class="chart-title">
+            <i class="yc-icon yc-icon-menu2"></i>
+            融资总额统计
+          </div>
+          <div class="desc">单位：（亿元）</div>
+          <div class="chart-content" id="financing-amount-chart"></div>
+        </div>
+        <div class="chart">
+          <div class="chart-title">
+            <i class="yc-icon yc-icon-menu2"></i>
+            产品融资金额分布（本年度）
+          </div>
+          <div class="chart-content" id="financing-dis-chart"></div>
+        </div>
+        <div class="chart">
+          <div class="chart-title">
+            <i class="yc-icon yc-icon-menu2"></i>
+            服务企业总量统计
+          </div>
+          <div class="desc">单位：（万家）</div>
+          <div class="chart-content" id="serviced-enterprise-chart"></div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="map">
+          <div class="toolbox">
+            <el-tooltip class="item" effect="dark" content="查看地图说明"><i class="yc-icon yc-icon-map-note"
+                                                                       @click="showMapNote=true"></i></el-tooltip>
+            <el-tooltip class="item" effect="dark" content="查看企业扶持列表">
+              <router-link to="/enterprise/list" tag="i" class="yc-icon yc-icon-list"></router-link>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="全屏查看">
+              <i class="yc-icon yc-icon-full-screen" @click="fullScreenMap=true"></i>
+            </el-tooltip>
+          </div>
+          <div id="map"></div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="chart">
+          <div class="chart-title">
+            <i class="yc-icon yc-icon-menu2"></i>
+            申报企业数量统计（本年度）
+          </div>
+          <div class="desc fl">单位：（家）</div>
+          <div class="chart-content" id="declared-company-chart"></div>
+        </div>
+        <div class="chart">
+          <div class="chart-title">
+            <i class="yc-icon yc-icon-menu2"></i>
+            就业贡献
+          </div>
+          <div class="desc fl">单位：（万人）</div>
+          <div class="sub-title1">就业人数</div>
+          <div class="sub-title2">人才类别</div>
+          <div class="chart-content" id="employment-contrib-chart"></div>
+        </div>
+        <div class="chart">
+          <div class="chart-title">
+            <i class="yc-icon yc-icon-menu2"></i>
+            产业贡献
+          </div>
+          <div class="chart-content" id="industry-contrib-chart"></div>
+        </div>
+      </el-col>
+    </el-row>
+    <heat-map v-model="fullScreenMap"/>
+    <el-dialog
+        title="地图说明"
+        width="300px"
+        :visible="showMapNote"
+        :before-close="handleCloseMapNote"
+    >
+      <div class="map-note">
+        <div>热力图展示企业受平台扶持（政策性贷款申请+政策申报）情况，受扶持金额越高，颜色越深。支持滑动鼠标滚轮来放大缩小地图，支持长按鼠标左键来拖动地图。</div>
+        <div><span class="marker blue"></span>
+          <div class="desc">蓝色地标，表示本年度获得政策性贷款扶持金额最高的前5家企业的所处位置，鼠标移入地标，可以查看该企业本年度政策性贷款的详细信息。</div>
+        </div>
+        <div><span class="marker green"></span>
+          <div class="desc">绿色地标，表示本年度获得政策申报扶持金额最高的前5家企业的所处位置，鼠标移入地标，可以查看该企业本年度政策申报的详细信息。</div>
+        </div>
+        <div><span class="marker purple"></span>
+          <div class="desc">紫色地标，表示本年度政策性贷款、政策申报的扶持金额均为前5企业的所处位置，鼠标移入地标，可以查看该企业本年度政策性贷款、政策申报的详细信息。</div>
+        </div>
+      </div>
+
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+  import {ycChart} from "../../assets/js/chart";
+  import {home} from "../../api/api";
+  import {dialog} from "../../assets/js/dialog";
+  import HeatMap from './HeatMap';
+  import {arrayFunc} from "../../assets/js/common";
+
+  export default {
+    name: "home2",
+    components: {
+      HeatMap
+    },
+    props: {
+      toggleMenu: {
+        type: Boolean,
+        default: false
+      }
+    },
+    watch: {
+      toggleMenu(newVal) {
+        setTimeout(() => {
+          $('.chart-content').trigger('windowResize');
+        }, 500);
+      }
+    },
+    data() {
+      return {
+        statistics: [],
+        //输入搜索框的值
+        queryString: '',
+        dataList: [],
+        fullScreenMap: false,
+        showMapNote: false
+      }
+    },
+    created() {
+
+    },
+    mounted() {
+      this.getStatistics();
+      this.drawFinanceAmount();
+      this.drawServicedEnterpriseCount();
+      this.drawDeclaredCompanyChart();
+      this.drawFinancingDisChart();
+      this.drawHeatMap();
+      this.drawContributionChart();
+      window.onresize = () => {
+        $('.chart-content').trigger('windowResize');
+      }
+    },
+    beforeDestroy() {
+    },
+    methods: {
+      /**
+       * 申报企业数量统计
+       */
+      drawDeclaredCompanyChart() {
+        let el = document.getElementById('declared-company-chart');
+        home.getDeclaredCompanyCount().then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            let category = [];
+            let values = [];
+            if (data !== null && data.length > 0) {
+              let myChart = this.$echarts.init(el);
+              let colors = ['#f54d4d', '#f87544', '#ffad05', '#2ec7c9', '#25d053', '#ff62e8', '#007cff', '#4245ff', '#3bdaae', '#fff67f', '#749f83', '#557e79'];
+              data.forEach((item, index) => {
+                let value = item.applynum;
+                category.push(item.batchnumber);
+                values.push(value);
+                item.value = value;
+                item.itemStyle = {
+                  normal: {
+                    color: colors[index]
+                  }
+                }
+              });
+              let differ = 12 - data.length;
+              if (differ > 0) {
+                for (let i = 0; i < differ; i++) {
+                  data.push({
+                    value: 0,
+                    itemStyle: {
+                      normal: {
+                        color: 'transparent'
+                      }
+                    }
+                  });
+                  category.push('');
+                }
+              }
+              let option = {
+                tooltip: {
+                  trigger: 'item',
+                },
+                angleAxis: {
+                  interval: 1,
+                  type: 'category',
+                  data: category,
+                  z: 0,
+                  axisLine: {
+                    show: true,
+                    lineStyle: {
+                      color: "#ccc",
+                      width: 1,
+                      type: "dashed"
+                    }
+                  },
+                  axisLabel: {
+                    interval: 0,
+                    show: true,
+                    color: "#666",
+                    margin: 5,
+                    fontSize: 12
+                  },
+                  axisTick: {
+                    show: false
+                  }
+                },
+                radiusAxis: {
+                  min: 0,
+                  splitNumber: 4,
+                  axisLine: {
+                    show: true,
+                    lineStyle: {
+                      color: "#ccc",
+                      width: 1,
+                      type: "solid"
+                    },
+                  },
+                  axisLabel: {
+                    formatter: '{value}',
+                    show: true,
+                    padding: [0, 0, 20, 0],
+                    color: "#999",
+                    fontSize: 10
+                  },
+                  splitLine: {
+                    lineStyle: {
+                      color: "#ccc",
+                      width: 1,
+                      type: "dashed"
+                    }
+                  },
+                  splitArea: {
+                    show: true,
+                    areaStyle: {
+                      // color:['rgba(250,250,250,0.3)','rgba(200,200,200,1)']
+                      color: 'transparent'
+                    }
+                  }
+                },
+                polar: {
+                  // radius:'85%'
+                },
+                grid: {
+                  left: 5,
+                  right: 5,
+                  top: 5,
+                  bottom: 0,
+                  containLabel: true
+                },
+                series: [
+                  {
+                    type: 'bar',
+                    data: data,
+                    coordinateSystem: 'polar'
+                  }]
+              };
+              myChart.setOption(option)
+            } else {
+              $(el).addClass('nodata')
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      querySearch(queryString, cb) {
+        queryString = $.trim(queryString);
+        if (queryString) {
+          home.searchEnterprise(queryString).then(res => {
+            if (res.code === '200') {
+              this.dataList = res.data.listData;
+              // 调用 callback 返回建议列表的数据
+              cb(this.dataList);
+            } else {
+              dialog.error(res.message)
+            }
+          });
+        } else {
+          this.dataList = [];
+          // 调用 callback 返回建议列表的数据
+          cb(this.dataList);
+        }
+
+      },
+      handleSelect(item) {
+        this.$router.push('/enterprise/credit/' + item.name);
+      },
+      clickSearch() {
+        let q = $.trim(this.queryString);
+        if (!q) {
+          q = 'all';
+        }
+        this.$router.push('/enterprise/search/' + q);
+      },
+      /**
+       * 获取统计数据
+       */
+      getStatistics() {
+        home.getStatistics().then(res => {
+          let code = res.code;
+          if (code === '200') {
+            this.statistics = res.data;
+          } else {
+            dialog.error(res.message)
+          }
+        });
+      },
+      /**
+       * 平台融资总额柱状图
+       */
+      drawFinanceAmount() {
+        let el = document.getElementById('financing-amount-chart');
+        home.getFinanceAmountStatistics().then(res => {
+          const code = res.code;
+          if (code === '200') {
+            const data = res.data;
+            let myChart = ycChart.renderBar(el, '平台融资总额', data.date, data.value);
+            let zr = myChart.getZr();
+            let storage = zr.storage;
+            let finished = false;
+            let splitLine = null;
+            let note = null;
+            //如果跨年了，就在12月与1月之间画一条分隔线
+            if (data.year) {
+              myChart.on('finished', () => {
+                if (!finished) {
+                  finished = true;
+                  let displayList = storage.getDisplayList();
+                  let textList = displayList.filter((item) => {
+                    return item instanceof this.$echarts.graphic.Text;
+                  });
+                  let text1 = textList.filter((item) => {
+                    return item.style.text === '1月'
+                  })[0];
+                  let text12 = textList.filter((item) => {
+                    return item.style.text === '12月'
+                  })[0];
+                  if (text1 && text12) {
+                    var chartHeight = 140;
+                    let position12 = text12.position;
+                    let position1 = text1.position;
+                    let x_start = (position1[0] + position12[0]) / 2;
+                    let y_start = position12[1] - 10;
+                    let y_end = y_start - chartHeight + 20;
+                    splitLine = new this.$echarts.graphic.Line({
+                      shape: {
+                        x1: x_start,
+                        y1: y_start,
+                        x2: x_start,
+                        y2: y_end
+                      },
+                      style: {
+                        stroke: '#ccc',
+                        lineDash: [4, 2]
+                      }
+                    });
+                    note = new this.$echarts.graphic.Text({
+                      position: [x_start - 15, y_end - 15],
+                      style: {
+                        text: data.year,
+                        textFill: '#666'
+                      }
+                    });
+                    zr.add(splitLine);
+                    zr.add(note);
+                  }
+                }
+              });
+            }
+            //容器大小改变时
+            $(el).on('resize windowResize', () => {
+              myChart.resize();
+              finished = false;
+              if (splitLine) {
+                zr.remove(splitLine);
+              }
+              if (note) {
+                zr.remove(note);
+              }
+            });
+          } else {
+            dialog.error(res.message);
+          }
+        });
+
+      },
+      /**
+       * 企业服务总量统计图
+       */
+      drawServicedEnterpriseCount() {
+        let el = document.getElementById('serviced-enterprise-chart');
+        home.getServicedEnterpriseStatistics().then(res => {
+          const code = res.code;
+          if (code === '200') {
+            const data = res.data;
+            let myChart = ycChart.renderLine(el, '平台服务企业数量', data.date, data.value);
+            let zr = myChart.getZr();
+            let storage = zr.storage;
+            let finished = false;
+            let splitLine = null;
+            let note = null;
+            //如果跨年了，就在12月与1月之间画一条分隔线
+            if (data.year) {
+              myChart.on('finished', () => {
+                if (!finished) {
+                  finished = true;
+                  let displayList = storage.getDisplayList();
+                  let textList = displayList.filter((item) => {
+                    return item instanceof this.$echarts.graphic.Text;
+                  });
+                  let text1 = textList.filter((item) => {
+                    return item.style.text === '1月'
+                  })[0];
+                  let text12 = textList.filter((item) => {
+                    return item.style.text === '12月'
+                  })[0];
+                  if (text1 && text12) {
+                    var chartHeight = 140;
+                    let position12 = text12.position;
+                    let position1 = text1.position;
+                    let x_start = (position1[0] + position12[0]) / 2;
+                    let y_start = position12[1] - 10;
+                    let y_end = y_start - chartHeight + 20;
+                    splitLine = new this.$echarts.graphic.Line({
+                      shape: {
+                        x1: x_start,
+                        y1: y_start,
+                        x2: x_start,
+                        y2: y_end
+                      },
+                      style: {
+                        stroke: '#ccc',
+                        lineDash: [4, 2]
+                      }
+                    });
+                    note = new this.$echarts.graphic.Text({
+                      position: [x_start - 15, y_end - 15],
+                      style: {
+                        text: data.year,
+                        textFill: '#666'
+                      }
+                    });
+                    zr.add(splitLine);
+                    zr.add(note);
+                  }
+                }
+              });
+            }
+            //容器大小改变时
+            $(el).on('resize windowResize', () => {
+              myChart.resize();
+              finished = false;
+              if (splitLine) {
+                zr.remove(splitLine);
+              }
+              if (note) {
+                zr.remove(note);
+              }
+            });
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 产品融资金额分布图
+       */
+      drawFinancingDisChart() {
+        let el = document.getElementById('financing-dis-chart');
+        let myChart = this.$echarts.init(el);
+        home.getFinancingAmountDis().then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            let value = [];
+            let category = [];
+            if (data !== null && data.length > 0) {
+              data.forEach((item) => {
+                value.push({
+                  name: item.productName,
+                  value: item.productMoney
+                });
+                category.push(item.productName);
+              })
+            }
+            if (arrayFunc.isEmpty(value) && arrayFunc.isEmpty(category)) {
+              $(el).addClass('nodata');
+            } else {
+              var color = ["#ffeb39", "#ffc108", "#fe6565", "#c96fd9", "#4ba7ef", "#5ad6c4", "#ffcccc", "#7ebc9a", "#6f73bd", "#ff8f5a"]
+              let option = {
+                color: color,
+                legend: {
+                  bottom: 0,
+                  data: category,
+                  itemWidth: 14,
+                  itemHeight: 10,
+                  itemGap: 10,
+                  padding: 0,
+                  selectedMode: false,
+                  formatter: function (name) {
+                    return '   ' + name
+                  },
+                  textStyle: {
+                    fontSize: 10,
+                    color: '#666'
+                  }
+                },
+                series: [{
+                  name: '产品融资金额分布',
+                  type: 'pie',
+                  // clockwise: false,
+                  minAngle: 20,
+                  radius: ["50%", "80%"],
+                  center: ["50%", "43%"],
+                  avoidLabelOverlap: true,
+                  itemStyle: { //图形样式
+                    normal: {
+                      borderColor: '#ffffff',
+                      borderWidth: 2,
+                    }
+                  },
+                  label: {
+                    normal: {
+                      show: false,
+                      position: 'center',
+                      formatter: '{value|{c}万\n}{text|{b}}\n{percent|{d}%}',
+                      rich: {
+                        text: {
+                          color: "#666",
+                          fontSize: 10,
+                          align: 'center',
+                          verticalAlign: 'middle',
+                          padding: 5
+                        },
+                        value: {
+                          color: "#333",
+                          fontSize: 10,
+                          fontWeight: 'bold',
+                          align: 'center',
+                          verticalAlign: 'middle',
+                        },
+                        percent: {
+                          color: "#666",
+                          fontSize: 10,
+                          align: 'center',
+                          verticalAlign: 'middle',
+                          padding: 5
+                        }
+                      }
+                    },
+                    emphasis: {
+                      show: true,
+                      textStyle: {
+                        fontSize: 46,
+                      }
+                    }
+                  },
+                  data: value
+                }]
+              };
+              myChart.setOption(option);
+
+              setTimeout(function () {
+                myChart.dispatchAction({
+                  type: 'highlight',
+                  seriesIndex: 0,
+                  dataIndex: 0
+                });
+
+                myChart.on('mouseover', function (params) {
+                  if (params.name === value[0].name) {
+                    myChart.dispatchAction({
+                      type: 'highlight',
+                      seriesIndex: 0,
+                      dataIndex: 0
+                    });
+                  } else {
+                    myChart.dispatchAction({
+                      type: 'downplay',
+                      seriesIndex: 0,
+                      dataIndex: 0
+                    });
+                  }
+                });
+
+                myChart.on('mouseout', function (params) {
+                  myChart.dispatchAction({
+                    type: 'highlight',
+                    seriesIndex: 0,
+                    dataIndex: 0
+                  });
+                });
+              }, 1000);
+              $(el).on('resize windowResize', () => {
+                myChart.resize();
+                setTimeout(function () {
+                  myChart.dispatchAction({
+                    type: 'highlight',
+                    seriesIndex: 0,
+                    dataIndex: 0
+                  });
+
+                  myChart.on('mouseover', function (params) {
+                    if (params.name === value[0].name) {
+                      myChart.dispatchAction({
+                        type: 'highlight',
+                        seriesIndex: 0,
+                        dataIndex: 0
+                      });
+                    } else {
+                      myChart.dispatchAction({
+                        type: 'downplay',
+                        seriesIndex: 0,
+                        dataIndex: 0
+                      });
+                    }
+                  });
+
+                  myChart.on('mouseout', function (params) {
+                    myChart.dispatchAction({
+                      type: 'highlight',
+                      seriesIndex: 0,
+                      dataIndex: 0
+                    });
+                  });
+                }, 1000);
+              });
+            }
+          } else {
+            dialog.error(res.message)
+          }
+
+        });
+
+      },
+      /**
+       * 绘制热力图
+       */
+      drawHeatMap() {
+        var map = new BMap.Map("map", {minZoom: 10, maxZoom: 20, enableMapClick: false});
+        // 初始化地图，设置中心点坐标和地图级别
+        map.centerAndZoom(new BMap.Point(104.0778177054, 30.5999871019), 13);
+        // 允许滚轮缩放
+        map.enableScrollWheelZoom();
+        home.getHeatMapData().then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            //热力数据
+            let heatMapListData = data.heatMapListData;
+            //申报总额前5的公司
+            let reportAmtTop5 = data.reportAmtTop5;
+            //本年度政策性贷款总额TOP5
+            let loanAmtTop5 = data.loanAmtTop5;
+            //既是申报金额前5，又是贷款金额前5的企业
+            let loanAndReportTop5 = data.loanAndReportTop5;
+            let heatData = [];
+            heatMapListData.forEach((item, index) => {
+              heatData.push({
+                lng: item.lng,
+                lat: item.lat,
+                count: item.value
+              });
+            });
+
+            let heatmapOverlay = new BMapLib.HeatmapOverlay({"radius": 20});
+            map.addOverlay(heatmapOverlay);
+            heatmapOverlay.setDataSet({data: heatData, max: 100});
+            let gradient = {
+              1: '#f70200',
+              .6: '#fff100',
+              .2: '#1f9700'
+            };
+            heatmapOverlay.setOptions({"gradient": gradient});
+
+            let iconGreen = new BMap.Icon("img/marker-green.png", new BMap.Size(24, 24));
+            let iconBlue = new BMap.Icon("img/marker-blue.png", new BMap.Size(24, 24));
+            let iconPurple = new BMap.Icon("img/marker-purple.png", new BMap.Size(24, 24));
+            if (reportAmtTop5 !== null && reportAmtTop5.length > 0) {
+              reportAmtTop5.forEach((item, index) => {
+                addMarkerAndInfoWindow(item, iconGreen);
+              })
+            }
+            if (loanAmtTop5 !== null && loanAmtTop5.length > 0) {
+              loanAmtTop5.forEach((item, index) => {
+                addMarkerAndInfoWindow(item, iconBlue);
+              })
+            }
+            if (loanAndReportTop5 !== null && loanAndReportTop5.length > 0) {
+              loanAndReportTop5.forEach((item, index) => {
+                addMarkerAndInfoWindow(item, iconPurple);
+              })
+            }
+          } else {
+            dialog.error(res.message);
+          }
+
+          /**
+           * 添加标注
+           * @param markerInfo
+           * @param icon
+           * @returns {{point: BMap.Point, marker: BMap.Marker}}
+           */
+          function addMarker(markerInfo, icon) {
+            let location = markerInfo.entHeatMap;
+            let point = new BMap.Point(location.lng, location.lat);
+            let marker = new BMap.Marker(point, {icon: icon});
+            map.addOverlay(marker);
+            return {point: point, marker: marker};
+          }
+
+          /**
+           * 创建信息窗口
+           * @param options： loanDetail 贷款明细 ，reportDetail 扶持明细
+           * @returns {BMap.InfoWindow}
+           */
+          function addInfoWindow(options) {
+            let loanDetail = options.loanDetail;
+            let reportDetail = options.reportDetail;
+            let $content = $('<div class="info-window"></div>');
+            let $infoList = $('<div class="info-list"></div>');
+            if (loanDetail && loanDetail !== null && loanDetail.length > 0) {
+              loanDetail.forEach((info) => {
+                $infoList.append('<div class="info-item">' +
+                    '<p><span class="item-name">贷款金额：</span><span class="item-value">' + info.loanAmt + '万</span></p>' +
+                    '<p><span class="item-name">贷款产品：</span><span class="item-value">' + info.prodName + '</span></p>' +
+                    '<p><span class="item-name">贷款时间：</span><span class="item-value">' + info.loanDate + '</span></p>' +
+                    '</div>');
+              });
+            }
+            if (reportDetail && reportDetail !== null && reportDetail.length > 0) {
+              reportDetail.forEach((info) => {
+                $infoList.append('<div class="info-item">' +
+                    '<p><span class="item-name">扶持金额：</span><span class="item-value">' + info.amt + '万</span></p>' +
+                    '<p><span class="item-name">扶持政策：</span><span class="item-value">' + info.policyName + '</span></p>' +
+                    '<p><span class="item-name">扶持时间：</span><span class="item-value">' + info.batchNumber + '</span></p>' +
+                    '</div>');
+              });
+            }
+            $content.append($infoList);
+            let opts = {
+              width: 250,
+              title: options.title
+            };
+            // 创建信息窗口对象
+            return new BMap.InfoWindow($content[0], opts);
+
+          }
+
+          /**
+           * 添加标注与信息窗口
+           * @param data
+           * @param icon
+           */
+          function addMarkerAndInfoWindow(data, icon) {
+            let markerInfo = addMarker(data, icon);
+            let markerPoint = markerInfo.point;
+            let marker = markerInfo.marker;
+            map.addOverlay(marker);
+            let infoWindow = addInfoWindow({
+              title: data.entHeatMap.companyName,
+              loanDetail: data.loanDetail,
+              reportDetail: data.reportDetail
+            });
+            marker.addEventListener("click", function () {
+              map.openInfoWindow(infoWindow, markerPoint);
+            });
+          }
+        });
+      },
+      /**
+       * 绘制就业贡献、产业贡献图
+       */
+      drawContributionChart() {
+        let industryContribEl = document.getElementById('industry-contrib-chart');
+        let employmentContribEl = document.getElementById('employment-contrib-chart');
+        home.getContributionInfo().then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            //产业贡献数据
+            let industryContribData = null;
+            //就业信息
+            let employmentInfoData = null;
+            //人才分类信息
+            let talentData = null;
+
+            if (data !== null && data.length > 0) {
+              data.forEach((item, index) => {
+                if (item.tittle === '就业人数') {
+                  employmentInfoData = item;
+                }
+                if (item.tittle === '人才类型') {
+                  talentData = item;
+                }
+                if (item.tittle === '产业贡献') {
+                  industryContribData = item;
+                }
+              });
+            }
+            this.drawEmploymentContribChart(employmentContribEl, employmentInfoData, talentData);
+            this.drawIndustryContribChart(industryContribEl, industryContribData);
+          } else {
+            dialog.error(res.message);
+          }
+
+        });
+      },
+      drawIndustryContribChart(el, data) {
+        let thedata = data.thedata;
+        let value1 = [];
+        let value2 = [];
+        if (!arrayFunc.isEmpty(thedata[0].showdata)) {
+          thedata[0].showdata.forEach(item => {
+            value1.push((parseFloat(item) / 10000).toFixed(2));
+          });
+        }
+        if (!arrayFunc.isEmpty(thedata[1].showdata)) {
+          thedata[1].showdata.forEach(item => {
+            value2.push((parseFloat(item) / 10000).toFixed(2));
+          });
+        }
+        let options = {
+          el: el,
+          seriesName: [thedata[0].name, thedata[1].name],
+          category: data.type,
+          value: [value1, value2],
+          yAxisTitle: '单位：（亿元）'
+        };
+        let myChart = ycChart.renderBars(options);
+        $(el).on('resize windowResize', () => {
+          myChart.resize();
+        });
+      },
+      /**
+       * 就业贡献统计图
+       */
+      drawEmploymentContribChart(el, data1, data2) {
+        let thedata = data1.thedata;
+        let employmentFigure = thedata[0];
+        let talentCategory = data2.thedata[0];
+        //就业人数图表数据
+        let chartData1 = [];
+        let value1 = employmentFigure.showdata;
+        let category1 = data1.type;
+
+        let chartData2 = [];
+        let value2 = talentCategory.showdata;
+        let category2 = data2.type;
+        if (value1 !== null && value1.length > 0) {
+          let length = value1.length;
+          value1.forEach((item, index) => {
+            chartData1.push({
+              name: category1[index],
+              value: (item / 10000).toFixed(1)
+            })
+          });
+          let differ = 8 - length;
+          if (differ > 0) {
+            for (let i = 0; i < differ; i++) {
+              chartData1.push({
+                name: '',
+                value: 0,
+                itemStyle: {
+                  normal: {
+                    color: 'transparent'
+                  }
+                },
+                label: {
+                  show: false
+                }
+              });
+            }
+          }
+        }
+        if (value2 !== null && value2.length > 0) {
+          value2.forEach((item, index) => {
+            chartData2.push({
+              name: category2[index],
+              value: item
+            });
+          })
+        }
+
+        let myChart = this.$echarts.init(el);
+        $(el).on('resize windowResize', () => {
+          myChart.resize();
+        });
+        let option = {
+          tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c}"
+          },
+          legend: {
+            data: category2,
+            bottom: 0,
+            right: 0,
+            // width:'30%',
+            itemWidth: 12,
+            itemHeight: 12,
+            textStyle: {
+              color: '#666',
+              fontSize: 12
+            }
+          },
+          calculable: true,
+          series: [
+            {
+              name: '就业人数',
+              type: 'pie',
+              startAngle: 0,
+              minAngle: 30,
+              radius: [25, 85],
+              center: ['25%', '45%'],
+              roseType: 'area',
+              avoidLabelOverlap: false,
+              label: {
+                normal: {
+                  show: true,
+                  position: 'inside',
+                  formatter: '{c}'
+                },
+                emphasis: {
+                  show: true
+                }
+              },
+              labelLine: {
+                normal: {
+                  show: true,
+                  length2: 1,
+                },
+                emphasis: {
+                  show: true
+                }
+              },
+              color: ['#f54d4d', '#f87544', '#ffad05', '#2ec7c9', '#25d053', '#ff62e8', '#007cff', '#4245ff', '#3bdaae', '#fff67f', '#749f83', '#557e79'],
+              data: chartData1
+            },
+            {
+              name: '人才分类',
+              type: 'pie',
+              radius: '70%',
+              color: ['#ffac2a', '#ff64a7', '#53d5ff', '#6863e6'],
+              center: ['75%', '45%'],
+              label: {
+                show: true,
+                position: 'inside',
+                formatter: '{d}%'
+              },
+              data: chartData2,
+              itemStyle: {
+                emphasis: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              }
+            }
+          ]
+        };
+        myChart.setOption(option);
+      },
+      handleCloseMapNote() {
+        this.showMapNote = false;
+      }
+    }
+  };
+</script>
+<style scoped lang="scss">
+  div.search {
+    height: 80px;
+    background: url(../../../public/img/top-bg.png) rgba(255, 255, 255, .2) left center no-repeat;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    .el-col {
+      position: relative;
+      height: 100%;
+      .search-input-wrapper {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translate(0, -50%);
+      }
+    }
+  }
+
+  .statistics {
+    height: 80px;
+    background: #fff;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    .el-col {
+      position: relative;
+      height: 100%;
+    }
+    .item {
+      height: 50px;
+      margin-top: 15px;
+      text-align: center;
+      .yc-icon {
+        color: #eb5308;
+        vertical-align: text-bottom;
+        @media screen and (min-width: 1280px) {
+          font-size: 32px;
+        }
+        @media screen and (min-width: 1366px) {
+          font-size: 38px;
+        }
+        @media screen and (min-width: 1440px) {
+          font-size: 42px;
+        }
+        @media screen and (min-width: 1600px) {
+          font-size: 48px;
+        }
+        @media screen and (min-width: 1680px) {
+          font-size: 50px;
+        }
+        @media screen and (max-width: 1280px) {
+          font-size: 32px;
+        }
+      }
+      .info {
+        display: inline-block;
+        margin-left: 5px;
+        line-height: 1.5em;
+        > p {
+          text-align: left;
+        }
+        .number {
+          margin-right: 5px;
+          font-size: 16px;
+          font-weight: bold;
+          color: #333;
+        }
+        .unit,
+        .item-title {
+          color: #999;
+        }
+      }
+    }
+  }
+
+  .el-row .chart {
+    position: relative;
+    height: 227px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    .chart-title {
+      height: 35px;
+      line-height: 35px;
+      font-weight: bold;
+      .yc-icon {
+        margin: 0 5px;
+        font-size: 20px;
+        color: #f08247;
+        vertical-align: middle;
+      }
+    }
+    > .desc {
+      position: absolute;
+      top: 25px;
+      right: 20px;
+      font-size: 10px;
+      z-index: 999;
+      &.fl {
+        top: 45px;
+        left: 20px;
+      }
+    }
+    > .sub-title1,
+    > .sub-title2 {
+      position: absolute;
+      top: 35px;
+      transform: translate(-50%, 0);
+      color: #666;
+      z-index: 999;
+    }
+    > .sub-title1 {
+      left: 30%;
+    }
+    > .sub-title2 {
+      left: 75%;
+    }
+    .chart-content {
+      height: 170px;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .map {
+    height: 721px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    .toolbox {
+      text-align: right;
+      .yc-icon {
+        margin-right: 10px;
+        font-size: 22px;
+        color: #ea530f;
+        cursor: pointer;
+      }
+    }
+  }
+
+  #map {
+    height: 672px;
+    margin-top: 5px;
+  }
+
+  .map-note {
+    > div {
+      position: relative;
+      margin-bottom: 15px;
+      line-height: 2em;
+      .marker {
+        position: absolute;
+        display: inline-block;
+        left: 0;
+        top: 3px;
+        width: 24px;
+        height: 24px;
+        &.blue {
+          background: url(../../../public/img/marker-blue.png) left center no-repeat;
+        }
+        &.green {
+          background: url(../../../public/img/marker-green.png) left center no-repeat;
+        }
+        &.purple {
+          background: url(../../../public/img/marker-purple.png) left center no-repeat;
+        }
+      }
+      .desc {
+        padding-left: 24px;
+        box-sizing: border-box;
+      }
+    }
+  }
+</style>

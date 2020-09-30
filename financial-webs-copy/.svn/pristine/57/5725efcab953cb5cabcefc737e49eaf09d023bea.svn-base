@@ -1,0 +1,266 @@
+[
+  {
+    "desc": "框",
+    "class": "yc-icon-dimetric"
+  },
+  {
+    "desc": "勾,选中",
+    "class": "yc-icon-checked"
+  },
+  {
+    "desc": "经营管理",
+    "class": "yc-icon-operation-management"
+  },
+  {
+    "desc": "企业年限",
+    "class": "yc-icon-clock"
+  },
+  {
+    "desc": "企业规模",
+    "class": "yc-icon-users"
+  },
+  {
+    "desc": "资产结构",
+    "class": "yc-icon-pie"
+  },
+  {
+    "desc": "信用减分",
+    "class": "yc-icon-cry"
+  },
+  {
+    "desc": "收益质量",
+    "class": "yc-icon-income-quality"
+  },
+  {
+    "desc": "信用加分",
+    "class": "yc-icon-smile"
+  },
+  {
+    "desc": "人力资源",
+    "class": "yc-icon-hr"
+  },
+  {
+    "desc": "发展能力",
+    "class": "yc-icon-development-ability"
+  },
+  {
+    "desc": "偿债能力",
+    "class": "yc-icon-solvency"
+  },
+  {
+    "desc": "财务基础",
+    "class": "yc-icon-financial-foundation"
+  },
+  {
+    "desc": "check，正确",
+    "class": "yc-icon-check-fill"
+  },
+  {
+    "desc": "加载",
+    "class": "yc-icon-loading-2"
+  },
+  {
+    "desc": "禁止",
+    "class": "yc-icon-forbidden"
+  },
+  {
+    "desc": "检索",
+    "class": "yc-icon-search2"
+  },
+  {
+    "desc": "全屏",
+    "class": "yc-icon-map-note"
+  },
+  {
+    "desc": "全屏",
+    "class": "yc-icon-full-screen"
+  },
+  {
+    "desc": "列表",
+    "class": "yc-icon-list"
+  },
+  {
+    "desc": "菜单",
+    "class": "yc-icon-menu2"
+  },
+  {
+    "desc": "总笔数,总数",
+    "class": "yc-icon-total-count"
+  },
+  {
+    "desc": "总笔数,总数",
+    "class": "yc-icon-total-count2"
+  },
+  {
+    "desc": "总额",
+    "class": "yc-icon-money"
+  },
+  {
+    "desc": "融资总额",
+    "class": "yc-icon-amount"
+  },
+  {
+    "desc": "握手",
+    "class": "yc-icon-handshake"
+  },
+  {
+    "desc": "入库企业数",
+    "class": "yc-icon-number"
+  },
+  {
+    "desc": "纳税情况",
+    "class": "yc-icon-tax-info"
+  },
+  {
+    "desc": "星,有填充",
+    "class": "yc-icon-star-fill"
+  },
+  {
+    "desc": "星",
+    "class": "yc-icon-star"
+  },
+  {
+    "desc": "半星",
+    "class": "yc-icon-star-half"
+  },
+  {
+    "desc": "菱形",
+    "class": "yc-icon-lingxing"
+  },
+  {
+    "desc": "感叹号,警告",
+    "class": "yc-icon-warning"
+  },
+  {
+    "desc": "loading,加载中",
+    "class": "yc-icon-loading"
+  },
+  {
+    "desc": "重置密码",
+    "class": "yc-icon-rest-pwd"
+  },
+  {
+    "desc": "向右",
+    "class": "yc-icon-right"
+  },
+  {
+    "desc": "删除",
+    "class": "yc-icon-delete"
+  },
+  {
+    "desc": "密码，锁",
+    "class": "yc-icon-lock"
+  },
+  {
+    "desc": "用户名，用户",
+    "class": "yc-icon-user"
+  },
+  {
+    "desc": "编辑，修改",
+    "class": "yc-icon-edit"
+  },
+  {
+    "desc": "权限设置",
+    "class": "yc-icon-assign-authority"
+  },
+  {
+    "desc": "系统管理，设置",
+    "class": "yc-icon-setting"
+  },
+  {
+    "desc": "运营能力",
+    "class": "yc-icon-operation"
+  },
+  {
+    "desc": "政策申报分析",
+    "class": "yc-icon-analysis"
+  },
+  {
+    "desc": "企业成长能力",
+    "class": "yc-icon-analysis-circle"
+  },
+  {
+    "desc": "政策效果追踪",
+    "class": "yc-icon-trace"
+  },
+  {
+    "desc": "导航菜单",
+    "class": "yc-icon-menu"
+  },
+  {
+    "desc": "盈利能力",
+    "class": "yc-icon-finance"
+  },
+  {
+    "desc": "下载",
+    "class": "yc-icon-download"
+  },
+  {
+    "desc": "无法确认，问号",
+    "class": "yc-icon-question"
+  },
+  {
+    "desc": "企业竞争能力，天平",
+    "class": "yc-icon-balance"
+  },
+  {
+    "desc": "退出，注销",
+    "class": "yc-icon-logout"
+  },
+  {
+    "desc": "融资信用报告",
+    "class": "yc-icon-report"
+  },
+  {
+    "desc": "首页，无填充",
+    "class": "yc-icon-home"
+  },
+  {
+    "desc": "首页，有填充",
+    "class": "yc-icon-home-2"
+  },
+  {
+    "desc": "人才素质",
+    "class": "yc-icon-talent-quality"
+  },
+  {
+    "desc": "企业公共信用",
+    "class": "yc-icon-credit"
+  },
+  {
+    "desc": "搜索",
+    "class": "yc-icon-search"
+  },
+  {
+    "desc": "检索",
+    "class": "yc-icon-search-2"
+  },
+  {
+    "desc": "合规合法",
+    "class": "yc-icon-legal"
+  },
+  {
+    "desc": "评价",
+    "class": "yc-icon-evaluate"
+  },
+  {
+    "desc": "经营能力，赞",
+    "class": "yc-icon-praise"
+  },
+  {
+    "desc": "符合",
+    "class": "yc-icon-check"
+  },
+  {
+    "desc": "创新能力",
+    "class": "yc-icon-new"
+  },
+  {
+    "desc": "不符合，禁用",
+    "class": "yc-icon-disabled"
+  },
+  {
+    "desc": "偿债能力，交换",
+    "class": "yc-icon-exchange"
+  }
+]

@@ -1,0 +1,199 @@
+<script type="text/html" id="report-base-info-tp2">
+  <!--工商信息-->
+  <div class="business-info content-box-body3 watermark">
+    <h2 class="title">（一）工商信息</h2>
+    <div class="content-box-body4 testPdf">
+      <table class="ml25" style="width: 100%">
+        <tbody>
+        {{each markBaseInfo value index}}
+        <tr>
+          <td style="line-height: 2.679;position: relative;padding-left: {{value.label.length+1}}em">
+            <span style="position: absolute;left: 0px;top: 0px;">{{value.label}}：</span>
+            {{value.value ? value.value : '-'}}
+          </td>
+        </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <!--股东信息-->
+  <div class="share-info content-box-body3 watermark">
+    <h2 class="title">（二）股东信息</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>股东名称(或姓名)</th>
+          <th>持股比例</th>
+          <th>认缴出资额(万元)</th>
+          <th>实缴出资额(万元)</th>
+          <th>实缴出资比例</th>
+          <th>风险标签信息</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if shareholderInfo.length < 1 || shareholderInfo === null}}
+        <tr>
+          <td colspan="6">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each shareholderInfo value index}}
+        <tr>
+          <td>{{value.name ? value.name : '-'}}</td>
+          <td>{{value.investmentProportion ? value.investmentProportion : '-'}}</td>
+          <td>{{value.shoudCapi ? value.shoudCapi : '-'}}</td>
+          <td>{{value.realCapi ? value.realCapi : '-'}}</td>
+          <td>{{value.capiProportion ? value.capiProportion : '-'}}</td>
+          {{if value.risk == null || value.risk.length < 1}}
+          <td>当前数据下无风险标签</td>
+          {{else}}
+          <td>
+            {{each value.risk childValue index}}
+            <span class="yc-label red pdf">{{childValue.risklabel ? childValue.risklabel : '-'}}</span>
+            {{/each}}
+          </td>
+          {{/if}}
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if shareholderInfo.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--主要人员-->
+  <div class="principals-info content-box-body3 watermark">
+    <h2 class="title">（三）主要人员</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>姓名</th>
+          <th>职务</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if keyPerson.length < 1 || keyPerson === null}}
+        <tr>
+          <td colspan="2">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each keyPerson value index}}
+        <tr>
+          <td>{{value.name ? value.name : '-'}}</td>
+          <td>{{value.jobTitle ? value.jobTitle : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if keyPerson.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--分支机构-->
+  <div class="branch-info content-box-body3 watermark">
+    <h2 class="title">（四）分支机构</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>名称</th>
+          <th>成立时间</th>
+          <th>是否近一年成立</th>
+          <th>是否近三年成立</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if branchInfo.length < 1 || branchInfo === null}}
+        <tr>
+          <td colspan="4">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each branchInfo value index}}
+        <tr>
+          <td>{{value.companyName ? value.companyName : '-'}}</td>
+          <td>{{value.foundingDate ? value.foundingDate : '-'}}</td>
+          <td>{{value.withinOneYear ? value.withinOneYear : '-'}}</td>
+          <td>{{value.withinThreeYear ? value.withinThreeYear : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if branchInfo.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--变更记录-->
+  <div class="change-info content-box-body3 watermark">
+    <h2 class="title">（五）变更记录</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20" id="change-info-table">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>变更日期</th>
+          <th>变更事项</th>
+          <th>变更前</th>
+          <th>变更后</th>
+          <th>变更标签</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if changeRecord.length < 1 || changeRecord === null}}
+        <tr>
+          <td colspan="6">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each changeRecord value index}}
+        <tr>
+          <td>
+            <div>{{index+1}}</div>
+          </td>
+          <td>
+            <div>{{value.changeDate ? value.changeDate : '-'}}</div>
+          </td>
+          <td>
+            <div>{{value.changeItem ? value.changeItem : '-'}}</div>
+          </td>
+          <td>
+            <p class="change-before" style="padding-bottom: 1em;">
+              {{value.beforeContent ? value.beforeContent : '-'}}
+            </p>
+          </td>
+          <td>
+            <p class="change-after" style="padding-bottom: 1em;">
+              {{value.afterContent ? value.afterContent : '-'}}
+            </p>
+          </td>
+          {{if value.risk == null || value.risk.length < 1}}
+          <td>
+            <div>当前数据下无风险标签</div>
+          </td>
+          {{else}}
+          <td>
+            <div>
+              {{each value.risk childValue index}}
+              <span class="yc-label red pdf">{{childValue.riskLabel ? childValue.riskLabel : '-'}}</span>
+              {{/each}}
+            </div>
+          </td>
+          {{/if}}
+        </tr>
+        {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+      {{if changeRecord.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+</script>

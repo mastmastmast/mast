@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href="./css/_lib-reset.css" rel="stylesheet">
+  <link href="./css/_lib-base.css" rel="stylesheet">
+  <link href="./css/pdf.css" rel="stylesheet">
+  <link href="./css/custom-table.css" rel="stylesheet">
+  <link href="./css/yc-label.css" rel="stylesheet">
+  <link href="./css/pdf-table.css" rel="stylesheet">
+  <script type="text/javascript" src="js/require.js"></script>
+  <title>企业公共信用报告</title>
+</head>
+<body>
+<div id="report">
+  <!--头部,封面-->
+  <div class="header-wrapper" id="report-header-tp">
+  </div>
+  <!--内容-->
+  <div class="content-wrapper">
+    <!--报告说明-->
+    <div class="content-box2" id="report-explain">
+      <div class="content-box-title2">报告说明</div>
+      <div class="content-box-body2 watermark">
+        <p>
+          1.本报告由成都高投盈创动力投资发展有限公司（以下简称盈创动力）出具，依据截止报告时间融资信用平台记录的信息生产。报告中的基础信息均由相关报数机构和信息主体提供，盈创动力不保证其真实性和准确性，但承诺在信息整合、汇总、评价、展示的全过程中保持客观、中立的地位。</p>
+        <p>2.本报告是盈创动力依据合理的技术规范和信用模型做出的独立判断，用数据说话，未因受信息主体和其他任何组织机构或个人的影响而发生改变。</p>
+        <p>3.本报告仅限用于本次申请事项使用，本次事项使用完毕即失效，盈创动力拥有对信用等级进行跟踪、变更和等级变化公告的权利。</p>
+        <p>4.如无特别说明，本报告中的金额类数据项单位均为万元。</p>
+        <p>5.如无特别说明币种，本报告中的金额类汇总数据项均为人民币计价。外币折人民币的计算依据国家外汇管理局当月公布的各种货币对美元折算率表。</p>
+        <p>6.如信息记录“-”展示，则说明系统暂未记录该数据。</p>
+        <p>7.如信息记录展示“暂无数据”，则说明系统暂未记录该数据。</p>
+        <p>8.本报告仅供参考，请注意识别和防范信用风险。</p>
+        <p>9.本报告仅向政府部门和金融机构提供，请妥善保管。因保管不当造成信息泄露的，盈创动力不承担相关责任。</p>
+        <p>10.本报告未经授权，任何机构和个人不得复制、转载、出售和发布。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+<script type="text/javascript">
+  require.config({
+    baseUrl: './',
+    paths: {
+      'art-template': './js/template-web',
+      'text': './js/require-text',
+      'header': './js/header',
+      'api': './js/api',
+      'api2': './js/api2',
+      'jquery': './js/jquery-1.12.4.min',
+      'pdf': './js/pdf',
+      'echarts': './js/echarts.min',
+      'header-template': './template/header-template.html'
+    }
+  });
+  var resources = [
+    'jquery',
+    'art-template',
+    'echarts',
+    'pdf',
+    'header',
+    'text!header-template'
+  ];
+  require(resources, function ($) {
+    var pdf = require('pdf');
+    pdf.token = pdf.getQueryString('token');
+    pdf.companyName = pdf.getQueryString('companyName');
+    var modules = [
+      {
+        template: 'text!header-template',
+        js: 'header',
+        id: 'report-header-tp'
+      },
+    ];
+    modules.forEach(function (item, index) {
+      if (item.template) {
+        $('#' + item.id).html(require(item.template));
+      }
+      var entry = require(item.js);
+      entry.load();
+    });
+  });
+</script>
+</html>

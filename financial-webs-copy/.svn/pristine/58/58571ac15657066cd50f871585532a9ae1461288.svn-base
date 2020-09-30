@@ -1,0 +1,197 @@
+<template>
+  <el-dialog
+      :visible="showDialog"
+      :fullscreen="true"
+      custom-class="map-dialog"
+      :before-close="handleClose"
+      width="30%">
+    <div class="map">
+      <div id="heat-map">
+
+      </div>
+    </div>
+  </el-dialog>
+</template>
+
+<script>
+  import {home} from "../../api/api";
+  import {dialog} from "../../assets/js/dialog";
+
+  export default {
+    name: "HeatMap",
+    model: {
+      prop: 'showDialog',
+      event: 'changeShowDialog'
+    },
+    props: {
+      showDialog: {
+        type: Boolean,
+        default: false
+      }
+    },
+    watch: {
+      showDialog(newVal) {
+        if (newVal && !this.rendered) {
+          setTimeout(() => {
+            this.drawHeatMap();
+            this.rendered = true;
+          }, 500);
+        }
+      }
+    },
+    data() {
+      return {
+        rendered: false
+      }
+    },
+    mounted() {
+    },
+    methods: {
+      handleClose() {
+        this.$emit('changeShowDialog', false);
+      },
+      drawHeatMap() {
+        var map = new BMap.Map("heat-map", {minZoom: 10, maxZoom: 20,enableMapClick:false});          // 创建地图实例
+        // 初始化地图，设置中心点坐标和地图级别
+        map.centerAndZoom(new BMap.Point(104.0778177054, 30.5999871019), 13);
+        // 允许滚轮缩放
+        map.enableScrollWheelZoom();
+        home.getHeatMapData().then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            //热力数据
+            let heatMapListData = data.heatMapListData;
+            //申报总额前5的公司
+            let reportAmtTop5 = data.reportAmtTop5;
+            //本年度政策性贷款总额TOP5
+            let loanAmtTop5 = data.loanAmtTop5;
+            //既是申报金额前5，又是贷款金额前5的企业
+            let loanAndReportTop5 = data.loanAndReportTop5;
+            let heatData = [];
+            heatMapListData.forEach((item, index) => {
+              heatData.push({
+                lng: item.lng,
+                lat: item.lat,
+                count: item.value
+              });
+            });
+
+            let heatmapOverlay = new BMapLib.HeatmapOverlay({"radius": 20});
+            map.addOverlay(heatmapOverlay);
+            heatmapOverlay.setDataSet({data: heatData, max: 100});
+            let gradient = {
+              1: '#f70200',
+              .6: '#fff100',
+              .2: '#1f9700'
+            };
+            heatmapOverlay.setOptions({"gradient": gradient});
+            
+            let iconGreen = new BMap.Icon("img/marker-green.png", new BMap.Size(24, 24));
+            let iconBlue = new BMap.Icon("img/marker-blue.png", new BMap.Size(24, 24));
+            let iconPurple = new BMap.Icon("img/marker-purple.png", new BMap.Size(24, 24));
+            if (reportAmtTop5 !== null && reportAmtTop5.length > 0) {
+              reportAmtTop5.forEach((item, index) => {
+                addMarkerAndInfoWindow(item, iconGreen);
+              })
+            }
+            if (loanAmtTop5 !== null && loanAmtTop5.length > 0) {
+              loanAmtTop5.forEach((item, index) => {
+                addMarkerAndInfoWindow(item, iconBlue);
+              })
+            }
+            if (loanAndReportTop5 !== null && loanAndReportTop5.length > 0) {
+              loanAndReportTop5.forEach((item, index) => {
+                addMarkerAndInfoWindow(item, iconPurple);
+              })
+            }
+          } else {
+            dialog.error(res.message);
+          }
+
+          /**
+           * 添加标注
+           * @param markerInfo
+           * @param icon
+           * @returns {{point: BMap.Point, marker: BMap.Marker}}
+           */
+          function addMarker(markerInfo, icon) {
+            let location = markerInfo.entHeatMap;
+            let point = new BMap.Point(location.lng, location.lat);
+            let marker = new BMap.Marker(point, {icon: icon});
+            map.addOverlay(marker);
+            return {point: point, marker: marker};
+          }
+
+          /**
+           * 创建信息窗口
+           * @param options： loanDetail 贷款明细 ，reportDetail 扶持明细
+           * @returns {BMap.InfoWindow}
+           */
+          function addInfoWindow(options) {
+            let loanDetail = options.loanDetail;
+            let reportDetail = options.reportDetail;
+            let $content = $('<div class="info-window"></div>');
+            let $infoList = $('<div class="info-list"></div>');
+            if (loanDetail && loanDetail !== null && loanDetail.length > 0) {
+              loanDetail.forEach((info) => {
+                $infoList.append('<div class="info-item">' +
+                    '<p><span class="item-name">贷款金额：</span><span class="item-value">' + info.loanAmt + '万</span></p>' +
+                    '<p><span class="item-name">贷款产品：</span><span class="item-value">' + info.prodName + '</span></p>' +
+                    '<p><span class="item-name">贷款时间：</span><span class="item-value">' + info.loanDate + '</span></p>' +
+                    '</div>');
+              });
+            }
+            if (reportDetail && reportDetail !== null && reportDetail.length > 0) {
+              reportDetail.forEach((info) => {
+                $infoList.append('<div class="info-item">' +
+                    '<p><span class="item-name">扶持金额：</span><span class="item-value">' + info.amt + '万</span></p>' +
+                    '<p><span class="item-name">扶持政策：</span><span class="item-value">' + info.policyName + '</span></p>' +
+                    '<p><span class="item-name">扶持时间：</span><span class="item-value">' + info.batchNumber + '</span></p>' +
+                    '</div>');
+              });
+            }
+            $content.append($infoList);
+            let opts = {
+              width: 250,
+              title: options.title
+            };
+            // 创建信息窗口对象
+            return new BMap.InfoWindow($content[0], opts);
+
+          }
+
+          /**
+           * 添加标注与信息窗口
+           * @param data
+           * @param icon
+           */
+          function addMarkerAndInfoWindow(data, icon) {
+            let markerInfo = addMarker(data, icon);
+            let markerPoint = markerInfo.point;
+            let marker = markerInfo.marker;
+            map.addOverlay(marker);
+            let infoWindow = addInfoWindow({
+              title: data.entHeatMap.companyName,
+              loanDetail: data.loanDetail,
+              reportDetail: data.reportDetail
+            });
+            marker.addEventListener("click", function () {
+              map.openInfoWindow(infoWindow, markerPoint);
+            });
+          }
+        });
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  .map {
+    height: 100%;
+    padding-top: 50px;
+    box-sizing: border-box;
+    #heat-map {
+      height: 100%;
+    }
+  }
+</style>

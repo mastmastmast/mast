@@ -1,0 +1,587 @@
+<template>
+  <div>
+    <!--行为类型和风险类-->
+    <el-row class="mt10">
+      <div class="nav-wrapper">
+        <div class="nav">
+          <span class="title">行为类型</span>
+          <a @click="pointJump('administrative')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">行政处罚</a>
+          <a @click="pointJump('abnormalInfo')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">经营异常</a>
+          <a @click="pointJump('illegalInfoList')" @mouseenter="hintShow('数据来源：中华人民共和国最高人民法院')" @mouseleave="hintHide()">严重违法</a>
+          <a @click="pointJump('chattelMortgageInfo')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">动产抵押</a>
+          <a @click="pointJump('equityPledgedInfo')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">股权出质</a>
+        </div>
+        <div class="nav">
+          <span class="title">风险类型</span>
+          <div class="yc-label default ml10 my-total">
+            <div style="padding-top: 30px">一年内经营风险集合（{{riskType.totalOneYearNum}}）
+              <div class="desc">{{riskType.totalOneYearNumProportion}}</div>
+            </div>
+          </div>
+          <div class="my-label">
+          <div class="yc-label default ml10 mb10">
+            一年内行政处罚（{{riskType.administrativeSanctionNum}}）
+            <div class="desc">{{riskType.administrativeSanctionProportion}}</div>
+          </div>
+          <div class="yc-label default ml10 mb10">
+            一年内经营异常（{{riskType.abnormalOperationNum}}）
+            <div class="desc">{{riskType.abnormalOperationNumProportion}}</div>
+          </div>
+          <div class="yc-label default ml10 mb10">
+            严重违法（{{riskType.seriousNum}}）
+            <div class="desc">{{riskType.seriousNumProportion}}</div>
+          </div>
+          <div class="yc-label default ml10 mb10">
+            在抵押动产（{{riskType.mortgageChattelsNum}}）
+            <div class="desc">{{riskType.mortgageChattelsNumProportion}}</div>
+          </div>
+          <div class="yc-label default ml10 mb10">
+            在出质股权（{{riskType.pledgeInNum}}）
+            <div class="desc">{{riskType.pledgeInNumProportion}}</div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </el-row>
+    <!--行政处罚-->
+    <el-row>
+      <div id="administrative" class="content-box">
+        <div class="content-box-title">行政处罚</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="administrative-table"
+                    :data="tableData.administrative.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="penaltyNumber"
+                label="决定书文号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="penaltyContent"
+                label="处罚内容"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="penaltyDesicionDepartment"
+                label="决定机关"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="penaltyDesicionDate"
+                label="处罚决定日期"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.administrative.pagination"
+                      :container="tableData.administrative.container"
+                      @changePage="handleChangePage($event,'administrative')"/>
+        </div>
+      </div>
+    </el-row>
+    <!--欠税信息-->
+    <!--经营异常-->
+    <el-row>
+      <div id="abnormalInfo" class="content-box">
+        <div class="content-box-title">经营异常</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="abnormal-info-table"
+                    :data="tableData.abnormalInfo.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="abnormalOperationReason"
+                label="列入原因"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="abnormalOperationDate"
+                label="列入日期"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="moveAbnormalOperationReason"
+                label="移出原因"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="moveDate"
+                label="移出日期"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="department"
+                label="决定机关"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.abnormalInfo.pagination"
+                      :container="tableData.abnormalInfo.container"
+                      @changePage="handleChangePage($event,'abnormalInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <!--严重违法-->
+    <el-row>
+      <div id="illegalInfoList" class="content-box">
+        <div class="content-box-title">严重违法</div>
+        <div class="content-box-body">
+          <!--严重违法失信-->
+          <!--被执行人-->
+          <el-row>
+            <el-table class="yc-table default"
+                      id="executedPerson-info-table"
+                      :data="tableData.executedPersonInfo.data"
+                      border>
+              <el-table-column label="——被执行人——">
+                <el-table-column
+                    width="80px"
+                    type="index"
+                    :show-overflow-tooltip="true"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="caseDate"
+                    label="立案时间"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="caseNumber"
+                    label="案号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="caseCount"
+                    label="执行标的"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="caseCourt"
+                    label="执行法院"
+                >
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+            <pagination :pagination="tableData.executedPersonInfo.pagination"
+                        :container="tableData.executedPersonInfo.container"
+                        @changePage="handleChangePage($event,'executedPersonInfo')"/>
+          </el-row>
+          <!--失信被执行人-->
+          <el-row>
+            <el-table class="yc-table default"
+                      id="executed-info-table"
+                      :data="tableData.executedInfo.data"
+                      border>
+              <el-table-column label="——失信被执行人——">
+                <el-table-column
+                    width="80px"
+                    type="index"
+                    :show-overflow-tooltip="true"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="date"
+                    label="立案时间"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="caseNumber"
+                    label="案号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="docNumber"
+                    label="执行依据文号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="executionCourt"
+                    label="执行法院"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="performSituation"
+                    label="履行情况"
+                >
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+            <pagination :pagination="tableData.executedInfo.pagination"
+                        :container="tableData.executedInfo.container"
+                        @changePage="handleChangePage($event,'executedInfo')"/>
+          </el-row>
+          <!--重大税收违法-->
+        </div>
+      </div>
+    </el-row>
+    <!--动产抵押-->
+    <el-row>
+      <div id="chattelMortgageInfo" class="content-box">
+        <div class="content-box-title">动产抵押</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="chattelMortgage-info-table"
+                    :data="tableData.chattelMortgageInfo.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="registerNumber"
+                label="登记编号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="registerDate"
+                label="登记日期"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="status"
+                label="状态"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="registerDepartment"
+                label="登记机关"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.chattelMortgageInfo.pagination"
+                      :container="tableData.chattelMortgageInfo.container"
+                      @changePage="handleChangePage($event,'chattelMortgageInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <!--股权出质-->
+    <el-row>
+      <div id="equityPledgedInfo" class="content-box">
+        <div class="content-box-title">股权出质</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="equityPledged-info-table"
+                    :data="tableData.equityPledgedInfo.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="registerNumber"
+                label="登记编号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="pledgor"
+                label="出质人"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="pledgee"
+                label="质权人"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="status"
+                label="状态"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="pledgedRegisterDate"
+                label="登记日期"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.equityPledgedInfo.pagination"
+                      :container="tableData.equityPledgedInfo.container"
+                      @changePage="handleChangePage($event,'equityPledgedInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <!--股权冻结-->
+  </div>
+</template>
+
+<script>
+  import {dialog} from "../../assets/js/dialog";
+  import xhr from '../../api/axiosConfig';
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  export default {
+    //经营风险
+    name: "enterpriseOperationRisk",
+    props: ['companyName'],
+    data() {
+      return {
+        riskType: {
+          totalOneYearNum:'',//一年内经营风险集合
+          totalOneYearNumProportion:'暂无数据',//一年内经营风险集合高于同行业
+          administrativeSanctionNum:'',//一年内行政处罚
+          administrativeSanctionProportion:'暂无数据',//一年内行政处罚高于同行业
+          taxArrearsNum:'',//一年内欠税历史
+          taxArrearsNumProportion:'暂无数据',//一年内欠税历史高于同行业
+          abnormalOperationNumProportion:'暂无数据',//一年内经营异常高于同行业
+          seriousNum:'',//严重违法
+          seriousNumProportion:'暂无数据',//严重违法高于同行业
+          mortgageChattelsNum:'',//在抵押动产
+          mortgageChattelsNumProportion:'暂无数据',//在抵押动产高于同行业
+          unthawedNum:'',//未解冻股权冻结
+          unthawedNumProportion:'暂无数据',//未解冻股权冻结高于同行业
+          pledgeInNum:'',//在出质股权
+          pledgeInNumProportion:'暂无数据',//在出质股权高于同行业
+        },//风险类型
+        tableData: {
+          administrative: {
+            desc: '行政处罚',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'administrative',
+              method: 'post'
+            },
+            containerId: 'administrative-table',
+            container: null
+          },
+          abnormalInfo: {
+            desc: '经营异常',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'abnormalInfo',
+              method: 'post'
+            },
+            containerId: 'abnormal-info-table',
+            container: null
+          },
+          executedPersonInfo: {
+            desc: '被执行人',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'executedPersonInfo',
+              method: 'post'
+            },
+            containerId: 'executedPerson-info-table',
+            container: null
+          },
+          executedInfo: {
+            desc: '失信被执行人',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'executedInfo',
+              method: 'post'
+            },
+            containerId: 'executed-info-table',
+            container: null
+          },
+          chattelMortgageInfo: {
+            desc: '动产抵押',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'chattelMortgageInfo',
+              method: 'post'
+            },
+            containerId: 'chattelMortgage-info-table',
+            container: null
+          },
+          equityPledgedInfo: {
+            desc: '股权出质',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'equityPledgedInfo',
+              method: 'post'
+            },
+            containerId: 'equityPledged-info-table',
+            container: null
+          },
+        }
+      }
+    },
+    mounted() {
+      this.getInfo();
+    },
+    methods: {
+      getInfo(){
+        //在这里依次调用相应的接口
+        this.$nextTick(()=>{
+          this.businessRisk();
+          for (let key in this.tableData) {
+            if (this.tableData.hasOwnProperty(key)) {
+              let item = this.tableData[key];
+              let containerId = item.containerId;
+              if (containerId) {
+                item.container = document.getElementById(containerId);
+              }
+              this.getListData(item);
+            }
+          }
+        });
+
+      },
+      // 获取列表数据
+      getListData (itemConfig) {
+        let pagination = itemConfig.pagination;
+        let params = {
+          pageNum: pagination.pageNum,
+          pageSize: pagination.pageSize,
+          enName: this.companyName
+        }
+        return xhr.request({
+          url: pagination.url,
+          method: 'post',
+          data: params
+        }).then((res)=>{
+          if (res.code==='200') {
+            let data = res.data;
+            data.listData.map((item)=>{
+              if (pagination.url === 'equityFreezeInfo') {
+                item.freezeDate = item.freezeDateFrom+'-'+item.freezeDateTo;
+              }
+              for(let key in item) {
+                if (item[key] === "" || item[key] === null) {
+                  item[key] = '-';
+                }
+              }
+              itemConfig.data = data.listData;
+              pagination.total = data.total
+              pagination.params = params;
+            })
+          } else {
+            dialog.error(res.message);
+          }
+        }).catch((err)=>{
+          dialog.error('获取'+itemConfig.desc+'失败')
+        })
+      },
+      handleChangePage($event, target) {
+        $event.tableData.map((item)=>{
+          if (target==='equityFreezeInfo') {
+            item.freezeDate = item.freezeDateFrom+'-'+item.freezeDateTo;
+          }
+          for(let key in item) {
+            if (item[key] === "" || item[key] === null) {
+              item[key] = '-';
+            }
+          }
+        })
+        this.tableData[target].data = $event.tableData;
+        this.tableData[target].pagination = $event.pagination;
+      },
+      //获取标签信息
+      businessRisk() {
+        let params = {
+          enName: this.companyName
+        }
+        enterpriseCredit.operationRisk.businessRisk(params).then((res)=>{
+          if (res.code==='200') {
+            let data = res.data;
+            this.riskType = data;
+          } else {
+            dialog.error(res.message)
+          }
+        })
+      },
+      /**
+       * 锚点悬浮提示
+       */
+      hintShow(text) {
+        let el = event.currentTarget;
+        this.$emit('hintChangeTrue');
+        this.$nextTick(()=>{
+          $('.tool-tip-div')
+              .css({'top':$(el).position().top-$(el).outerHeight(true)-10+77+'px',
+                'left':$(el).position().left+25+'px',})
+              .html(text);
+        })
+      },
+      hintHide() {
+        this.$emit('hintChangeFalse');
+      },
+      pointJump(id) {
+        document.getElementById(id).scrollIntoView({behavior: 'smooth',block: 'start'})
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  @import "../../assets/css/enterprise-credit";
+  .nav-wrapper {
+    .nav {
+      .my-total {
+        height: 115px;
+        position: relative;
+      }
+    }
+  }
+  .my-label {
+    position: absolute;
+    left: 295px;
+    top: 52px;
+    width: 800px;
+  }
+</style>

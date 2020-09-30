@@ -1,0 +1,37 @@
+<script type="text/html" id="financing-basic-data-tp2">
+{{each data item index}}
+<div class="software-info content-box-body3 watermark">
+  <div class="process">
+    <h2 class="title">
+    <i class="yc-icon yc-icon-lingxing" style="color: #407ddd"></i>
+    {{item.order}}{{item.title}}
+    </h2>
+  </div>
+  <!--企业存续时间-->
+  {{each item.content childItem index2}}
+  <div class="content-box-body4" >
+    <div class="process"><p class="title">{{childItem.externalTitle}}</p></div>
+    <div id="{{childItem.sign}}{{index2}}"></div>
+    <!-- todo -->
+    {{if item.score !== 0}}
+    <div class="note">
+      <div style="position: relative;padding-left: 5em" class="process">
+        <span style="position: absolute;top: 0px;left: 0px">
+          {{childItem.informationDate ? childItem.informationDate.label : '数据时间'}}：
+        </span>
+        {{childItem.informationDate ? childItem.informationDate.value : '-'}}
+      </div>
+      <div style="position: relative;padding-left: 5em" class="process">
+        <span style="position: absolute;top: 0px;left: 0px">
+          {{childItem.informationConclusion ? childItem.informationConclusion.label : '数据结论'}}：
+        </span>
+        {{childItem.informationConclusion ? childItem.informationConclusion.value : '-'}}
+      </div>
+    </div>
+    {{/if}}
+  </div>
+  {{/each}}
+</div>
+{{/each}}
+
+</script>

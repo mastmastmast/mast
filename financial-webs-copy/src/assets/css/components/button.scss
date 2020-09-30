@@ -1,0 +1,94 @@
+@import "../lib-variable";
+
+$btnBg: #fff;
+$btnHoverBg: #858fb7;
+.btn {
+  padding: 7px 10px !important;
+  height: 30px;
+  font-size: 13px;
+  border-radius: 5px;
+  border: none;
+  &.default {
+    background: $btnBg;
+    color: $mainColor;
+    font-size: $mainFontSize;
+    border: 1px solid #e8e8e8;
+    &:hover,
+    &:focus {
+      background: $highLightColor;
+      color: #fff;
+      border: 1px solid $highLightColor;
+    }
+  }
+  &.gray,
+  &.cancel {
+    background: #9D9D9D;
+    color: #fff;
+    border: none !important;
+    &:hover,
+    &:focus {
+      background: #b5b0b0;
+      color: #fff;
+    }
+  }
+  &.green {
+    background: #50c592;
+    color: #fff;
+    border: none !important;
+    &:hover,
+    &:focus {
+      background: #38bb9f;
+      color: #fff;
+    }
+  }
+  &.submit,
+  &.download {
+    background: #E64E00 !important;
+    color: #fff;
+    border: none !important;
+    &:hover,
+    &:focus {
+      background: #FF6618 !important;
+      color: #fff;
+    }
+  }
+  &.cancel,
+  &.submit {
+    min-width: 100px;
+  }
+  &.search {
+    //height: 37px !important;
+    //margin-top: 0 !important;
+  }
+  &.add {
+    color: $highLightColor;
+    border: 1px solid $highLightColor !important;
+    &:hover,
+    &:focus {
+      background: $highLightColor;
+      color: #fff;
+    }
+  }
+  &.text {
+    border: none;
+    color: $highLightColor;
+    &:hover,
+    &:focus {
+      background: #fff;
+      color: #FF6618;
+    }
+    &.disabled,
+    &.disabled:hover,
+    &.disabled:focus {
+      border: none !important;
+    }
+  }
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:focus {
+    color: #c0c4cc !important;
+    background-color: #fff !important;
+    border: 1px solid #ebeef5 !important;
+    cursor: not-allowed !important;
+  }
+}

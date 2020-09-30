@@ -1,0 +1,85 @@
+<!--该模块被废弃，数据放到经营行为中展示-->
+<script type="text/html" id="internet-behavior-info-tp">
+  <h1 class="content-box-title2">七、互联网行为</h1>
+  <div class="content-box-body2 ">
+    <!--融资信息-->
+    <div class="finance-info content-box-body3 watermark">
+      <h2 class="title">（一）融资信息</h2>
+      <div class="content-box-body4">
+        <table class="pdf-table">
+          <thead>
+          <tr>
+            <th>公布日期</th>
+            <th>融资轮次</th>
+            <th>融资金额</th>
+            <th>投资方</th>
+            <th>风险信息标签</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{if financingList===null || financingList.length===0}}
+          <tr>
+            <td colspan="5">暂无数据</td>
+          </tr>
+          {{else}}
+          {{each financingList item index}}
+          <tr>
+            <td>{{item.financingTime?item.financingTime:'-'}}</td>
+            <td>{{item.financingtRount?item.financingtRount:'-'}}</td>
+            <td>{{item.investmentAmount && item.investmentAmount !== '0' && item.investmentAmount !== '0.0' &&item.investmentAmount !== '0.00' ? item.investmentAmount: '-' }}</td>
+            <td>{{item.investor?item.investor:'-'}}</td>
+            <td><span class="yc-label pdf red">{{item.investorLabel ? item.investorLabel : '-'}}</span></td>
+          </tr>
+          {{/each}}
+          {{/if}}
+
+          </tbody>
+        </table>
+        {{if financingList.length >=10}}
+        <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+        {{/if}}
+      </div>
+    </div>
+    <!--公开招聘-->
+    <div class="enterpriseRecruitment-info content-box-body3 watermark">
+      <h2 class="title">（二）公开招聘</h2>
+      <div class="content-box-body4">
+        <table class="pdf-table">
+          <thead>
+          <tr>
+            <th>序号</th>
+            <th>职位</th>
+            <th>薪资</th>
+            <th>地点</th>
+            <th>学历</th>
+            <th>发布时间</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{if recruitmentList===null || recruitmentList.length===0}}
+          <tr>
+            <td colspan="6">暂无数据</td>
+          </tr>
+          {{else}}
+          {{each recruitmentList item index}}
+          <tr>
+            <td>{{index+1}}</td>
+            <td>{{item.title?item.title:'-'}}</td>
+            <td>{{item.salary?item.salary:'-'}}</td>
+            <td>{{item.location?item.location:'-'}}</td>
+            <td>{{item.education?item.education:'-'}}</td>
+            <td>{{item.date?item.date:'-'}}</td>
+            <!--<td><span class="label pdf blue">{{item.investorLabel}}</span></td>-->
+          </tr>
+          {{/each}}
+          {{/if}}
+
+          </tbody>
+        </table>
+        {{if recruitmentList.length >=10}}
+        <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</script>

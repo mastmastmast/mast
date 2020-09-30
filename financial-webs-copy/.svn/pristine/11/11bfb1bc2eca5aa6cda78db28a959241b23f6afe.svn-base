@@ -1,0 +1,364 @@
+#report {
+  position: relative;
+  width: 2480px;
+  color: #FFFFFF;
+  background-color: #FFFFFF;
+}
+.header-wrapper {
+  position: relative;
+  height: 835px;
+  background: url(../../../public/img/report-bg_01.png) left center no-repeat;
+  font-size: 48px;
+  .report-number {
+    position: absolute;
+    top: 55px;
+    right: 108px;
+  }
+  .report-title {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    padding-top: 285px;
+    background: url("../../../public/img/report-title.png") no-repeat center bottom;
+  }
+  .report-info {
+    position: relative;
+    height: 310px;
+    margin-top: 100px;
+    font-size: 36px;
+    div {
+      position: relative;
+      span:nth-of-type(1) {
+        display: inline-block;
+        max-width: 50%;
+        padding-left: 475px;
+        box-sizing: border-box;
+      }
+      span:nth-of-type(2) {
+        display: inline-block;
+        position: absolute;
+        left: 1290px;
+      }
+      &:nth-of-type(2) {
+        margin-top: 60px;
+      }
+    }
+  }
+}
+.content-wrapper {
+  position: relative;
+  padding-top: 85px;
+  .content-box2 {
+    position: relative;
+    width: 2184px;
+    margin: 200px auto 0;
+    font-size: 56px;
+    .content-box-title2 {
+      height: 120px;
+      width: 2184px;
+      background-color: #407DDD;
+      font-size: 58px;
+      text-indent: 36px;
+      line-height: 120px;
+      border-radius: 10px;
+    }
+    .content-box-body2 {
+      color: #333333;
+      .content-box-body3 {
+        margin-top: 100px;
+        .title {
+          color: #407DDD;
+          font-weight: bold;
+        }
+        .text {
+          margin-top: 45px;
+          color: #666666;
+          line-height: 1.379;
+        }
+        .content-box-body4 {
+          padding-top: 60px;
+        }
+      }
+    }
+  }
+}
+
+#report-explain {
+  margin-top: 0;
+  .content-box-body2 {
+    padding-top: 55px;
+    p {
+      margin-top: 90px;
+      line-height: 1.571;
+      &:nth-of-type(1) {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+#report-directory {
+  .content-box-body2 {
+    padding-top: 95px;
+    line-height: 1.429;
+    p {
+      display: flex;
+      align-items:baseline;
+      margin-top: 55px;
+      &:nth-of-type(1) {
+        margin-top: 0;
+      }
+      .one-level-title {
+        padding-left: 30px;
+      }
+      .line {
+        flex: 1;
+        display: inline-block;
+        margin: 0 20px;
+        border-bottom: 1px dashed #999;
+      }
+      .page {
+        font-size: 48px;
+      }
+    }
+    .two-level {
+      margin-top: 15px;
+      margin-left: 120px;
+      color: #666666;
+      font-size: 48px;
+      line-height: 1.667;
+
+      .page {
+        font-size: 48px;
+        color: #333333;
+      }
+      p {
+        margin-top: 0;
+        &:nth-of-type(1) {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+}
+
+#report-summary {
+  .company-base-info {
+    height: auto;
+    margin: 0;
+    padding-top: 170px;
+    .name {
+      font-size: 86px;
+      font-weight: bold;
+      line-height: 0.93;
+    }
+    .company-label {
+      padding-top: 30px;
+      .yc-label {
+        max-width: 100%;
+        height: auto;
+        padding: 0 40px;
+        margin-top: 20px;
+        margin-right: 50px;
+        border-width: 2px;
+        font-size: 48px;
+        line-height: 86px;
+        white-space: normal;
+        border-radius: 20px;
+        word-break: break-word;
+      }
+    }
+  }
+  .company-info-table {
+    margin-top: 60px;
+  }
+  .summary-evaluate {
+    margin-top: 210px;
+    .content-box-body4 {
+      padding-top: 0;
+    }
+
+    .summary-evaluate-radar {
+      .mark-info {
+        margin-top: 200px;
+        font-size: 56px;
+        p {
+          margin-top: 100px;
+          &:nth-of-type(1) {
+            margin-top: 0;
+          }
+        }
+        .info-title {
+          display: inline-block;
+          width: 300px;
+        }
+        .number {
+          padding-left: 40px;
+          color: #FF6C1C;
+          font-weight: bold;
+        }
+        .desc {
+          display: block;
+          padding-top: 20px;
+          color: #FF6C1C;
+        }
+      }
+    }
+    .summary-evaluate-text1 {
+      margin-top: 100px;
+      color: #666666;
+      font-size: 58px;
+      line-height: 1.379;
+      text-indent: 2em;
+    }
+    .summary-evaluate-text2 {
+      margin-top: 80px;
+      font-size: 58px;
+      font-weight: bold;
+      line-height: 1.379;
+      text-indent: 2em;
+    }
+  }
+  .company-advantage {
+    margin-top: 300px;
+  }
+  .advantage-list,.disAdvantage-list {
+    ul {
+      li {
+        display: flex;
+        min-height: 80px;
+        margin-top: 70px;
+        &:nth-of-type(1) {
+          margin-top: 0;
+        }
+        i {
+          display: inline-block;
+          width: 80px;
+          height: 80px;
+          background-color: #749EDF;
+          color: #FFFFFF;
+          line-height: 80px;
+          text-align: center;
+          border-radius: 50%;
+        }
+        span {
+          flex: 1;
+          display: inline-block;
+          padding-left: 50px;
+          font-size: 58px;
+          line-height: normal;
+        }
+      }
+    }
+  }
+  .company-disAdvantage {
+    margin-top: 180px;
+    .disAdvantage-list {
+      ul {
+        li {
+          i {
+            background-color: #FF6666;
+          }
+        }
+      }
+    }
+  }
+  .declaration-record {
+    margin-top: 160px;
+    .time-line {
+      margin-top: 80px;
+      margin-left: 40px;
+      .time-line-top {
+        height: 50px;
+        width: 7px;
+        background-color: #DCDCDC;
+        border-radius: 3px 3px 0 0;
+      }
+      .time-line-text {
+        position: relative;
+        margin-top: 8px;
+        min-height: 36px;
+        font-size: 0;
+        i {
+          position: relative;
+          left: -14px;
+          display: inline-block;
+          width: 36px;
+          height: 36px;
+          background-color: #749EDF;
+          border-radius: 50%;
+        }
+        span {
+          position: absolute;
+          top: -20px;
+          left: 75px;
+          font-size: 58px;
+        }
+        .time-line-bottom {
+          height: 105px;
+          width: 7px;
+          margin-top: 8px;
+          background-color: #DCDCDC;
+        }
+      }
+      div:last-of-type {
+        .time-line-bottom {
+          height: 75px;
+          border-radius: 0 0 3px 3px;
+        }
+      }
+    }
+  }
+}
+
+#company-baseInfo {
+  .business-info {
+    margin-top: 110px;
+    ul {
+      li {
+        display: flex;
+        width: 100%;
+        font-size: 56px;
+        line-height: 2.679;
+        .info-key {
+          color: #666666;
+        }
+        .info-value {
+          flex: 1;
+          word-break: break-word;
+        }
+      }
+    }
+  }
+}
+
+#operation {}
+
+#operation-risk {}
+
+#relation-ship {}
+
+#enterprise-lawsuits {}
+
+#internet-behavior {}
+
+#annotation {
+  .level-meaning {
+    .level-meaning-explain {
+      font-size: 36px;
+      color: #666666;
+      border: 1px solid #666666;
+      border-top: none;
+      p {
+        text-indent: 1em;
+        span {
+          color: #333333;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+.watermark {
+  background: url(~@/assets/img/pdf-watermark.png) no-repeat;
+}

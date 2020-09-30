@@ -1,0 +1,686 @@
+<template>
+  <div>
+    <el-row class="mt10">
+      <div class="nav-wrapper">
+        <div class="nav">
+          <span class="title">行为类型</span>
+          <a @click="pointJump('finance-info')" @mouseenter="hintShow('数据来源：IT桔子等主流融资信息平台')" @mouseleave="hintHide()">风投融资</a>
+          <a @click="pointJump('intellectual-property-info')" @mouseenter="hintShow('数据来源：国家知识产权局')" @mouseleave="hintHide()">知识产权</a>
+          <a @click="pointJump('certificate-info')" @mouseenter="hintShow('数据来源：信用中国（四川成都）')" @mouseleave="hintHide()">资质证书</a>
+          <a @click="pointJump('tax-info')" @mouseenter="hintShow('数据来源：国家税务总局成都市税务局')" @mouseleave="hintHide()">税务评级</a>
+          <a @click="pointJump('recruit-info')" @mouseenter="hintShow('数据来源：智联招聘等主流招聘网站')" @mouseleave="hintHide()">公开招聘</a>
+        </div>
+        <!--融资信息-->
+        <div class="nav">
+          <span class="title">融资信息</span>
+          <div class="yc-label default ml10">
+            风投融资笔数（{{riskType.fengtouNum}}）
+            <div class="desc">{{riskType.fengtouProportion}}</div>
+          </div>
+          <div class="yc-label default ml10">
+            风投融资总额
+            <div class="desc">{{riskType.fengtouTotalMoneyProportion}}</div>
+          </div>
+        </div>
+        <!--知识产权-->
+        <div class="nav">
+          <span class="title">知识产权</span>
+          <div class="yc-label default ml10">
+            软件著作权（{{riskType.softwareCopyrightNum}}）
+            <div class="desc">{{riskType.softwareCopyrightProportion}}</div>
+          </div>
+          <div class="yc-label default ml10">
+            专利（{{riskType.inventionPatentNum}}）
+            <div class="desc">{{riskType.inventionPatentProportion}}</div>
+          </div>
+          <div class="yc-label default ml10">
+            著作权（{{riskType.copyrightNum}}）
+            <div class="desc">{{riskType.copyrightProportion}}</div>
+          </div>
+        </div>
+        <!--评级信息-->
+        <div class="nav">
+          <span class="title">评级信息</span>
+          <div class="yc-label default ml10">
+            资质评级（{{riskType.qualificationLevel}}）
+            <div class="desc">{{riskType.qualificationLevelProportion}}</div>
+          </div>
+          <div class="yc-label default ml10" v-if="riskType.taxLevel !== null && riskType.taxLevelProportion !== null">
+            税务评级（{{riskType.taxLevel}}）
+            <div class="desc">{{riskType.taxLevelProportion}}</div>
+          </div>
+        </div>
+        <!--人才结构-->
+        <div class="nav">
+          <span class="title">人才结构</span>
+          <div class="yc-label default ml10" v-if="riskType.recruitmentGrowthRateProportion !== null">
+            公开招聘增长率
+            <div class="desc">{{riskType.recruitmentGrowthRateProportion}}</div>
+          </div>
+          <div class="yc-label default ml10">
+            招聘区域集中度
+            <div class="desc">{{riskType.regionalConcentrationRecruitmentProportion}}</div>
+          </div>
+          <div class="yc-label default ml10" v-if="riskType.undergraduateManagementProportion !== null">
+            本科以上管理人员比例
+            <div class="desc">{{riskType.undergraduateManagementProportion}}</div>
+          </div>
+          <div class="yc-label default ml10" v-if="riskType.juniorCollegeManagementProportion !== null">
+            大专以上人员比例
+            <div class="desc">{{riskType.juniorCollegeManagementProportion}}</div>
+          </div>
+          <div class="yc-label default ml10" v-if="riskType.developertotalProportion !== null">
+            研发人员总人数
+            <div class="desc">{{riskType.developertotalProportion}}</div>
+          </div>
+        </div>
+      </div>
+    </el-row>
+    <!--融资信息-->
+    <el-row>
+      <div id="finance-info" class="content-box">
+        <div class="content-box-title">融资信息</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="finance-info-table"
+                    :data="tableData.financingInfo.data"
+                    border>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="financingTime"
+                label="公布日期"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="financingtRount"
+                label="融资轮次"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="investmentAmount"
+                label="融资金额"
+            >
+              <template slot-scope="scope">
+                <span>{{scope.row.investmentAmount === '0.0' || scope.row.investmentAmount === '0' || scope.row.investmentAmount === '0.00' ? '-' : scope.row.investmentAmount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="investor"
+                label="投资方"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="investorLabel"
+                label="风险信息标签"
+            >
+              <template slot-scope="scope">
+                <!--<span>当前数据下无风险标签</span>-->
+                <span v-if="scope.row.investorLabel !== '-'" class="yc-label info" >{{scope.row.investorLabel}}</span>
+                <span v-else>当前数据下无风险标签</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.financingInfo.pagination"
+                      :container="tableData.financingInfo.container"
+                      @changePage="handleChangePage($event,'financingInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <!--知识产权-->
+    <el-row>
+      <div id="intellectual-property-info" class="content-box">
+        <div class="content-box-title">知识产权</div>
+        <div class="content-box-body">
+          <!--软件著作权-->
+          <el-row>
+            <el-table class="yc-table default"
+                      id="software-info-table"
+                      :data="tableData.softwareInfo.data"
+                      border>
+              <el-table-column label="——软件著作权——">
+                <el-table-column
+                    width="80px"
+                    type="index"
+                    :show-overflow-tooltip="true"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="softwareName"
+                    label="名称"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="registrationNumber"
+                    label="登记号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="version"
+                    label="版本号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="classification"
+                    label="分类号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="approvalDate"
+                    label="登记批准日期"
+                >
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+            <pagination :pagination="tableData.softwareInfo.pagination"
+                        :container="tableData.softwareInfo.container"
+                        @changePage="handleChangePage($event,'softwareInfo')"/>
+          </el-row>
+          <!--专利信息-->
+          <el-row>
+            <el-table class="yc-table default"
+                      id="patentInformation-info-table"
+                      :data="tableData.patentInformationInfo.data"
+                      border>
+              <el-table-column label="——专利信息——">
+                <el-table-column
+                    width="80px"
+                    type="index"
+                    :show-overflow-tooltip="true"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="patentType"
+                    label="专利类型"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="publicationNumber"
+                    label="申请公布号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="publicationDate"
+                    label="申请公布日"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="brief"
+                    label="摘要"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="legalStatusDesc"
+                    label="法律状态"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="legalStatusDate"
+                    label="法律状态日期"
+                >
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+            <pagination :pagination="tableData.patentInformationInfo.pagination"
+                        :container="tableData.patentInformationInfo.container"
+                        @changePage="handleChangePage($event,'patentInformationInfo')"/>
+          </el-row>
+          <!--著作权-->
+          <el-row>
+            <el-table class="yc-table default"
+                      id="workscopyright-info-table"
+                      :data="tableData.workscopyrightInfo.data"
+                      border>
+              <el-table-column label="——著作权——">
+                <el-table-column
+                    width="80px"
+                    type="index"
+                    :show-overflow-tooltip="true"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="name"
+                    label="作品名称"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="number"
+                    label="登记号"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="type"
+                    label="类别"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="successDate"
+                    label="创作完成日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="approvalDate"
+                    label="登记日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    prop="firstDate"
+                    label="首次发布日期"
+                >
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+            <pagination :pagination="tableData.workscopyrightInfo.pagination"
+                        :container="tableData.workscopyrightInfo.container"
+                        @changePage="handleChangePage($event,'workscopyrightInfo')"/>
+          </el-row>
+        </div>
+      </div>
+    </el-row>
+    <!--资质证书-->
+    <el-row>
+      <div id="certificate-info" class="content-box">
+        <div class="content-box-title">资质证书</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="certificates-info-table"
+                    :data="tableData.certificatesInfo.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="type"
+                label="证书类型"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="certificateFileNumber"
+                label="证书编号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="certificateDate"
+                label="发证日期"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="validityDateTo"
+                label="截止日期"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.certificatesInfo.pagination"
+                      :container="tableData.certificatesInfo.container"
+                      @changePage="handleChangePage($event,'certificatesInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <!--税务评级-->
+    <el-row>
+      <div id="tax-info" class="content-box">
+        <div class="content-box-title">税务评级</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="taxEvaluationLevel-info-table"
+                    :data="tableData.taxEvaluationLevelInfo.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="evaluationAnnual"
+                label="评价年度"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="evaluationLevel"
+                label="纳税人信用级别"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="companyName"
+                label="纳税人名称"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="creditNo"
+                label="纳税人识别号"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.taxEvaluationLevelInfo.pagination"
+                      :container="tableData.taxEvaluationLevelInfo.container"
+                      @changePage="handleChangePage($event,'taxEvaluationLevelInfo')"/>
+        </div>
+      </div>
+    </el-row>
+    <!--公开招聘-->
+    <el-row>
+      <div id="recruit-info" class="content-box">
+        <div class="content-box-title">公开招聘</div>
+        <div class="content-box-body">
+          <el-table class="yc-table default"
+                    id="enterpriseRecruitment-info-table"
+                    :data="tableData.enterpriseRecruitmentInfo.data"
+                    border>
+            <el-table-column
+                width="80px"
+                type="index"
+                :show-overflow-tooltip="true"
+                label="序号"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="title"
+                label="职位"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="salary"
+                label="薪资"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="location"
+                label="地点"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="education"
+                label="学历"
+            >
+            </el-table-column>
+            <el-table-column
+                :show-overflow-tooltip="true"
+                prop="date"
+                label="发布时间"
+            >
+            </el-table-column>
+          </el-table>
+          <pagination :pagination="tableData.enterpriseRecruitmentInfo.pagination"
+                      :container="tableData.enterpriseRecruitmentInfo.container"
+                      @changePage="handleChangePage($event,'enterpriseRecruitmentInfo')"/>
+        </div>
+      </div>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+  import xhr from '../../api/axiosConfig';
+  export default {
+    //经营行为
+    name: "enterpriseOperation",
+    props: ['companyName'],
+    data() {
+      return {
+        //标签信息
+        riskType:{
+          fengtouNum: '',//风投融资比数
+          fengtouProportion: '暂无数据', //风投desc
+          fengtouTotalMoneyProportion: '暂无数据',//desc
+          softwareCopyrightNum: '',//软件著作权
+          softwareCopyrightProportion: '暂无数据',//desc
+          inventionPatentNum: '',//发明专利
+          inventionPatentProportion: '暂无数据',//desc
+          copyrightNum: '',//著作权
+          copyrightProportion: '暂无数据',//desc
+          taxLevel:null,//税务评级
+          taxLevelProportion: null,//desc
+          qualificationLevel: '',//资质评级
+          qualificationLevelProportion: '暂无数据',//desc
+          recruitmentGrowthRateProportion: null,//公开招聘增长率高于同行业
+          regionalConcentrationRecruitmentProportion: '暂无数据',//招聘区域集中度高于同行业
+          undergraduateManagementProportion: null,//本科以上管理人员比例高于同行业
+          juniorCollegeManagementProportion: null,//大专以上技术人员比例高于同行业
+          developertotalProportion: null//研发人员总人数高于同行业
+        },
+        tableData: {
+          financingInfo: {
+            desc: '融资信息',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'financingInfo',
+              method: 'post'
+            },
+            containerId: 'financing-info-table',
+            container: null
+          },
+          softwareInfo: {
+            desc: '软件著作权',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'softwareInfo',
+              method: 'post'
+            },
+            containerId: 'software-info-table',
+            container: null
+          },
+          patentInformationInfo: {
+            desc: '专利信息',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'patentInformationInfo',
+              method: 'post'
+            },
+            containerId: 'patentInformation-info-table',
+            container: null
+          },
+          workscopyrightInfo: {
+            desc: '著作权',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'workscopyrightInfo',
+              method: 'post'
+            },
+            containerId: 'workscopyright-info-table',
+            container: null
+          },
+          certificatesInfo: {
+            desc: '资质证书',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'certificatesInfo',
+              method: 'post'
+            },
+            containerId: 'certificates-info-table',
+            container: null
+          },
+          taxEvaluationLevelInfo: {
+            desc: '税务评级',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'taxEvaluationLevelInfo',
+              method: 'post'
+            },
+            containerId: 'taxEvaluationLevel-info-table',
+            container: null
+          },
+          enterpriseRecruitmentInfo: {
+            desc: '公开招聘',
+            data: [],
+            pagination: {
+              pageNum: 1,
+              pageSize: 10,
+              total: 0,
+              url: 'enterpriseRecruitmentInfo',
+              method: 'post'
+            },
+            containerId: 'enterpriseRecruitment-info-table',
+            container: null
+          },
+        }
+      }
+    },
+    mounted() {
+      this.getInfo();
+    },
+    methods: {
+      getInfo(){
+        //在这里依次调用相应的接口
+        this.managementInfo();
+        for (let key in this.tableData) {
+          if (this.tableData.hasOwnProperty(key)) {
+            let item = this.tableData[key];
+            let containerId = item.containerId;
+            if (containerId) {
+              item.container = document.getElementById(containerId);
+            }
+            this.getListData(item);
+          }
+        }
+      },
+      /**
+       * 通用获取相关列表数据的方法
+       * @param itemConfig tableData中的一个配置项
+       * @returns {Promise<T | never>}
+       */
+      getListData(itemConfig) {
+        let pagination = itemConfig.pagination;
+        let params = {
+          pageNum: pagination.pageNum,
+          pageSize: pagination.pageSize,
+          enName: this.companyName
+        };
+        return xhr.request({
+          url: pagination.url,
+          method: 'post',
+          data: params
+        }).then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            // 数据处理
+            data.listData.map((item)=>{
+              for(let key in item) {
+                if (item[key] === "" || item[key] === null) {
+                  item[key] = '-';
+                }
+              }
+            })
+            itemConfig.data = data.listData;
+            pagination.total = data.total;
+            pagination.params = params;
+          } else {
+            dialog.error(res.message);
+          }
+        }).catch(err => {
+          dialog.error('获取' + itemConfig.desc + '失败');
+        });
+      },
+      handleChangePage($event, target) {
+        $event.tableData.map((item)=>{
+          for(let key in item) {
+            if (item[key] === "" || item[key] === null) {
+              item[key] = '-';
+            }
+          }
+        })
+        this.tableData[target].data = $event.tableData;
+        this.tableData[target].pagination = $event.pagination;
+      },
+      /**
+       *获取企业标签信息
+       */
+      managementInfo() {
+        let params = {
+          enName: this.companyName
+        }
+        enterpriseCredit.operation.managementInfo(params).then((res)=>{
+          if (res.code==='200') {
+            let data = res.data;
+            this.riskType = data;
+          } else {
+            dialog.error(res.message)
+          }
+        })
+      },
+      /**
+       * 锚点悬浮提示
+       */
+      hintShow(text) {
+        let el = event.currentTarget;
+        this.$emit('hintChangeTrue');
+        this.$nextTick(()=>{
+          $('.tool-tip-div')
+              .css({'top':$(el).position().top-$(el).outerHeight(true)-10+77+'px',
+                'left':$(el).position().left+25+'px',})
+              .html(text);
+        })
+      },
+      hintHide() {
+        this.$emit('hintChangeFalse');
+      },
+      pointJump(id) {
+        document.getElementById(id).scrollIntoView({behavior: 'smooth',block: 'start'})
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  @import "../../assets/css/enterprise-credit";
+</style>

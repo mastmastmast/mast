@@ -1,0 +1,56 @@
+@import "lib-variable";
+
+.msg-block {
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  min-height: 208px;
+  overflow: hidden;
+  background: #fff;
+  color: #333;
+  border: 1px solid #eee;
+  box-sizing: border-box;
+  transition: border .3s;
+  &:hover {
+    border-color: #ffa576;
+    cursor: pointer;
+  }
+  > div {
+    width: 100%;
+    overflow: hidden;
+  }
+  p {
+    line-height: 24px;
+  }
+  .base-info {
+    .title {
+      margin: 10px 0;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all .3s;
+      &:hover {
+        //color: $highLightColor;
+      }
+    }
+    > p {
+      line-height: 24px;
+    }
+  }
+  .mark-info {
+    .number {
+      font-size: 22px;
+      color: #e74e00;
+    }
+  }
+  .mark-info,
+  .type-info {
+    margin-top: 56px;
+  }
+  .disabled {
+    color: #999;
+  }
+}
+
+.tip-span {
+  letter-spacing: 1em;
+}

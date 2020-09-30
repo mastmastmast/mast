@@ -1,0 +1,225 @@
+<template>
+  <div :id="id"></div>
+</template>
+
+<script>
+  import echarts from 'echarts';
+  import {arrayFunc, getMinAndMax} from "../../assets/js/common";
+  export default {
+    name: "DrawLine",
+    props: {
+      id: String,
+      option: Object
+    },
+    data () {
+      return {
+        lineData: [],
+      }
+    },
+    created(){
+    },
+    methods: {
+      init(id,newVal) {
+        let value = this.getData(newVal);
+        let el = document.getElementById(id);
+        $(el).removeClass('nodata');
+        let myChartLine = echarts.init(el)
+        let option = {
+          backgroundColor: '#fff',
+          title: {
+            text: newVal.title,
+            x: '20px',
+            y: '20px',
+            textStyle: {
+              fontSize: 15,
+              color: '#333',
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: 'normal'
+            }
+          },
+          legend: {
+            orient: 'horizontal',
+            top: '15%',
+            right: '5%',
+            itemGap: 50,
+            itemWidth: 6,
+            itemHeight: 6,
+            data: value.legendData,
+            textStyle: {
+              color: '#666',
+            }
+          },
+          //  图表距边框的距离,可选值：'百分比'¦ {number}（单位px）
+          grid: {
+            left: 15,
+            right: 10,
+            bottom: 25,
+            top: 110,
+            containLabel: true
+          },
+          // 提示框
+          tooltip: {
+            show: false
+          },
+          // X轴
+          xAxis: {
+            id: 'xLine',
+            name: '',
+            type: 'category',
+            axisLine: {
+              lineStyle: {
+                // 设置x轴颜色
+                color: '#eee',
+                width: 2
+              }
+            },
+            //刻度线
+            axisTick: {
+              show: false
+            },
+            // 设置X轴数据旋转倾斜
+            axisLabel: {
+              rotate: 0, // 旋转角度
+              interval: 0,  //设置X轴数据间隔几个显示一个，为0表示都显示
+              color: '#666',
+              fontSize: 14,
+            },
+            // boundaryGap值为false的时候，折线第一个点在y轴上
+            boundaryGap: true,
+            data: value.xData,
+            //分割线
+            splitLine: {
+              show: false
+            }
+          },
+          // Y轴
+          yAxis: {
+            type: 'value',
+            show: true,
+            // min: value.yData.min, // 设置y轴刻度的最小值
+            // max: value.yData.max,  // 设置y轴刻度的最大值
+            splitNumber:5,  // 设置y轴刻度间隔个数
+            axisLine: {
+              show: false,
+            },
+            axisTick: {
+              show: false
+            },
+            splitLine: {
+              show: false
+            }
+          },
+          // 数据
+          series: value.series,
+          color: ["#3ad0a1","#e95906", "#5bb0fd",'#8c9bdb']
+        }
+        myChartLine.setOption(option);
+        let finished=false;
+        myChartLine.on('finished',()=>{
+          if(!finished){
+            finished=true;
+            if (value.sign === "") {
+              let x = ($('#'+id).width())/2-70;
+              let y = ($('#'+id).height())/2-20;
+              let zr = myChartLine.getZr();
+              let note = new this.$echarts.graphic.Text({
+                position: [x,y],
+                style: {
+                  text: '暂无数据',
+                  textFill: '#ccc',
+                  fontSize: 16
+                },
+                z:3
+              })
+              zr.add(note);
+            }
+          }
+        })
+      },
+      //获取数据
+      getData(newVal) {
+        let value = {
+          legendData: [],
+          series: [],
+          xData: [],
+          yData: {},
+          sign: ''
+        }
+        if (!arrayFunc.isEmpty(newVal.items)) {
+          //获取legend 数据
+          for (let i = 0; i < newVal.items.length; i++) {
+            value.legendData.push({
+              name: newVal.items[i].item,
+              icon: 'circle'
+            })
+          }
+          //获取series 数据
+
+          for (let i = 0; i < newVal.items.length; i++) {
+            let data = [];
+            if (!arrayFunc.isEmpty(newVal.items[i].value)) {
+              data = [...newVal.items[i].value]
+            }
+            value.sign += data.join('');
+            value.series.push({
+              type: 'line',
+              // 设置折线上圆点大小
+              symbolSize: 6,
+              // 设置小圆点消失
+              // 注意：设置symbol: 'none'以后，拐点不存在了，设置拐点上显示数值无效
+              symbol: 'rect',
+              // 设置折线弧度，取值：0-1之间
+              smooth: true,
+              connectNulls: true,
+              itemStyle: {
+                normal:{
+                  label: {
+                    show: true,
+                    fontSize: 14,
+                  },
+                }
+              },
+              name: newVal.items[i].item,
+              data: data
+            })
+          }
+          //获取x轴的数据
+          if (!arrayFunc.isEmpty(newVal.items[0].year)) {
+            value.xData = [...newVal.items[0].year];
+          }
+          //获取y轴数据
+          let yDataValue = [];
+          // let yDataValueMax ;
+          // let yDataValueMin ;
+          for (let i = 0; i < newVal.items.length; i++) {
+            yDataValue = yDataValue.concat(newVal.items[i].value);
+          }
+          yDataValue = yDataValue.filter((value)=>{
+            return value !== "" && value !== null && value !== undefined
+          })
+          // yDataValueMin = Math.min(...yDataValue)
+          // yDataValueMax = Math.max(...yDataValue)
+          // yDataValueMax += yDataValueMax*0.2
+          // yDataValueMax = Math.ceil(yDataValueMax)
+          // value.yData.max = yDataValueMax
+          // value.yData.min = yDataValueMin >= 0 ? 0 : yDataValueMin;
+        }
+        return value
+      },
+    },
+    mounted() {
+    },
+    watch:{
+      option: {
+        handler(newVal, oldVal) {
+          this.init(this.id,newVal);
+        }
+      }
+    },
+
+  }
+</script>
+
+<style scoped>
+
+</style>

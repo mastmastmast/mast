@@ -1,0 +1,293 @@
+<template>
+  <div id="relationship-chart">
+
+    <div class="node-wrapper">
+      <div class="node-group parent" :style="{width:207*holderList.length+'px'}">
+        <div class="node parent"
+             :class="{clickable:item.type===1,emphasis:!(index!==0||((item.money===null||item.money===''||item.money==='-') &&(item.proportion===null||item.proportion===''||item.proportion==='-')))}"
+             v-for="(item,index) in holderList"
+             :key="'parent_'+index" @click="handleClick(item)">
+          <div class="emphasis"
+               v-if="!(index!==0||((item.money===null||item.money===''||item.money==='-') &&(item.proportion===null||item.proportion===''||item.proportion==='-')))">
+            一级实际控制人
+          </div>
+          <el-tooltip class="item" effect="dark" :content="item.name" placement="top-start">
+            <div class="title">
+              {{item.name}}
+            </div>
+          </el-tooltip>
+          <div class="content">
+            <el-tooltip class="item" effect="dark" :content="'认缴金额：'+item.money" placement="top-start">
+              <p>认缴金额：{{item.money}}</p>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="'持股比例：'+item.proportion" placement="top-start">
+              <p>持股比例：{{item.proportion}}</p>
+            </el-tooltip>
+
+          </div>
+        </div>
+      </div>
+      <div class="node-group" :style="{width:207*investorList.length+'px'}">
+        <div class="node child clickable" v-for="(item,index) in investorList"
+             :key="'child_'+index" @click="handleClick(item)">
+          <el-tooltip class="item" effect="dark" :content="item.name" placement="top-start">
+            <div class="title">
+              {{item.name}}
+            </div>
+          </el-tooltip>
+          <div class="content">
+            <el-tooltip class="item" effect="dark" :content="'认缴金额：'+item.money" placement="top-start">
+              <p>注册资本：{{item.money}}</p>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="'持股比例：'+item.proportion" placement="top-start">
+              <p>持股比例：{{item.proportion}}</p>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="'企业状态：'+item.status" placement="top-start">
+              <p>企业状态：{{item.status}}</p>
+            </el-tooltip>
+          </div>
+        </div>
+      </div>
+      <div class="target" id="target">{{companyName}}</div>
+    </div>
+  </div>
+</template>
+<script>
+  import jsPlumb from 'jsplumb'
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+  import {arrayFunc} from "../../assets/js/common";
+
+  export default {
+    //关联关系
+    name: "enterpriseRelationship",
+    props: ['companyName'],
+    data() {
+      return {
+        parentsCount: 6,
+        childrenCount: 10,
+        //股东
+        holderList: [],
+        //投资的公司
+        investorList: []
+      }
+    },
+    mounted() {
+      this.getInfo();
+    },
+    methods: {
+      getInfo() {
+        let $target = $('#target');
+        let width = $target.width() + 50;
+        $target.css('marginLeft', -(width / 2) + 'px');
+        this.getRelationshipInfo();
+      },
+      getRelationshipInfo() {
+        enterpriseCredit.getRelationship(this.companyName).then(res => {
+          if (res.code === '200') {
+            let data = res.data;
+            if (data !== null) {
+              this.holderList = data.holderList;
+              this.investorList = data.investorList;
+              this.investorList.forEach((item, index) => {
+                item.type = 1;
+              });
+              this.$nextTick(() => {
+                this.draw();
+              });
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      draw() {
+        //流程图的连接配置
+        let defaults = {
+          //设置端点鼠标hover的效果
+          // EndpointHoverStyle: {fill: '#ff0033'},
+          //连线的hover效果
+          // HoverPaintStyle: {stroke: '#ff0033'},
+          PaintStyle: {
+            strokeWidth: 1,
+            stroke: '#ddd'
+          },
+        };
+        let connectionConfig = {
+          isSource: true,
+          isTarget: true,
+          connector: ['Flowchart'],
+          maxConnections: -1
+          // connectorOverlays: [['Arrow', {width: 12, length: 12, location: 1}]]
+        };
+        let jsPlumbIns = jsPlumb.jsPlumb.getInstance();
+        jsPlumbIns.importDefaults(defaults);
+        $('.node.parent').each(function (index, item) {
+          jsPlumbIns.connect({
+            source: 'target',
+            target: item,
+            connector: ['Flowchart'],
+            anchor: ['Top', 'Bottom'],
+            endpointStyle: {fill: 'transparent', outlineStroke: 'transparent', outlineWidth: 0}
+          })
+        });
+        $('.node.child').each(function (index, item) {
+          jsPlumbIns.connect({
+            source: 'target',
+            target: item,
+            connector: ['Flowchart'],
+            anchor: ['Bottom', 'Top'],
+            endpointStyle: {fill: 'transparent', outlineStroke: 'transparent', outlineWidth: 0}
+          })
+        });
+      },
+      handleClick(item) {
+        if (item.type === 1) {
+          if (item.jump === 0) {
+            dialog.info('系统暂未收录该公司信息');
+            return false;
+          } else {
+            this.$router.push('/enterprise/credit/' + item.name);
+          }
+        }
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  /*@import "../../assets/css/lib-variable";*/
+
+  #relationship-chart {
+    overflow-x: auto;
+  }
+
+  .node-wrapper {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    position: relative;
+
+    > div {
+      display: table;
+      margin: 0 auto;
+    }
+
+    .node-group {
+      overflow: hidden;
+
+      &.parent {
+        margin-bottom: 380px;
+        padding: 60px 50px 0;
+      }
+
+      .node {
+        width: 182px;
+        float: left;
+        margin-right: 25px;
+        font-size: 14px;
+        color: #333;
+        border: 1px solid rgb(184, 232, 255);
+        border-radius: 5px;
+        box-sizing: border-box;
+        transition: all .3s;
+
+        &.parent {
+          position: relative;
+          height: 90px;
+
+          &:hover {
+            border: 1px solid rgb(184, 200, 255)
+          }
+
+          &.emphasis {
+            &::before {
+              content: '';
+              position: absolute;
+              top: -30px;
+              left: -8px;
+              width: 8px;
+              height: 40px;
+              background: url(../../assets/img/title-left.png);
+            }
+
+            &::after {
+              content: '';
+              position: absolute;
+              top: -30px;
+              right: -8px;
+              width: 8px;
+              height: 40px;
+              background: url(../../assets/img/title-left.png);
+              transform: rotateY(180deg);
+            }
+          }
+
+          .emphasis {
+            position: absolute;
+            top: -30px;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 5px;
+            background: #ff7704;
+            color: #fff;
+            text-align: center;
+            box-sizing: border-box;
+          }
+        }
+
+        &.child {
+          height: 115px;
+        }
+
+        &.clickable {
+          cursor: pointer;
+
+          &:hover {
+            border: 1px solid rgb(184, 200, 255)
+          }
+        }
+
+        .title {
+          padding: 0 5px;
+          height: 33px;
+          line-height: 33px;
+          overflow: hidden;
+          background: #b8e8ff;
+          text-indent: 10px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .content {
+          padding: 3px 10px;
+
+          p {
+            overflow: hidden;
+            line-height: 24px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+
+    .target {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-top: -30px;
+      padding: 0 25px;
+      min-width: 242px;
+      max-width: 300px;
+      height: 60px;
+      line-height: 60px;
+      background-color: rgb(102, 188, 228);
+      font-size: 18px;
+      color: #fff;
+      clear: both;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+  }
+</style>

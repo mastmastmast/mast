@@ -1,0 +1,14 @@
+<script type="text/html" id="header-tp">
+<div class="report-number">报告编号：{{baseInfo.reportNum}}</div>
+<div class="report-title"></div>
+<div class="report-info">
+  <div>
+    <span id="demo-test">企业名称：{{baseInfo.companyName}}</span>
+    <span>信用评价体系更新日期：{{baseInfo.unifiedUpdateDate}}</span>
+  </div>
+  <div>
+    <span>统一社会信用代码：{{baseInfo.unifiedSocialCreditCode}}</span>
+    <span>报告下载时间：{{baseInfo.downlodeDate}}</span>
+  </div>
+</div>
+</script>

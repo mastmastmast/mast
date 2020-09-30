@@ -1,0 +1,33 @@
+@import "./lib-variable";
+
+.nav-wrapper {
+  margin: 0 -15px;
+  padding: 0 15px 10px;
+  border-bottom: 1px solid #eee;
+  .nav {
+    margin-bottom: 20px;
+    padding: 0 15px;
+    .title {
+      margin-right: 25px;
+    }
+    a {
+      margin: 0 10px;
+      padding: 8px 10px !important;
+      display: inline-block;
+      height: 32px;
+      color: $mainColor;
+      vertical-align: middle;
+      border-radius: 5px;
+      border: 1px solid #e8e8e8;
+      box-sizing: border-box;
+      &.active {
+        color: #ea5504;
+        border: 1px solid #ea5504;
+      }
+    }
+    .yc-label.default {
+      margin-right: 5px;
+      vertical-align: text-top;
+    }
+  }
+}

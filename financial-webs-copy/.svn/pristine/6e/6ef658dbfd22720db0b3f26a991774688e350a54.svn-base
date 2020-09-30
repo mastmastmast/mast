@@ -1,0 +1,15 @@
+<script type="text/html" id="catalog-tp">
+  {{each list item index}}
+  <div class="catalog-item">
+    <div class="catalog-item-title-wrapper">
+      <div class="catalog-item-title">{{index+1 | toChineseCharacter}}、{{item.name}}</div>
+      <div class="line"></div>
+    </div>
+    <div class="sub-item">
+      {{each item.children subItem subIndex}}
+      <div>（{{subIndex+1 | toChineseCharacter}}）{{subItem.name}}</div>
+      {{/each}}
+    </div>
+  </div>
+  {{/each}}
+</script>

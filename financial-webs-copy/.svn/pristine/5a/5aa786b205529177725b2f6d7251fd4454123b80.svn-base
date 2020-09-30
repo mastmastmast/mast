@@ -1,0 +1,126 @@
+<template>
+  <div>
+    <div style="text-align: left" class="navbar-back">
+      <navbar :data="navbar" />
+    </div>
+    <div class="box mt20 user-list">
+      <div class="sub-title">请输入公司名称。</div>
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 1, maxRows: 1}"
+        placeholder="请输入公司名称。"
+        v-model="input"
+        @focus="visible=false"
+      ></el-input>
+      <el-popover
+        placement="bottom"
+        width="200"
+        trigger="manual"
+        content="请输入公司名称。"
+        v-model="visible"
+      >
+        <el-button
+          slot="reference"
+          class="btn info fn"
+          @click="doRealTimeKettleDate()"
+          :disabled="updateData"
+        >实时更新数据</el-button>
+      </el-popover>
+
+      <template>
+        <el-table
+          :data="checkTables"
+          style="width: 50%;left:25%"
+          v-loading="tableLoading"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
+        >
+          <!-- <el-table-column prop="company" label="公司名称"></el-table-column>
+          <el-table-column prop="score" label="得分"></el-table-column>-->
+        </el-table>
+      </template>
+    </div>
+  </div>
+</template>
+
+<script>
+import { dialog } from "../../assets/js/dialog";
+import { score } from "../../api/api-setting";
+
+export default {
+  data() {
+    return {
+      navbar: {
+        prevs: [
+          {
+            name: "系统管理",
+            path: ""
+          }
+        ],
+        current: "查询算分"
+      },
+      //查询输入框
+      input: "",
+      visible: false,
+      tableLoading: false,
+      updateData: false,
+      checkTables: []
+    };
+  },
+  mounted() {},
+  created() {},
+  methods: {
+    doRealTimeKettleDate() {
+      this.tableLoading = true;
+      this.updateData = true;
+      this.$alert("预计耗时40分钟，请勿重复点击。", "正在实时抽数", {
+        confirmButtonText: "确定"
+      });
+      //去除空格
+      if (!this.input) {
+        this.visible = true;
+        return;
+      }
+      this.input = this.input.replace(/\s*/g, "");
+      var params = this.input;
+      var str = params.split(",");
+      if (str.length > 1) {
+        dialog.error("只支持单条更新");
+        return;
+      }
+      for (var i in str) {
+        var params = { companys: str[i] };
+        score.doRealTimeKettleDate(params).then(res => {
+          if (res == 200) {
+            dialog.success("实时抽数完成");
+          } else if (res === 300) {
+            dialog.success("无数据更新");
+          } else if(rest === 600){
+            dialog.success("清洗数据失败，无法算分。");
+          }else {
+            dialog.error(res);
+          }
+          this.tableLoading = false;
+          this.updateData = false;
+        });
+      }
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.user-list {
+  height: 720px;
+}
+.sub-title {
+  margin-bottom: 20px;
+  text-align: center;
+  color: darkgray;
+}
+.fn {
+  width: 280px;
+  display: block;
+  margin: 20px auto;
+}
+</style>

@@ -1,0 +1,296 @@
+<script type="text/html" id="operation-info-tp">
+  <!--经营行为-->
+  <div class="software-info content-box-body3 watermark">
+    <!--融资信息-->
+    <h2 class="title">（一）融资信息</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table">
+        <thead>
+        <tr>
+          <th>公布日期</th>
+          <th>融资轮次</th>
+          <th>融资金额</th>
+          <th>投资方</th>
+          <th>风险信息标签</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if financingList===null || financingList.length===0}}
+        <tr>
+          <td colspan="5">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each financingList item index}}
+        <tr>
+          <td>{{item.financingTime?item.financingTime:'-'}}</td>
+          <td>{{item.financingtRount?item.financingtRount:'-'}}</td>
+          <td>{{item.investmentAmount && item.investmentAmount !== '0' && item.investmentAmount !== '0.0'
+            &&item.investmentAmount !== '0.00' ? item.investmentAmount: '-' }}
+          </td>
+          <td>{{item.investor?item.investor:'-'}}</td>
+          <td>
+            {{if item.investorLabel}}
+            <span class="yc-label pdf red">{{item.investorLabel}}</span>
+            {{else}}
+            <span>当前数据下无风险标签</span>
+            {{/if}}
+          </td>
+        </tr>
+        {{/each}}
+        {{/if}}
+
+        </tbody>
+      </table>
+      {{if financingList.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--软件著作权-->
+  <div class="software-info content-box-body3 watermark">
+    <h2 class="title">（二）知识产权</h2>
+    <div class="content-box-body4">
+      <p class="title">软件著作权</p>
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>名称</th>
+          <th>登记号</th>
+          <th>版本号</th>
+          <th>分类号</th>
+          <th>登记批准日期</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if propertyRights.length > 0}}
+        {{each propertyRights item index}}
+        <tr>
+          <td>{{index + 1}}</td>
+          <td>{{item.softwareName ? item.softwareName : '-'}}</td>
+          <td>{{item.registrationNumber ? item.registrationNumber : '-'}}</td>
+          <td>{{item.version ? item.version : '-'}}</td>
+          <td>{{item.classifcation ? item.classifcation : '-'}}</td>
+          <td>{{item.approvalDate ? item.approvalDate : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="6">暂无数据</td>
+        </tr>
+        {{/if}}
+        </tbody>
+      </table>
+      {{if propertyRights.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--著作权-->
+  <div class="software-info content-box-body3 watermark">
+    <div class="content-box-body4">
+      <p class="title">著作权</p>
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>作品名称</th>
+          <th>登记号</th>
+          <th>类别</th>
+          <th>创作完成日期</th>
+          <th>登记日期</th>
+          <th>首次发布日期</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if propertyRights1.length > 0}}
+        {{each propertyRights1 item index}}
+        <tr>
+          <td>{{index + 1}}</td>
+          <td>{{item.name ? item.name : '-'}}</td>
+          <td>{{item.number ? item.number : '-'}}</td>
+          <td>{{item.type ? item.type : '-'}}</td>
+          <td>{{item.successDate ? item.successDate : '-'}}</td>
+          <td>{{item.approvalDate ? item.approvalDate : '-'}}</td>
+          <td>{{item.firstDate ? item.firstDate : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="7">暂无数据</td>
+        </tr>
+        {{/if}}
+        </tbody>
+      </table>
+      {{if propertyRights1.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--专利信息-->
+  <div class="software-info content-box-body3 watermark">
+    <div class="content-box-body4">
+      <p class="title">专利信息</p>
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>专利类型</th>
+          <th>申请公布号</th>
+          <th>申请公布日</th>
+          <th>法律状态</th>
+          <th>法律状态日期</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if patentInfo.length > 0}}
+        {{each patentInfo item index}}
+        <tr>
+          <td>
+            <div>{{index + 1}}</div>
+          </td>
+          <td>
+            <div>{{item.patentType ? item.patentType : '-'}}</div>
+          </td>
+          <td>
+            <div>{{item.publicationNumber ? item.publicationNumber : '-'}}</div>
+          </td>
+          <td>
+            <div>{{item.publicationDate ? item.publicationDate : '-'}}</div>
+          </td>
+          <td>
+            <div>{{item.legalStatusDesc ? item.legalStatusDesc : '-'}}</div>
+          </td>
+          <td>
+            <div>{{item.legalStatusDate ? item.legalStatusDate : '-'}}</div>
+          </td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="6">暂无数据</td>
+        </tr>
+        {{/if}}
+        </tbody>
+      </table>
+      {{if patentInfo.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--资质证书-->
+  <div class="software-info content-box-body3 watermark">
+    <h2 class="title">（三）资质证书</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>证书类型</th>
+          <th>证书编号</th>
+          <th>发证日期</th>
+          <th>截止日期</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if qualificationCertificate.length > 0}}
+        {{each qualificationCertificate item index}}
+        <tr>
+          <td>{{index + 1}}</td>
+          <td>{{item.type ? item.type : '-'}}</td>
+          <td>{{item.certificateFileNumber ? item.certificateFileNumber : '-'}}</td>
+          <td>{{item.certificateDate ? item.certificateDate : '-'}}</td>
+          <td>{{item.validityDateTo ? item.validityDateTo : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="5">暂无数据</td>
+        </tr>
+        {{/if}}
+        </tbody>
+      </table>
+      {{if qualificationCertificate.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--税务评级-->
+  <div class="software-info content-box-body3 watermark">
+    <h2 class="title">（四）税务评级</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table mb20">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>评价年度</th>
+          <th>纳税人信用级别</th>
+          <th>纳税人名称</th>
+          <th>纳税人识别号</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if taxEvaluationLevelInfo.length > 0}}
+        {{each taxEvaluationLevelInfo item index}}
+        <tr>
+          <td>{{index + 1}}</td>
+          <td>{{item.evaluationAnnual ? item.evaluationAnnual : '-'}}</td>
+          <td>{{item.evaluationLevel ? item.evaluationLevel : '-'}}</td>
+          <td>{{item.companyName ? item.companyName : '-'}}</td>
+          <td>{{item.creditNo ? item.creditNo : '-'}}</td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="5">暂无数据</td>
+        </tr>
+        {{/if}}
+        </tbody>
+      </table>
+      {{if taxEvaluationLevelInfo.length >= 10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+  <!--公开招聘-->
+  <div class="software-info content-box-body3 watermark">
+    <h2 class="title">（五）公开招聘</h2>
+    <div class="content-box-body4">
+      <table class="pdf-table">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>职位</th>
+          <th>薪资</th>
+          <th>地点</th>
+          <th>学历</th>
+          <th>发布时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if recruitmentList===null || recruitmentList.length===0}}
+        <tr>
+          <td colspan="6">暂无数据</td>
+        </tr>
+        {{else}}
+        {{each recruitmentList item index}}
+        <tr>
+          <td>{{index+1}}</td>
+          <td>{{item.title?item.title:'-'}}</td>
+          <td>{{item.salary?item.salary:'-'}}</td>
+          <td>{{item.location?item.location:'-'}}</td>
+          <td>{{item.education?item.education:'-'}}</td>
+          <td>{{item.date?item.date:'-'}}</td>
+          <!--<td><span class="label pdf blue">{{item.investorLabel}}</span></td>-->
+        </tr>
+        {{/each}}
+        {{/if}}
+
+        </tbody>
+      </table>
+      {{if recruitmentList.length >=10}}
+      <p class="note-info">注：该项数据量较大，如需查看更多数据，请登录系统</p>
+      {{/if}}
+    </div>
+  </div>
+</script>

@@ -1,0 +1,65 @@
+define(function (require, exports, module) {
+  var template = require('art-template');
+  var api = require('api');
+  var api2 = require('api2');
+  var $ = require('jquery');
+  var pdf = require('pdf');
+  var verticalTable = require('verticalTable');
+  var data = {
+    rander: {},
+    loanName: '',
+    coverInfo: {},
+    content:'',
+    group: ['较差', '中等', '良好', '优秀', '极好']
+  };
+  //  导出模块内容
+  module.exports = {
+    load: function () {
+      this.getInfo(pdf.companyName, pdf.loanName,pdf.id);
+      data.loanName = pdf.loanName;
+    },
+    getInfo: function (companyName, loanName, id) {
+      var that = this;
+      new api2([
+        {
+          url: 'loanCredit/queryProductCreditScore',
+          data: {
+            companyName: companyName,
+            productName: loanName,
+            id: id
+          },
+          success: function (res) {
+            data.coverInfo = res.data;
+            var randerData = res.data;
+            if (randerData.credit_name !== undefined && randerData.credit_value !== undefined) {
+              var indicator = [];
+              randerData.credit_name.forEach(function (item, index) {
+                indicator.push({
+                  name: item
+                });
+              });
+              var minAndMax = pdf.getMinAndMax(randerData.credit_value);
+              var max = minAndMax.max;
+              var min = minAndMax.min;
+              min = min >= 0 ? 0 : min;
+              indicator.forEach(function (item, index) {
+                item.max = max;
+                item.min = min;
+              });
+              data.rander.indicator = indicator;
+              data.rander.value = randerData.credit_value;
+            } else {
+              data.noData = true;
+            };
+          }
+        }
+      ], function () {
+        $('#cover').html(template('cover-tp', data));
+        that.drawRadar(document.getElementById('radar-chart'), data.rander.indicator, data.rander.value);
+      })
+    },
+    drawRadar: function (el, indicator, value) {
+      pdf.renderRadarForLoanPdf(el, indicator, value, '企业信用评价')
+    }
+  }
+});

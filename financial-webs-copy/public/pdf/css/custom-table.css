@@ -1,0 +1,113 @@
+@charset "UTF-8";
+.custom-table {
+  display: table;
+  position: relative;
+  table-layout: fixed;
+  width: 100%;
+  background-color: #32374a;
+  font-size: 0.23rem;
+  border: 1px solid #555C7A;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.custom-table.pdf {
+  background-color: #fff;
+  border: 1px solid #999;
+  border-radius: 0;
+}
+
+.custom-table.pdf .custom-table-row > .cell {
+  padding: 25px 10px;
+  line-height: 1.5em;
+  font-size: 1rem;
+  color: #333;
+  border-right: 1px solid #999;
+  border-bottom: 1px solid #999;
+}
+
+.custom-table.pdf .custom-table {
+  background-color: #fff;
+}
+
+.custom-table .custom-table {
+  border: none !important;
+}
+
+.custom-table .sub-table {
+  padding: 0 !important;
+}
+
+.custom-table .custom-table-header {
+  color: #c7c7c7;
+  text-align: center;
+}
+
+.custom-table .custom-table-header,
+.custom-table .custom-table-row {
+  display: table-row;
+}
+
+.custom-table .custom-table-header > .cell,
+.custom-table .custom-table-row > .cell {
+  display: table-cell;
+  padding: 10px 9px;
+  border-right: 1px solid #555C7A;
+  border-bottom: 1px solid #555C7A;
+  vertical-align: middle;
+  word-break: break-all;
+}
+
+.custom-table .custom-table-header > .cell:last-child,
+.custom-table .custom-table-row > .cell:last-child {
+  border-right: none;
+}
+
+.custom-table .custom-table-header > .cell.label,
+.custom-table .custom-table-row > .cell.label {
+  color: #c7c7c7;
+}
+
+.custom-table .custom-table-header > .cell.value,
+.custom-table .custom-table-row > .cell.value {
+  color: #666;
+}
+
+.custom-table .custom-table-header > .cell.value > span,
+.custom-table .custom-table-row > .cell.value > span {
+  margin: 0 21px 6px 0;
+}
+
+.custom-table .custom-table-header > .cell.value .comma-separator,
+.custom-table .custom-table-row > .cell.value .comma-separator {
+  margin: 0 0 6px 0;
+}
+
+.custom-table .custom-table-header > .cell.value .comma-separator::after,
+.custom-table .custom-table-row > .cell.value .comma-separator::after {
+  content: "，";
+}
+
+.custom-table .custom-table-header > .cell.value .comma-separator:last-child::after,
+.custom-table .custom-table-row > .cell.value .comma-separator:last-child::after {
+  content: "";
+}
+
+.custom-table .custom-table-header > .cell.value .number,
+.custom-table .custom-table-row > .cell.value .number {
+  margin: 0 5px;
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.custom-table .custom-table-body {
+  display: table-row-group;
+}
+
+.custom-table .custom-table-body .custom-table-row:last-child > .cell {
+  border-bottom: none;
+}
+
+.custom-table .custom-table-header .custom-table-row:last-child > .cell {
+  border-bottom: none;
+}

@@ -1,0 +1,102 @@
+@import "../lib-variable";
+//表格背景
+$tableBg: #32374a;
+//表头字体颜色
+$labelColor: #c7c7c7;
+//表格border颜色
+$borderColor: #555C7A;
+
+.custom-table {
+  display: table;
+  position: relative;
+  table-layout: fixed;
+  width: 100%;
+  background-color: $tableBg;
+  font-size: 13px;
+  border: 1px solid $borderColor;
+  border-radius: 6px;
+  box-sizing: border-box;
+  &.pdf{
+    background-color: #fff;
+    border:1px solid #999;
+    border-radius: none;
+    .custom-table-row{
+      >.cell{
+        padding:59px 15px;
+        line-height:1.5em;
+        font-size:56px;
+        color:#333;
+        border-right: 1px solid #999;
+        border-bottom: 1px solid #999;
+      }
+    }
+    .custom-table{
+      background-color: #fff;
+    }
+  }
+  .custom-table {
+    border: none !important;
+  }
+  .sub-table {
+    padding: 0 !important;
+  }
+  .custom-table-header {
+    color: $labelColor;
+    text-align: center;
+  }
+  .custom-table-row {
+  }
+  .custom-table-header,
+  .custom-table-row {
+    display: table-row;
+    > .cell {
+      display: table-cell;
+      padding: 17px 15px;
+      border-right: 1px solid $borderColor;
+      border-bottom: 1px solid $borderColor;
+      vertical-align: middle;
+      word-break: break-all;
+      &:last-child {
+        border-right: none;
+      }
+      &.label {
+        color: $labelColor;
+      }
+      &.value {
+        color: $mainColor;
+        > span {
+          margin: 0 35px 10px 0;
+        }
+        .comma-separator {
+          margin: 0 0 10px 0;
+          &::after {
+            content: '，';
+          }
+          &:last-child::after {
+            content: ''
+          }
+        }
+        .number {
+          margin: 0 5px;
+          color: #ff0000;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  .custom-table-body {
+    display: table-row-group;
+    .custom-table-row:last-child {
+      > .cell {
+        border-bottom: none;
+      }
+    }
+  }
+  .custom-table-header {
+    .custom-table-row:last-child {
+      > .cell {
+        border-bottom: none;
+      }
+    }
+  }
+}

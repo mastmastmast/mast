@@ -1,0 +1,55 @@
+<script type="text/html" id="noteinfo-tp">
+  <div class="content-box-body2">
+    <!--报告编码规则-->
+    <div class="reportCode-rules content-box-body3 watermark">
+      <p class="title process">报告编码规则</p>
+      <div class="content-box-body4">
+        <div class="report-code-rule process">
+          <div class="code" style="width:350px">GGXYBG
+            <div class="desc">“公共信用报告”字样的拼音首字母，固定字段</div>
+          </div>
+          <div class="code">YYYYMMDD
+            <div class="desc" style="line-height:84px;">8位生成日期</div>
+          </div>
+          <div class="code">0001
+            <div class="desc">4位报告生成流水号</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--企业公共信用等级代表含义及释义-->
+    <div class="level-meaning content-box-body3 watermark">
+      <p class="title process">天府之星代表含义及释义</p>
+      <div class="content-box-body4">
+        <table class="pdf-table mb20">
+          <thead>
+          <tr>
+            <th>天府之星</th>
+            <th>说明</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{if noteInfo.length < 1}}
+          <tr>
+            <td colspan="2">暂无数据</td>
+          </tr>
+          {{else}}
+          {{each noteInfo value i}}
+          <tr id="noteInfo{{value.id}}">
+            <td>{{@ value.level.outerHTML}}</td>
+            <td>{{value.explain}}</td>
+          </tr>
+          {{/each}}
+          {{/if}}
+          </tbody>
+        </table>
+        <div class="level-meaning-explain">
+          <p>
+            <span>天府之星：</span>
+            由盈创动力融资信用平台根据信用分值自动对应产生。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>

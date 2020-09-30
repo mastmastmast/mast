@@ -1,0 +1,40 @@
+{{if data==null || data.length===0}}
+<div class="table-nodata pdf">
+  暂无数据
+</div>
+{{else}}
+<table class="vertical-table pdf">
+  {{if title!==null && title!==''}}
+  {{each dataGroup[0] item}}
+  <col style="width:{{item.labelWidth}}">
+  <col>
+  {{/each}}
+
+  {{/if}}
+  <tbody class="vertical-table-body">
+  {{if title!==null && title!==''}}
+  <tr class="vertical-table-row">
+    <td class="cell title fill" colspan="{{dataGroup[0].length*2}}">{{title}}</td>
+  </tr>
+  {{/if}}
+  {{each dataGroup item index}}
+  <tr class="vertical-table-row">
+    {{each item dataItem dataItemIndex}}
+    {{if tableClass.fillLabel}}
+    <td class="cell label fill" width="{{dataItem.labelWidth}}">
+      {{dataItem.label}}
+    </td>
+    {{else}}
+    <td class="cell label" width="{{dataItem.labelWidth}}">
+      {{dataItem.label}}
+    </td>
+    {{/if}}
+    <td class="cell value" colspan="{{dataItem.colpsan}}">
+      {{dataItem.value}}
+    </td>
+    {{/each}}
+  </tr>
+  {{/each}}
+  </tbody>
+</table>
+{{/if}}

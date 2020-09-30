@@ -1,0 +1,36 @@
+.demo-wrapper {
+  //background: #32374a;
+  font-size:14px;
+  color:#fff;
+  .demo-header {
+    height: 50px;
+    background: #00bfff;
+  }
+
+}
+.demo-main {
+  display: flex;
+  .demo-sidebar {
+    width: 250px;
+    border-right: 1px solid #ccc;
+  }
+  .demo-content {
+    padding:25px;
+    flex: 1;
+    width:100%;
+    overflow-x: hidden;
+  }
+}
+pre.code{
+  line-height:35px;
+  font-size:14px;
+}
+.mb10{
+  margin-bottom:10px;
+}
+.mb50{
+  margin-bottom:50px;
+}
+.mt50{
+  margin-top:50px;
+}

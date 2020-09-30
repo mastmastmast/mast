@@ -1,0 +1,66 @@
+import xhr from './axiosConfig';
+import {dialog} from "../assets/js/dialog";
+
+/**
+ *身份认证相关接口
+ * @type {{validator: {getValidateImg(): *, validateImg(*=): (Promise<T|never>|*|void)}}}
+ */
+export const authentication = {
+  // 登录
+  login(data) {
+    alert(data)
+    return xhr.request({
+      url: 'user/login',
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: data
+    });
+  },
+  /**
+   * 注销
+   */
+  logout(){
+    return xhr.request({
+      url:'user/logout',
+      method:'post',
+      data:{}
+    });
+  },
+  /**
+   * 图片滑块验证码相关接口
+   */
+  validator: {
+    /**
+     * 获取图片滑块验证的图片
+     * @returns {*}
+     */
+    getValidateImg() {
+      return xhr.request({
+        url: 'getpictureverification',
+        method: 'post',
+        params: {}
+      }).catch(err => {
+        dialog.error('获取验证图片失败');
+      });
+    },
+    /**
+     * 验证图片
+     * @param params
+     * @returns {Promise<T | never> | * | void}
+     */
+    validateImg(params) {
+      return xhr.request({
+        url: 'checkimage',
+        method: 'post',
+        data: params
+      }).catch(err => {
+        dialog.error('图片验证失败');
+      });
+    }
+
+  }
+};
+
+

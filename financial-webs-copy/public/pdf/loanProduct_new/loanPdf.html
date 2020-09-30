@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="../css/_lib-reset.css" rel="stylesheet">
+  <link href="../css/_lib-base.css" rel="stylesheet">
+  <link href="./css/loan-vertical-table.css" rel="stylesheet">
+  <link href="./css/loan-pdf-table.css" rel="stylesheet">
+  <link href="./css/loanPdf.css" rel="stylesheet">
+  <script type="text/javascript" src="../js/require.js"></script>
+  <title>征信贷款产品报告</title>
+</head>
+<body>
+<div id="report">
+  <!--内容-->
+  <div class="content-wrapper">
+    <div class="section">
+      <h1 class="section-title">第一部分 企业概况</h1>
+      <div class="section-body" id="company-profile">
+      </div>
+    </div>
+    <div class="section">
+      <h1 class="section-title">第二部分 本期贷款评议指标情况</h1>
+      <div class="section-body" id="loan-review">
+      </div>
+    </div>
+    <div class="section">
+      <h1 class="section-title">第三部分 大数据征信情况</h1>
+      <div class="section-body" id="big-data-credit">
+      </div>
+    </div>
+    <div class="section">
+      <h1 class="section-title">第四部分 综合评价</h1>
+      <div class="section-body" id="comprehensive-assessment">
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript">
+  require.config({
+    baseUrl: './',
+    paths: {
+      'art-template': '../js/template-web',
+      'text': '../js/require-text',
+      'echarts': '../js/echarts.min',
+      'api': '../js/api',
+      'api2': '../js/api2',
+      'jquery': '../js/jquery-1.12.4.min',
+      'pdf': '../js/pdf',
+      'verticalTable': '../js/verticalTable',
+      'tableTp': '../template/vertical-table-template.html',
+      'company-profile-tp': './template/company-profile-tp.html',
+      'company-profile-js': './js/company-profile',
+      'loan-review-tp': './template/loan-review-tp.html',
+      'loan-review-js': './js/loan-review',
+      'big-data-credit-tp': './template/big-data-credit-tp.html',
+      'big-data-credit-js': './js/big-data-credit',
+      'comprehensive-assessment-tp': './template/comprehensive-assessment-tp.html',
+      'comprehensive-assessment-js': './js/comprehensive-assessment'
+    }
+  });
+  var resources = [
+    'jquery',
+    'art-template',
+    'echarts',
+    'pdf',
+    'verticalTable',
+    'company-profile-js',
+    'text!company-profile-tp',
+    'loan-review-js',
+    'text!loan-review-tp',
+    'big-data-credit-js',
+    'text!big-data-credit-tp',
+    'comprehensive-assessment-js',
+    'text!comprehensive-assessment-tp'
+  ];
+  require(resources, function ($) {
+    var pdf = require('pdf');
+    pdf.token = pdf.getQueryString('token');
+    pdf.companyName = pdf.getQueryString('companyName');
+    pdf.loanName = pdf.getQueryString('loanName');
+    pdf.id = pdf.getQueryString('id');
+    pdf.rzid = pdf.getQueryString('rzid');
+    var modules = [
+      {
+        template: 'text!company-profile-tp',
+        js: 'company-profile-js',
+        id: 'company-profile'
+      },
+      {
+        template: 'text!loan-review-tp',
+        js: 'loan-review-js',
+        id: 'loan-review'
+      },
+      {
+        template: 'text!big-data-credit-tp',
+        js: 'big-data-credit-js',
+        id: 'big-data-credit'
+      },
+      {
+        template: 'text!comprehensive-assessment-tp',
+        js: 'comprehensive-assessment-js',
+        id: 'comprehensive-assessment'
+      },
+    ];
+    modules.forEach(function (item, index) {
+      if (item.template) {
+        $('#' + item.id).html(require(item.template));
+      }
+      var entry = require(item.js);
+      entry.load();
+    });
+  });
+</script>
+</html>
+

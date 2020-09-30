@@ -1,0 +1,2233 @@
+<template>
+  <div id="report">
+    <!--头部-->
+    <div class="header-wrapper">
+      <div class="report-number">报告编号：GGXYBG-20190311-0001</div>
+      <div class="report-title"></div>
+      <div class="report-info">
+        <div>
+          <span @click="print">企业名称：{{companyName}}</span>
+          <span>信用评价体系更新日期：2019-03-01</span>
+        </div>
+        <div>
+          <span>统一社会信用代码：9151010032159783XA</span>
+          <span>报告下载时间：2019-03-11  13:10:20</span>
+        </div>
+      </div>
+    </div>
+    <!--内容-->
+    <div class="content-wrapper">
+      <!--报告说明-->
+      <div class="content-box2" id="report-explain">
+        <div class="content-box-title2">报告说明</div>
+        <div class="content-box-body2 watermark">
+          <p>
+            1.本报告由成都高投盈创动力投资发展有限公司（以下简称盈创动力）出具，依据截止报告时间融资信用平台记录的信息生产。报告中的基础信息均由相关报数机构和信息主体提供，盈创动力不保证其真实性和准确性，但承诺在信息整合、汇总、评价、展示的全过程中保持客观、中立的地位。</p>
+          <p>2.本报告是盈创动力依据合理的技术规范和信用模型做出的独立判断，用数据说话，未因受信息主体和其他任何组织机构或个人的影响而发生改变。</p>
+          <p>3.本报告仅限用于本次申请事项使用，本次事项使用完毕即失效，盈创动力拥有对信用等级进行跟踪、变更和等级变化公告的权利。</p>
+          <p>4.如无特别说明，本报告中的金额类数据项单位均为万元。</p>
+          <p>5.如无特别说明币种，本报告中的金额类汇总数据项均为人民币计价。外币折人民币的计算依据国家外汇管理局当月公布的各种货币对美元折算率表。</p>
+          <p>6.如信息记录“-”展示，则说明系统暂未记录该数据。</p>
+          <p>7.如信息记录展示“暂无数据”，则说明系统暂未记录该数据。</p>
+          <p>8.本报告仅供参考，请注意识别和防范信用风险。</p>
+          <p>9.本报告仅向政府部门和金融机构提供，请妥善保管。因保管不当造成信息泄露的，盈创动力不承担相关责任。</p>
+          <p>10.本报告未经授权，任何机构和个人不得复制、转载、出售和发布。</p>
+        </div>
+      </div>
+      <!--报告目录-->
+      <div class="content-box2" id="report-directory">
+        <div class="content-box-title2">报告目录</div>
+        <div class="content-box-body2 watermark">
+          <p class="one-level">一、<span class="one-level-title">报告概述</span><span class="line"></span><span
+              class="page">1</span></p>
+          <p class="one-level">二、<span class="one-level-title">基本信息</span><span class="line"></span><span
+              class="page">3</span></p>
+          <div class="two-level">
+            <p>（一）<span class="two-level-title">工商信息</span><span class="line"></span><span class="page">3</span></p>
+            <p>（二）<span class="two-level-title">股东信息</span><span class="line"></span><span class="page">3</span></p>
+            <p>（三）<span class="two-level-title">主要人员</span><span class="line"></span><span class="page">3</span></p>
+            <p>（四）<span class="two-level-title">分支机构</span><span class="line"></span><span class="page">4</span></p>
+            <p>（五）<span class="two-level-title">变更记录</span><span class="line"></span><span class="page">4</span></p>
+          </div>
+          <p class="one-level">三、<span class="one-level-title">经营行为</span><span class="line"></span><span
+              class="page">4</span></p>
+          <div class="two-level">
+            <p>（一）<span class="two-level-title">知识产权</span><span class="line"></span><span class="page">4</span></p>
+            <p>（二）<span class="two-level-title">资质证书</span><span class="line"></span><span class="page">5</span></p>
+            <p>（三）<span class="two-level-title">税务评级</span><span class="line"></span><span class="page">5</span></p>
+          </div>
+          <p class="one-level">四、<span class="one-level-title">经营风险</span><span class="line"></span><span
+              class="page">5</span></p>
+          <div class="two-level">
+            <p>（一）<span class="two-level-title">行政处罚</span><span class="line"></span><span class="page">5</span></p>
+            <p>（二）<span class="two-level-title">欠税信息</span><span class="line"></span><span class="page">5</span></p>
+            <p>（三）<span class="two-level-title">经营异常</span><span class="line"></span><span class="page">5</span></p>
+            <p>（四）<span class="two-level-title">严重违法</span><span class="line"></span><span class="page">5</span></p>
+            <p>（五）<span class="two-level-title">动产抵押</span><span class="line"></span><span class="page">6</span></p>
+            <p>（六）<span class="two-level-title">股权出质</span><span class="line"></span><span class="page">6</span></p>
+            <p>（七）<span class="two-level-title">股权冻结</span><span class="line"></span><span class="page">6</span></p>
+          </div>
+          <p class="one-level">五、<span class="one-level-title">关联关系</span><span class="line"></span><span
+              class="page">7</span></p>
+          <div class="two-level">
+            <p>（一）<span class="two-level-title">股东关系</span><span class="line"></span><span class="page">7</span></p>
+            <p>（二）<span class="two-level-title">投资关系</span><span class="line"></span><span class="page">7</span></p>
+          </div>
+          <p class="one-level">六、<span class="one-level-title">涉诉行为</span><span class="line"></span><span
+              class="page">7</span></p>
+          <div class="two-level">
+            <p>（一）<span class="two-level-title">开庭公告</span><span class="line"></span><span class="page">7</span></p>
+            <p>（二）<span class="two-level-title">法院公告</span><span class="line"></span><span class="page">8</span></p>
+            <p>（三）<span class="two-level-title">裁判文书</span><span class="line"></span><span class="page">8</span></p>
+          </div>
+          <p class="one-level">七、<span class="one-level-title">互联网行为</span><span class="line"></span><span class="page">8</span>
+          </p>
+          <div class="two-level">
+            <p>（一）<span class="two-level-title">融资信息</span><span class="line"></span><span class="page">8</span></p>
+            <p>（二）<span class="two-level-title">公开招聘</span><span class="line"></span><span class="page">8</span></p>
+            <p>（三）<span class="two-level-title">资讯情感</span><span class="line"></span><span class="page">9</span></p>
+          </div>
+          <p class="one-level">八、<span class="one-level-title">附注</span><span class="line"></span><span
+              class="page">10</span></p>
+        </div>
+      </div>
+      <!--一、报告概述-->
+      <div class="content-box2" id="report-summary">
+        <div class="content-box-title2">一、报告概述</div>
+        <div class="content-box-body2">
+          <div class="company-base-info watermark">
+            <p class="name">{{companyName}}</p>
+            <div class="company-label">
+              <span class="yc-label green"
+                    v-if="baseInfo.operateStatus!==null && baseInfo.operateStatus!==''">
+                {{baseInfo.operateStatus}}
+              </span>
+              <span class="yc-label blue"
+                    v-if="item!==null"
+                    v-for="(item,index) in baseInfo.cognizance"
+                    :key="'label_1_'+index">
+                  {{item.cognizance}}
+                </span>
+              <span class="yc-label info"
+                    v-for="(item,index) in baseInfo.policies"
+                    :key="'label_2_'+index">
+                  {{item.greyName}}<i class="icon el-icon-warning"></i>
+                </span>
+            </div>
+          </div>
+          <div class="company-info-table watermark">
+            <div class="custom-table pdf">
+              <div class="custom-table-body">
+                <div class="custom-table-row">
+                  <div class="sub-table cell">
+                    <div class="custom-table">
+                      <div class="custom-table-row">
+                        <div class="cell" style="width:50%">法定代表人：林靖力</div>
+                        <div class="cell" style="width:50%">成立日期：2014-12-19</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-table-row">
+                  <div class="sub-table cell">
+                    <div class="custom-table">
+                      <div class="custom-table-row">
+                        <div class="cell" style="width:50%">注册资本：117.65万元人民币</div>
+                        <div class="cell" style="width:50%">统一社会信用代码：9151010032159783XA</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-table-row">
+                  <div class="sub-table cell">
+                    <div class="custom-table">
+                      <div class="custom-table-row">
+                        <div class="cell">注册地址：中国(四川)自由贸易试验区成都高新区天府大道北段1480号9号楼A座3楼</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--综合评价-->
+          <div class="summary-evaluate content-box-body3 watermark">
+            <p class="title">综合评价</p>
+            <div class="content-box-body4">
+              <div class="summary-evaluate-radar" style="height: 887px;">
+                <el-col :span="16" id="radar-chart" style="height: 887px;">
+                </el-col>
+                <el-col :span="8">
+                  <div class="mark-info">
+                    <p><span class="info-title">盈创信用分</span><span class="number">{{baseInfo.totalScore?baseInfo.totalScore:'暂无数据'}}</span>
+                    </p>
+                    <p><span class="info-title">信用等级</span><span class="number">{{baseInfo.creditRating?baseInfo.creditRating:'暂无数据'}}</span>
+                    </p>
+                    <p><span class="info-title">信用排名</span>
+                      <span
+                          class="number">{{baseInfo.ranking?baseInfo.ranking:'暂无数据'}}
+                    </span>
+                      <span
+                          class="desc" v-if="baseInfo.rankingDescribe!==null && baseInfo.rankingDescribe!==''">（{{baseInfo.rankingDescribe}}）
+                    </span>
+                    </p>
+                  </div>
+                </el-col>
+              </div>
+              <p class="summary-evaluate-text1">
+                通过依法采集政府、信息主体、第三方机构、公开信息等数据，依据合理的技术规范、评价体系、大数据信用模型，从企业资质、经营行为、经营风险、关联关系、涉诉行为五方面，分析得出：
+              </p>
+              <p class="summary-evaluate-text2">
+                该企业当前信用分值90分，信用等级AAA，信用较好。在成都高新区企业中，该企业信用排名75，高于80%同类型企业（科学研究和技术服务业）。</p>
+            </div>
+          </div>
+          <!--企业优势-->
+          <div class="company-advantage content-box-body3 watermark">
+            <p class="title">企业优势</p>
+            <p class="text">该企业与成都高新区科学研究和技术服务业的其它企业相比，在以下15项上存在明显优势：</p>
+            <div class="content-box-body4 ">
+              <div class="advantage-list">
+                <ul>
+                  <li v-for="(item, index) in advantage" :key="'_label11_'+index">
+                    <i>{{index+1}}</i>
+                    <span>{{item}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!--企业风险-->
+          <div class="company-disAdvantage content-box-body3 watermark">
+            <p class="title">企业风险</p>
+            <p class="text">该企业近一年共存在5项风险，请提高风险防范意识：</p>
+            <div class="content-box-body4">
+              <div class="disAdvantage-list">
+                <ul>
+                  <li v-for="(item, index) in disAdvantage" :key="'_label12_'+index">
+                    <i>{{index+1}}</i>
+                    <span>{{item}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!--申报记录-->
+          <div class="declaration-record content-box-body3 watermark">
+            <p class="title">申报记录</p>
+            <p class="text">该企业在本平台共申报过3次，其中申报成功2次，申报失败1次</p>
+            <div class="content-box-body4">
+              <div class="time-line">
+                <div class="time-line-top"></div>
+                <div class="time-line-text"
+                     v-for="(item, index) in declarationRecord"
+                     :key="'label13'+index">
+                  <i class="ball"></i>
+                  <span>{{item}}</span>
+                  <div class="time-line-bottom"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--二、基本信息-->
+      <div class="content-box2" id="company-baseInfo">
+        <div class="content-box-title2">二、基本信息</div>
+        <div class="content-box-body2">
+          <!--工商信息-->
+          <div class="business-info content-box-body3 watermark">
+            <p class="title">工商信息</p>
+            <div class="content-box-body4">
+              <ul>
+                <li>
+                  <span class="info-key">统一社会信用码：</span>
+                  <span class="info-value">9151010032183XA9151010032159783XA</span>
+                </li>
+                <li>
+                  <span class="info-key">法定代表人：</span>
+                  <span class="info-value">林靖力</span>
+                </li>
+                <li>
+                  <span class="info-key">注册资本：</span>
+                  <span class="info-value">117.65万元</span>
+                </li>
+                <li>
+                  <span class="info-key">实缴比例：</span>
+                  <span class="info-value">50%</span>
+                </li>
+                <li>
+                  <span class="info-key">成立日期：</span>
+                  <span class="info-value">2014-12-19</span>
+                </li>
+                <li>
+                  <span class="info-key">核准日期：</span>
+                  <span class="info-value">2018-07-06</span>
+                </li>
+                <li>
+                  <span class="info-key">公司类型：</span>
+                  <span class="info-value">有限责任公司(自然人投资或控股)</span>
+                </li>
+                <li>
+                  <span class="info-key">所属行业：</span>
+                  <span class="info-value">科学研究和技术服务</span>
+                </li>
+                <li>
+                  <span class="info-key">登记机关：</span>
+                  <span class="info-value">成都高新工商行政管理局</span>
+                </li>
+                <li>
+                  <span class="info-key">社保参保人数：</span>
+                  <span class="info-value">59</span>
+                </li>
+                <li>
+                  <span class="info-key">营业期限：</span>
+                  <span class="info-value ">2014-12-19至3999-01-01</span>
+                </li>
+                <li>
+                  <span class="info-key">注册地址：</span>
+                  <span class="info-value ">中国(四川)自由贸易试验区成都高新区天府大道北段1480号9号楼A座3楼</span>
+                </li>
+                <li>
+                  <span class="info-key">经营范围：</span>
+                  <span class="info-value ">开发、销售、租赁计算机软硬件并提供技术服务;网络技术开发;计算机系统集成;信息技术咨询服务;企业形象策划、企业营销策划、企业管理咨询;计算机技术开发、技术  服务；网页设计；设计、制作、代理发布广告(不含气球广告);货物及技术进出口；商务信息咨询(不含投资咨询);销售:电子产品、通讯设备(不含无线广播电视发射设备及地面接收设备)、体育用品、服装、鞋帽、日用品、文具用品、医疗器械(仅限一类)、网络设备;机构商务代理服务;网上贸易代理;通讯设备租赁。(依法须经批准的项目,经相关部门批准后方可开展经营活动)。</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!--股东信息-->
+          <div class="share-info content-box-body3 watermark">
+            <p class="title">股东信息</p>
+            <div class="content-box-body4">
+              <el-table id="share-info-table"
+                        class="yc-table auto pdf"
+                        :data="tableData.shareInfo.data"
+                        border>
+                <el-table-column
+                    prop="name"
+                    label="股东名称（或姓名）"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="investmentProportion"
+                    label="持股比例"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="shoudCapi"
+                    label="认缴出资额（万元）"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="realCapi"
+                    label="实缴出资额（万元）"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="capiProportion"
+                    label="实缴出资比例"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="risk"
+                    label="风险信息标签"
+                >
+                  <template slot-scope="scope">
+                    <span class="yc-label red pdf" v-for="(label,index) in scope.row.risk" :key="'risk_label_'+index">{{label.risklabel}}</span>
+                    <span v-if="scope.row.risk===null || scope.row.risk.length===0">当前数据下无风险标签</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--主要人员-->
+          <div class="principals-info content-box-body3 watermark">
+            <p class="title">主要人员</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="principals-info-table"
+                        :data="tableData.principalsInfo.data"
+                        border>
+                <el-table-column
+                    prop="name"
+                    label="姓名"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="jobTitle"
+                    label="职务"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="risk"
+                    label="风险标签"
+                >
+                  <template slot-scope="scope">
+                    <span class="yc-label red pdf" v-for="(label,index) in scope.row.risk" :key="'risk_label_2_'+index">{{label.risklabel}}</span>
+                    <span v-if="scope.row.risk===null || scope.row.risk.length===0">当前数据下无风险标签</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--分支机构-->
+          <div class="branch-info content-box-body3 watermark">
+            <p class="title">分支机构</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="branch-info-table"
+                        :data="tableData.branchInfo.data"
+                        border>
+                <el-table-column
+                    prop="companyName"
+                    label="名称"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="foundingDate"
+                    label="成立时间"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="withinOneYear"
+                    label="是否最近一年内成立"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="withinThreeYear"
+                    label="是否最近三年内成立"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--变更记录-->
+          <div class="change-info content-box-body3 watermark">
+            <p class="title">变更记录</p>
+            <div class="content-box-body4">
+              <el-table id="change-info-table"
+                        class="yc-table auto pdf"
+                        :data="tableData.changeInfo.data"
+                        border>
+                <el-table-column
+                    type="index"
+                    width="200px"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="changeDate"
+                    label="变更日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="changeItem"
+                    label="变更事项"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="beforeContent"
+                    label="变更前"
+                >
+                  <template slot-scope="scope">
+                    <div class="change-before">{{scope.row.beforeContent}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                    prop="afterContent"
+                    label="变更后"
+                >
+                  <template slot-scope="scope">
+                    <div class="change-after">{{scope.row.afterContent}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                    prop="risk"
+                    label="风险标签"
+                >
+                  <template slot-scope="scope">
+                    <span class="yc-label red pdf" v-for="(label,index) in scope.row.risk" :key="'risk_label_3_'+index">{{label.riskLabel}}</span>
+                    <span v-if="scope.row.risk===null || scope.row.risk.length===0">当前数据下无风险标签</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--三、经营行为-->
+      <div class="content-box2" id="operation">
+        <div class="content-box-title2">三、经营行为</div>
+        <div class="content-box-body2">
+          <!--软件著作权-->
+          <div class="software-info content-box-body3 watermark">
+            <p class="title">软件著作权</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="software-info-table"
+                        :data="tableData.softwareInfo.data"
+                        border>
+                <el-table-column
+                    type="index"
+                    width="200px"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="softwareName"
+                    label="名称"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="registrationNumber"
+                    label="登记号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="version"
+                    label="版本号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="classification"
+                    label="分类号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="approvalDate"
+                    label="登记批准日期"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--专利信息-->
+          <div class="patentInformation-info content-box-body3 watermark">
+            <p class="title">专利信息</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="patentInformation-info-table"
+                        :data="tableData.patentInformationInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="patentType"
+                    label="专利类型"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="outhorNum"
+                    label="授权公布号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="outhorDate"
+                    label="发布日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="brief"
+                    label="摘要"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--著作权-->
+          <div class="workscopyright-info content-box-body3 watermark">
+            <p class="title">著作权</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="workscopyright-info-table"
+                        :data="tableData.workscopyrightInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    label="作品名称"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="number"
+                    label="登记号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="type"
+                    label="类别"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="successDate"
+                    label="创作完成日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="approvalDate"
+                    label="登记日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="firstDate"
+                    label="首次发布日期"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--资质证书-->
+          <div class="certificates-info content-box-body3 watermark">
+            <p class="title">资质证书</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="certificates-info-table"
+                        :data="tableData.certificatesInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="type"
+                    label="证书类型"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="certificateFileNumber"
+                    label="证书编号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="certificateDate"
+                    label="发证日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="remarks"
+                    label="备注"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--税务评级-->
+          <div class="tax-info content-box-body3 watermark">
+            <p class="title">税务评级</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="taxEvaluationLevel-info-table"
+                        :data="tableData.taxEvaluationLevelInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="evaluationAnnual"
+                    label="评价年度"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="evaluationLevel"
+                    label="纳税人信用级别"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="companyName"
+                    label="纳税人名称"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="creditNo"
+                    label="纳税人识别号"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--四、经营风险-->
+      <div class="content-box2" id="operation-risk">
+        <div class="content-box-title2">四、经营风险</div>
+        <div class="content-box-body2">
+          <!--行政处罚-->
+          <div class="administrative content-box-body3 watermark">
+            <p class="title">行政处罚</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="administrative-table"
+                        :data="tableData.administrative.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="penaltyNumber"
+                    label="决定书文号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="penaltyContent"
+                    label="处罚内容"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="penaltyDesicionDepartment"
+                    label="决定机关"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="penaltyDesicionDate"
+                    label="处罚决定日期"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--欠税信息-->
+          <div class="overdue-info content-box-body3 watermark">
+            <p class="title">欠税信息</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="overdue-info-table"
+                        :data="tableData.overdueInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="overdueAmount"
+                    label="欠税余额"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="currOverdueAmount"
+                    label="当期发生的欠税余额"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="overdueType"
+                    label="欠税税种"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="area"
+                    label="所属市县区"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="overduePeriod"
+                    label="欠税所属期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="pubDepartment"
+                    label="发布单位"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="pubDate"
+                    label="发布日期"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--经营异常-->
+          <div class="abnormal-info content-box-body3 watermark">
+            <p class="title">经营异常</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="abnormal-info-table"
+                        :data="tableData.abnormalInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="abnormalOperationReason"
+                    label="列入原因"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="abnormalOperationDate"
+                    label="列入日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="moveAbnormalOperationReason"
+                    label="移出原因"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="moveDate"
+                    label="移出日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="department"
+                    label="决定机关"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--严重违法失信-->
+          <div class="illegal-info content-box-body3 ">
+            <p class="title">严重违法失信</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="illegal-info-table"
+                        :data="tableData.illegalInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="inReason"
+                    label="列入严重违法失信企业名单原因"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="inDate"
+                    label="列入日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="inDepartment"
+                    label="决定机关"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="outReason"
+                    width="500px"
+                    label="移出严重违法失信企业名单原因"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="outDate"
+                    label="移出日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="outDepartment"
+                    label="决定机关"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--被执行人-->
+          <div class="executedPerson-info content-box-body3 watermark">
+            <p class="title">被执行人</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="executedPerson-info-table"
+                        :data="tableData.executedPersonInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="caseDate"
+                    label="立案时间"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="caseNumber"
+                    label="案号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="caseCount"
+                    label="执行标的"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="caseCourt"
+                    label="执行法院"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--&lt;!&ndash;失信被执行人&ndash;&gt;-->
+          <div class="executed-info content-box-body3 watermark">
+            <p class="title">失信被执行人</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="executed-info-table"
+                        :data="tableData.executedInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="date"
+                    label="立案时间"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="caseNumber"
+                    label="案号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="docNumber"
+                    label="执行依据文号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="executionCourt"
+                    label="执行法院"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="performSituation"
+                    label="履行情况"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--&lt;!&ndash;重大税收违法&ndash;&gt;-->
+          <div class="majorTax-info content-box-body3 watermark">
+            <p class="title">重大税收违法</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="majorTax-info-table"
+                        :data="tableData.majorTaxInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="mainIllegal"
+                    label="主要违法事实"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="caseNature"
+                    label="案件性质"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="punishmentSituation"
+                    label="处理情况"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="executionCourt"
+                    label="检查单位"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="performSituation"
+                    label="公布日期"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--&lt;!&ndash;动产抵押&ndash;&gt;-->
+          <div class="chattelMortgage-info content-box-body3 watermark">
+            <p class="title">动产抵押</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="chattelMortgage-info-table"
+                        :data="tableData.chattelMortgageInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="registerNumber"
+                    label="登记编号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="registerDate"
+                    label="登记日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="status"
+                    label="状态"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="registerDepartment"
+                    label="登记机关"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="closeDate"
+                    label="注销日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="closeReason"
+                    label="注销原因"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--&lt;!&ndash;股权出质&ndash;&gt;-->
+          <div class="equityPledged-info content-box-body3 watermark">
+            <p class="title">股权出质</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table pdf auto"
+                        id="equityPledged-info-table"
+                        :data="tableData.equityPledgedInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="registerNumber"
+                    label="登记编号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="pledgor"
+                    label="出质人"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="pledgee"
+                    label="质权人"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="status"
+                    label="状态"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="pledgedRegisterDate"
+                    label="登记日期"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--&lt;!&ndash;股权冻结&ndash;&gt;-->
+          <div class="equityFreeze-info content-box-body3 watermark">
+            <p class="title">股权冻结</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="equityFreeze-info-table"
+                        :data="tableData.equityFreezeInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="personSubjectedExecution"
+                    label="被执行人"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="amount"
+                    label="股权数额"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="noticeNo"
+                    label="执行通知书文号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="freezeDate"
+                    label="起止日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="status"
+                    label="状态"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="executionCourt"
+                    label="执行法院"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--五、关联关系-->
+      <div class="content-box2" id="relation-ship">
+        <div class="content-box-title2">五、关联关系</div>
+        <div class="content-box-body2">
+          <!--关联关系图-->
+          <div id="relationship-chart"></div>
+          <!--股东关系-->
+          <div class="share-ship content-box-body3 watermark">
+            <p class="title">股东关系</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="shareShip-table"
+                        :data="tableData.shareShip.data"
+                        border>
+                <el-table-column
+                    prop="shareName"
+                    label="股东姓名"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="shareholdingRatio"
+                    label="持股比例"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="money"
+                    label="认缴出资额(万元)"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--投资关系-->
+          <div class="invest-ship content-box-body3 watermark">
+            <p class="title">投资关系</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="investShip-table"
+                        :data="tableData.investShip.data"
+                        border>
+                <el-table-column
+                    prop="companyName"
+                    label="企业名称"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="shareholdingRatio"
+                    label="持股比例"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="money"
+                    label="认缴出资额(万元)"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--六、涉诉行为-->
+      <div class="content-box2" id="enterprise-lawsuits">
+        <div class="content-box-title2">六、涉诉行为</div>
+        <div class="content-box-body2">
+          <!--开庭公告-->
+          <div class="involved-info content-box-body3 watermark">
+            <p class="title">开庭公告</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="involved-info-table"
+                        :data="tableData.involvedInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="courtDate"
+                    label="开庭日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="caseCause"
+                    label="案由"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="plaintiff"
+                    label="原告 / 上诉人"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="defendant"
+                    label="被告 / 被上诉人"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="court"
+                    label="地点"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--法院公告-->
+          <div class="announcement-info content-box-body3 watermark">
+            <p class="title">法院公告</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="announcement-info-table"
+                        :data="tableData.announcementInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="bulletinTime"
+                    label="发布日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="instrumentType"
+                    label="公告类型"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="court"
+                    label="公告机构"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="bulletinPlace"
+                    label="地点"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="text"
+                    label="公告内容"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--裁判文书-->
+          <div class="judgment-info content-box-body3 watermark">
+            <p class="title">裁判文书</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        :data="tableData.judgmentInfo.data"
+                        id="judgment-info-table"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="executionBasisDate"
+                    label="判决日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="shenfen"
+                    label="身份"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="panjuejigou"
+                    label="判决机构"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="panjuePlace"
+                    label="地点"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--七、互联网行为-->
+      <div class="content-box2" id="internet-behavior">
+        <div class="content-box-title2">七、互联网行为</div>
+        <div class="content-box-body2">
+          <!--融资信息-->
+          <div class="finance-info content-box-body3 watermark">
+            <p class="title">融资信息</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="finance-info-table"
+                        :data="tableData.financingInfo.data"
+                        border>
+                <el-table-column
+                    prop="financingTime"
+                    label="公布日期"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="financingtRount"
+                    label="融资轮次"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="investmentAmount"
+                    label="融资金额"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="investor"
+                    label="投资方"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="investorLabel"
+                    label="风险信息标签"
+                >
+                  <template slot-scope="scope">
+                    <!--<span>当前数据下无风险标签</span>-->
+                    <span v-if="scope.row.investorLabel===null || scope.row.investorLabel===''">当前数据下无风险标签</span>
+                    <span v-else class="yc-label red pdf">{{scope.row.investorLabel}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--公开招聘-->
+          <div class="enterpriseRecruitment-info content-box-body3 watermark">
+            <p class="title">公开招聘</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="enterpriseRecruitment-info-table"
+                        :data="tableData.enterpriseRecruitmentInfo.data"
+                        border>
+                <el-table-column
+                    width="200px"
+                    type="index"
+                    label="序号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="title"
+                    label="职位"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="salary"
+                    label="薪资"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="location"
+                    label="地点"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="education"
+                    label="学历"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="date"
+                    label="发布时间"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+          <!--资讯情感-->
+          <div class="finance-info content-box-body3 watermark">
+            <p class="title">资讯情感</p>
+            <div class="content-box-body4">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--八、附注-->
+      <div class="content-box2" id="annotation">
+        <div class="content-box-title2">八、附注</div>
+        <div class="content-box-body2">
+          <!--报告编码规则-->
+          <div class="reportCode-rules content-box-body3 watermark">
+            <p class="title">报告编码规则</p>
+            <div class="content-box-body4">
+
+            </div>
+          </div>
+          <!--企业公共信用等级代表含义及释义-->
+          <div class="level-meaning content-box-body3 watermark">
+            <p class="title">企业公共信用等级代表含义及释义</p>
+            <div class="content-box-body4">
+              <el-table class="yc-table auto pdf"
+                        id="level-meaning-table"
+                        :data="levelMeaning"
+                        border>
+                <el-table-column
+                    prop="level"
+                    label="信用等级"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="score"
+                    label="信用分值范围"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="explain"
+                    label="说明"
+                >
+                </el-table-column>
+              </el-table>
+              <div class="level-meaning-explain">
+                <p>
+                  <span>信用分值：</span>
+                  基础数据均由相关报数机构和信息主体提供，按统一数学模型、标准计算得出。
+                </p>
+                <p>
+                  <span>信用等级：</span>
+                  由盈创动力融资信用平台根据信用分值自动对应产生。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import {enterpriseCredit} from "../../api/api-enterprise-credit";
+  import {dialog} from "../../assets/js/dialog";
+  import {addWaterMark, arrayFunc, getMinAndMax} from "../../assets/js/common";
+  import {ycChart} from "../../assets/js/chart";
+  import VerticalTable from "../../components/verticalTable"
+
+  export default {
+    name: "Report",
+    components: {VerticalTable},
+    data() {
+      return {
+        //公司名字
+        companyName: '',
+        //概要信息
+        masterInfo:{
+          //法人代表
+          legalRepresentative:'暂无数据',
+          //成立日期
+          foundingDate:'暂无数据',
+          //注册资本
+          registerCapital: '暂无数据'
+        },
+        //企业基本信息
+        baseInfo: {},
+        //工商信息
+        commercialInfo: [],
+        //优点
+        advantage: [
+          "企业实缴资本总额,高于70%同类型企业",
+          "实缴资本总额年增速，高于80%同类型企业",
+          "企业活跃度，高于90%同类型企业",
+          "风投融资1笔，高于80%同类型企业",
+          "企业实缴资本总额,高于70%同类型企业",
+          "实缴资本总额年增速，高于80%同类型企业",
+          "企业活跃度，高于90%同类型企业",
+          "风投融资1笔，高于80%同类型企业",
+          "企业实缴资本总额,高于70%同类型企业",
+          "实缴资本总额年增速，高于80%同类型企业",
+          "企业活跃度，高于90%同类型企业",
+          "风投融资1笔，高于80%同类型企业",
+          "企业实缴资本总额,高于70%同类型企业",
+          "实缴资本总额年增速，高于80%同类型企业",
+          "企业活跃度，高于90%同类型企业",
+        ],
+        //风险
+        disAdvantage: [
+          "一年内行政处罚1项，高于20%同类型企业",
+          "严重违法2项，高于60%同类型企业",
+          "未解冻股权冻结1项，高于30%同类型企业",
+          "在出质股权1项，高于25%同类型企业",
+          "一年内起诉次数1次，高于50%同类型企业,一年内起诉次数1次，高于50%同类型企业,一年内起诉次数1次，高于50%同类型企业",
+        ],
+        //申报记录
+        declarationRecord: [
+          "2019-02-25，申报企业发展奖励，申报成功，获得扶持资金金额50万元。",
+          "2018-09-01，申报成长贷，申报成功，获得贷款金额100万元。",
+          "2017-02-21，申报创新贷，申报失败。"
+        ],
+        //表格数据
+        tableData: {
+          //股东信息
+          shareInfo: {
+            desc: "股东信息",
+            //列表数据
+            data: [
+              {
+                name: "共青城安诺投资管理合伙企业（有限合伙）",
+                investmentProportion: "44%",
+                shoudCapi: "102.34",
+                realCapi: "255.67",
+                capiProportion: "113.65%",
+                risk: [{risklabel: "行政处罚"}, {risklabel: "股权出质"}]
+              },
+              {
+                name: "王璐",
+                investmentProportion: "44%",
+                shoudCapi: "102.34",
+                realCapi: "255.67",
+                capiProportion: "113.65%",
+                risk: ""
+              },
+              {
+                name: "曾蔓莉（有限合伙）",
+                investmentProportion: "44%",
+                shoudCapi: "102.34",
+                realCapi: "255.67",
+                capiProportion: "113.65%",
+                risk: [{risklabel: "行政处罚"}, {risklabel: "股权出质"}]
+              },
+              {
+                name: "共青城安诺投资管理合伙企业（有限合伙）",
+                investmentProportion: "44%",
+                shoudCapi: "102.34",
+                realCapi: "255.67",
+                capiProportion: "113.65%",
+                risk: ""
+              },
+              {
+                name: "共青城安诺投资管理合伙企业（有限合伙）",
+                investmentProportion: "44%",
+                shoudCapi: "102.34",
+                realCapi: "255.67",
+                capiProportion: "113.65%",
+                risk: [{risklabel: "行政处罚"}, {risklabel: "股权出质"}]
+              },
+              {
+                name: "共青城安诺投资管理合伙企业（有限合伙）",
+                investmentProportion: "44%",
+                shoudCapi: "102.34",
+                realCapi: "255.67",
+                capiProportion: "113.65%",
+                risk: ""
+              },
+            ],
+          },
+          //主要人员信息
+          principalsInfo: {
+            desc: "主要人员信息",
+            //列表数据
+            data: [
+              {name: "李剑英", jobTitle: "董事", risk: []},
+              {name: "张海龙", jobTitle: "董事", risk: [{risklabel: "行政处罚"}, {risklabel: "股权出质"}]},
+              {name: "张胜富", jobTitle: "董事", risk: []},
+              {name: "王玺", jobTitle: "董事", risk: [{risklabel: "行政处罚"}, {risklabel: "股权出质"}]},
+              {name: "曾蔓莉", jobTitle: "监事", risk: []},
+              {name: "李剑英", jobTitle: "董事", risk: []},
+              {name: "张海龙", jobTitle: "董事", risk: [{risklabel: "行政处罚"}, {risklabel: "股权出质"}]},
+              {name: "张胜富", jobTitle: "董事", risk: []},
+              {name: "王玺", jobTitle: "董事", risk: [{risklabel: "行政处罚"}, {risklabel: "股权出质"}]},
+              {name: "曾蔓莉", jobTitle: "监事", risk: []},
+            ],
+          },
+          //分支机构
+          branchInfo: {
+            desc: "分支机构信息",
+            //列表数据
+            data: [
+              {
+                companyName: "成都亦玖亦玖终端企业管理有限公司芳草东街店",
+                foundingDate: "2018-08-24",
+                withinOneYear: "是",
+                withinThreeYear: "是"
+              },
+              {
+                companyName: "成都亦玖亦玖终端企业管理有限公司肖家河店",
+                foundingDate: "2018-08-24",
+                withinOneYear: "是",
+                withinThreeYear: "是"
+              },
+              {
+                companyName: "成都亦玖亦玖终端企业管理有限公司成汉南路分公司",
+                foundingDate: "2018-08-24",
+                withinOneYear: "是",
+                withinThreeYear: "是"
+              },
+              {
+                companyName: "成都亦玖亦玖终端企业管理有限公司天府大道北段店",
+                foundingDate: "2018-08-23",
+                withinOneYear: "是",
+                withinThreeYear: "是"
+              },
+              {
+                companyName: "成都亦玖亦玖终端企业管理有限公司紫薇东路店",
+                foundingDate: "2018-08-23",
+                withinOneYear: "是",
+                withinThreeYear: "是"
+              },
+            ],
+          },
+          //变更记录
+          changeInfo: {
+            desc: "变更记录信息",
+            //列表数据
+            data: [
+              {changeItem: "其他", changeDate: "2017-06-17", beforeContent: null, afterContent: "周鹭,***", risk: []},
+              {changeItem: "其他", changeDate: "2016-10-26", beforeContent: "陆兆禧", afterContent: "张勇", risk: []},
+              {changeItem: "其他", changeDate: "2016-10-26", beforeContent: null, afterContent: null, risk: null},
+              {changeItem: "投资人", changeDate: "2016-10-26", beforeContent: "陆兆禧", afterContent: "张勇", risk: []},
+              {changeItem: "负责人", changeDate: "2016-10-26", beforeContent: "陆兆禧", afterContent: "张勇", risk: []},
+              {changeItem: "其他", changeDate: "2016-10-25", beforeContent: "陆兆禧", afterContent: "张勇", risk: []},
+              {
+                changeItem: "负责人",
+                changeDate: "2014-05-21",
+                beforeContent: "马云",
+                afterContent: "陆兆禧,中华人民共和国居民身份证,*****",
+                risk: []
+              },
+              {
+                changeItem: "其他",
+                changeDate: "2014-05-21",
+                beforeContent: "马云",
+                afterContent: "陆兆禧,中华人民共和国居民身份证,***",
+                risk: []
+              },
+              {
+                changeItem: "负责人",
+                changeDate: "2014-05-21",
+                beforeContent: "马云",
+                afterContent: "陆兆禧,中华人民共和国居民身份证,***",
+                risk: []
+              },
+              {
+                changeItem: "其他",
+                changeDate: "2014-05-20",
+                beforeContent: "马云",
+                afterContent: "陆兆禧,中华人民共和国居民身份证,***",
+                risk: []
+              },
+              {
+                changeItem: "地址",
+                changeDate: "2012-07-26",
+                beforeContent: "成都高新区世纪城南路216号4栋503室",
+                afterContent: "成都高新区世纪城南路599号4栋503室",
+                risk: [{riskLabel: "住所变更"}]
+              },
+            ],
+          },
+          //软件著作权
+          softwareInfo: {
+            desc: '软件著作权',
+            data: [
+              {
+                softwareName: "云祺虚拟机备份与恢复系统",
+                registrationNumber: "2016SR014981",
+                version: "V3.0",
+                classification: "30200-0000",
+                approvalDate: "2016年01月21日"
+              },
+              {
+                softwareName: "云祺虚拟机备份与恢复系统",
+                registrationNumber: "2016SR014981",
+                version: "V3.0",
+                classification: "30200-0000",
+                approvalDate: "2016年01月21日"
+              },
+              {
+                softwareName: "云祺虚拟机备份与恢复系统",
+                registrationNumber: "2016SR014981",
+                version: "V3.0",
+                classification: "30200-0000",
+                approvalDate: "2016年01月21日"
+              },
+              {
+                softwareName: "云祺虚拟机备份与恢复系统",
+                registrationNumber: "2016SR014981",
+                version: "V3.0",
+                classification: "30200-0000",
+                approvalDate: "2016年01月21日"
+              },
+              {
+                softwareName: "云祺虚拟机备份与恢复系统",
+                registrationNumber: "2016SR014981",
+                version: "V3.0",
+                classification: "30200-0000",
+                approvalDate: "2016年01月21日"
+              },
+            ],
+          },
+          //专利信息
+          patentInformationInfo: {
+            desc: '专利信息',
+            data: [
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+              {
+                outhorDate: "2019.02.12",
+                patentType: "发明公布",
+                outhorNum: "CN109327256A",
+                brief: "本发明公开了基于光开关控制的光模块高低温测试系统的数据采集电路，包括高低温一体测试机机箱、高低温控制电路、光模块信号采集电路，光模块控制电路，所述光模块控制电路包括单片机、光开关模块、串‑并转换电路，单片机接收命令信号后调用内部存储的控制指令传给光开关模块；所述串‑并转换电路用于单片机并行读入光开关内部寄存器中的串行原始路由信息；光开关模块接收单片机传来的控制指令作用给待测试的多个光模块，所述光模块信号采集电路集成的测试板上，多个待测光模块固定在测试板上并与信号采集电路连接。通过单片机控制光开关，光开光按照单片机的控制指令按时依次对多个光模块发出光信号，由此，光模块课设置多个一起检测提高检测效率。"
+              },
+            ],
+          },
+          //著作权
+          workscopyrightInfo: {
+            desc: '著作权',
+            data: [
+              {
+                approvalDate: "2017-01-03",
+                type: "美术",
+                successDate: "2014-01-11",
+                number: "国作登字-2017-F-00283133",
+                firstDate: "2014-01-11",
+                name: "盛世云图LOGO"
+              },
+              {
+                approvalDate: "2017-01-03",
+                type: "美术",
+                successDate: "2014-01-11",
+                number: "国作登字-2017-F-00283133",
+                firstDate: "2014-01-11",
+                name: "盛世云图LOGO"
+              },
+              {
+                approvalDate: "2017-01-03",
+                type: "美术",
+                successDate: "2014-01-11",
+                number: "国作登字-2017-F-00283133",
+                firstDate: "2014-01-11",
+                name: "盛世云图LOGO"
+              },
+            ],
+          },
+          //资质证书
+          certificatesInfo: {
+            desc: '资质证书',
+            data: [
+              {
+                certificateFileNumber: "2010010301441573",
+                certificateDate: "2018-05-22",
+                type: "CCC产品认证证书",
+                remarks: "产品规格: CCX 母线干线单元:In=2500A～1000A,Icw=50kA;Ue=380V,Ui=660V;50Hz;IP30",
+              },
+              {
+                certificateFileNumber: "2010010301441573",
+                certificateDate: "2018-05-22",
+                type: "CCC产品认证证书",
+                remarks: "产品规格: CCX 母线干线单元:In=2500A～1000A,Icw=50kA;Ue=380V,Ui=660V;50Hz;IP30",
+              },
+              {
+                certificateFileNumber: "2010010301441573",
+                certificateDate: "2018-05-22",
+                type: "CCC产品认证证书",
+                remarks: "产品规格: CCX 母线干线单元:In=2500A～1000A,Icw=50kA;Ue=380V,Ui=660V;50Hz;IP30",
+              },
+              {
+                certificateFileNumber: "2010010301441573",
+                certificateDate: "2018-05-22",
+                type: "CCC产品认证证书",
+                remarks: "产品规格: CCX 母线干线单元:In=2500A～1000A,Icw=50kA;Ue=380V,Ui=660V;50Hz;IP30",
+              },
+              {
+                certificateFileNumber: "2010010301441573",
+                certificateDate: "2018-05-22",
+                type: "CCC产品认证证书",
+                remarks: "产品规格: CCX 母线干线单元:In=2500A～1000A,Icw=50kA;Ue=380V,Ui=660V;50Hz;IP30",
+              },
+            ],
+          },
+          //税务评级
+          taxEvaluationLevelInfo: {
+            desc: '税务评级',
+            data: [
+              {
+                companyName: "四川电器集团股份有限公司",
+                creditNo: "91510100720338894X",
+                evaluationAnnual: "2016",
+                evaluationLevel: "A"
+              },
+              {
+                companyName: "四川电器集团股份有限公司",
+                creditNo: "91510100720338894X",
+                evaluationAnnual: "2016",
+                evaluationLevel: "A"
+              },
+              {
+                companyName: "四川电器集团股份有限公司",
+                creditNo: "91510100720338894X",
+                evaluationAnnual: "2016",
+                evaluationLevel: "A"
+              },
+              {
+                companyName: "四川电器集团股份有限公司",
+                creditNo: "91510100720338894X",
+                evaluationAnnual: "2016",
+                evaluationLevel: "A"
+              },
+            ],
+          },
+          //行政处罚
+          administrative: {
+            desc: '行政处罚',
+            data: [],
+          },
+          //欠税信息
+          overdueInfo: {
+            desc: '欠税信息',
+            data: [],
+          },
+          //经营异常
+          abnormalInfo: {
+            desc: '经营异常',
+            data: [
+              {
+                moveAbnormalOperationReason: "列入经营异常名录3年内且依照《经营异常名录管理办法》第六条规定被列入经营异常名录的企业，可以在补报未报年份的年度报告并公示后，申请移出",
+                moveDate: "2018-09-18",
+                department: "高新工商局",
+                abnormalOperationDate: "2018-09-01",
+                abnormalOperationReason: "未依照《企业信息公示暂行条例》第八条规定的期限公示年度报告"
+              },
+              {
+                moveAbnormalOperationReason: "列入经营异常名录3年内且依照《经营异常名录管理办法》第六条规定被列入经营异常名录的企业，可以在补报未报年份的年度报告并公示后，申请移出",
+                moveDate: "2018-09-18",
+                department: "高新工商局",
+                abnormalOperationDate: "2018-09-01",
+                abnormalOperationReason: "未依照《企业信息公示暂行条例》第八条规定的期限公示年度报告"
+              },
+              {
+                moveAbnormalOperationReason: "列入经营异常名录3年内且依照《经营异常名录管理办法》第六条规定被列入经营异常名录的企业，可以在补报未报年份的年度报告并公示后，申请移出",
+                moveDate: "2018-09-18",
+                department: "高新工商局",
+                abnormalOperationDate: "2018-09-01",
+                abnormalOperationReason: "未依照《企业信息公示暂行条例》第八条规定的期限公示年度报告"
+              },
+              {
+                moveAbnormalOperationReason: "列入经营异常名录3年内且依照《经营异常名录管理办法》第六条规定被列入经营异常名录的企业，可以在补报未报年份的年度报告并公示后，申请移出",
+                moveDate: "2018-09-18",
+                department: "高新工商局",
+                abnormalOperationDate: "2018-09-01",
+                abnormalOperationReason: "未依照《企业信息公示暂行条例》第八条规定的期限公示年度报告"
+              },
+              {
+                moveAbnormalOperationReason: "列入经营异常名录3年内且依照《经营异常名录管理办法》第六条规定被列入经营异常名录的企业，可以在补报未报年份的年度报告并公示后，申请移出",
+                moveDate: "2018-09-18",
+                department: "高新工商局",
+                abnormalOperationDate: "2018-09-01",
+                abnormalOperationReason: "未依照《企业信息公示暂行条例》第八条规定的期限公示年度报告"
+              },
+            ],
+          },
+          //严重违法失信
+          illegalInfo: {
+            desc: '严重违法失信',
+            data: [],
+          },
+          //被执行人
+          executedPersonInfo: {
+            desc: '被执行人',
+            data: [
+              {
+                caseNumber: "(2018)川0191执4293号",
+                caseDate: "2018-06-06",
+                caseCount: "89111",
+                caseCourt: "成都高新技术产业开发区人民法院"
+              },
+              {
+                caseNumber: "(2018)川0191执4293号",
+                caseDate: "2018-06-06",
+                caseCount: "89111",
+                caseCourt: "成都高新技术产业开发区人民法院"
+              },
+              {
+                caseNumber: "(2018)川0191执4293号",
+                caseDate: "2018-06-06",
+                caseCount: "89111",
+                caseCourt: "成都高新技术产业开发区人民法院"
+              },
+              {
+                caseNumber: "(2018)川0191执4293号",
+                caseDate: "2018-06-06",
+                caseCount: "89111",
+                caseCourt: "成都高新技术产业开发区人民法院"
+              },
+              {
+                caseNumber: "(2018)川0191执4293号",
+                caseDate: "2018-06-06",
+                caseCount: "89111",
+                caseCourt: "成都高新技术产业开发区人民法院"
+              },
+              {
+                caseNumber: "(2018)川0191执4293号",
+                caseDate: "2018-06-06",
+                caseCount: "89111",
+                caseCourt: "成都高新技术产业开发区人民法院"
+              },
+              {
+                caseNumber: "(2018)川0191执4293号",
+                caseDate: "2018-06-06",
+                caseCount: "89111",
+                caseCourt: "成都高新技术产业开发区人民法院"
+              },
+            ],
+          },
+          //失信被执行人
+          executedInfo: {
+            desc: '失信被执行人',
+            data: [],
+          },
+          //重大税收违法
+          majorTaxInfo: {
+            desc: '重大税收违法',
+            data: [],
+          },
+          //动产抵押
+          chattelMortgageInfo: {
+            desc: '动产抵押',
+            data: [
+              {
+                status: "有效",
+                registerNumber: "成高工商抵【2017】第066号",
+                registerDepartment: "高新工商局",
+                closeReason: "融资继续",
+                closeDate: "2018-04-13",
+                registerDate: "2017-09-13"
+              },
+              {
+                status: "有效",
+                registerNumber: "成高工商抵【2017】第066号",
+                registerDepartment: "高新工商局",
+                closeReason: "融资继续",
+                closeDate: "2018-04-13",
+                registerDate: "2017-09-13"
+              },
+              {
+                status: "有效",
+                registerNumber: "成高工商抵【2017】第066号",
+                registerDepartment: "高新工商局",
+                closeReason: "融资继续",
+                closeDate: "2018-04-13",
+                registerDate: "2017-09-13"
+              },
+              {
+                status: "有效",
+                registerNumber: "成高工商抵【2017】第066号",
+                registerDepartment: "高新工商局",
+                closeReason: "融资继续",
+                closeDate: "2018-04-13",
+                registerDate: "2017-09-13"
+              },
+            ],
+          },
+          //股权出质
+          equityPledgedInfo: {
+            desc: '股权出质',
+            data: [
+              {
+                status: "无效",
+                registerNumber: "5101091001539",
+                pledgor: "邓洁茹",
+                pledgedRegisterDate: "2016-07-05",
+                pledgee: "成都金控融资担保有限公司"
+              },
+              {
+                status: "无效",
+                registerNumber: "5101091001539",
+                pledgor: "邓洁茹",
+                pledgedRegisterDate: "2016-07-05",
+                pledgee: "成都金控融资担保有限公司"
+              },
+              {
+                status: "无效",
+                registerNumber: "5101091001539",
+                pledgor: "邓洁茹",
+                pledgedRegisterDate: "2016-07-05",
+                pledgee: "成都金控融资担保有限公司"
+              },
+              {
+                status: "无效",
+                registerNumber: "5101091001539",
+                pledgor: "邓洁茹",
+                pledgedRegisterDate: "2016-07-05",
+                pledgee: "成都金控融资担保有限公司"
+              },
+            ],
+          },
+          //股权冻结
+          equityFreezeInfo: {
+            desc: '股权冻结',
+            data: [],
+          },
+          //股东关系
+          shareShip: {
+            desc: '股东关系',
+            data: [],
+          },
+          //投资关系
+          investShip: {
+            desc: '投资关系',
+            data: [],
+          },
+          //开庭公告
+          involvedInfo: {
+            desc: '开庭公告',
+            data: [
+              {
+                plaintiff: "上海浦东发展银行股份有限公司成都分行",
+                defendant: "成都巨兴投资管理有限公司",
+                courtDate: "2018-10-29 09:30:00",
+                caseCause: "其他",
+                court: "成都市成华区人民法院第十二法庭"
+              },
+            ],
+          },
+          //法院公告
+          announcementInfo: {
+            desc: '法院公告',
+            data: [],
+          },
+          //裁判文书
+          judgmentInfo: {
+            desc: '裁判文书',
+            data: [
+              {shenfen: '-', executionBasisDate: "2017-02-03", panjuePlace: "昆明市东川区", panjuejigou: "昆明市东川区人民法院"},
+              {shenfen: '-', executionBasisDate: "2017-02-03", panjuePlace: "昆明市东川区", panjuejigou: "昆明市东川区人民法院"},
+              {shenfen: '-', executionBasisDate: "2017-02-03", panjuePlace: "昆明市东川区", panjuejigou: "昆明市东川区人民法院"},
+              {shenfen: '-', executionBasisDate: "2017-02-03", panjuePlace: "昆明市东川区", panjuejigou: "昆明市东川区人民法院"},
+              {shenfen: '-', executionBasisDate: "2017-02-03", panjuePlace: "昆明市东川区", panjuejigou: "昆明市东川区人民法院"},
+            ],
+          },
+          //融资信息
+          financingInfo: {
+            desc: '融资信息',
+            data: [],
+          },
+          //公开招聘
+          enterpriseRecruitmentInfo: {
+            desc: '公开招聘',
+            data: [
+              {title: "软件测试", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "主办会计（电子行业）", salary: "面议", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "硬件设计工程师", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "成本会计", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "软件设计工程师", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "SMT工程师/主管", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "软件测试", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "软件测试", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "软件测试", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+              {title: "软件测试", salary: "3500-5000", location: "成都市", education: "本科", date: "2018-12-13"},
+            ],
+          },
+        },
+        //业公共信用等级代表含义表格
+        levelMeaning: [
+          {level: "AAA", score: "[90,100]", explain: "信用优良"},
+          {level: "AA", score: "[85,90)", explain: "信用良好"},
+          {level: "A", score: "[80,85)", explain: "信用较好"},
+          {level: "BBB", score: "[75,80)", explain: "重视商誉，立信积累中"},
+          {level: "BB", score: "[70,75)", explain: "有较好的履约动力"},
+          {level: "B", score: "[60,70)", explain: "有履约动力"},
+          {level: "CCC", score: "[45,60)", explain: "履约动力欠足"},
+          {level: "CC", score: "[30,45)", explain: "维护商誉的信心已弱化"},
+          {level: "C", score: "[1,30)", explain: "违约风险较大"},
+          {level: "D", score: "0", explain: "在工商管理机关已注销、吊销、破产状态，法律意义上消亡"},
+        ],
+      }
+    },
+    created() {
+      let params = this.$route.params;
+      this.companyName = params.companyName;
+      this.getBaseInfo();
+      this.getCommercialInfo();
+    },
+    mounted() {
+      this.drawRadar();
+      addWaterMark($('.watermark'));
+    },
+    methods: {
+      print(){
+        // this.getPdf('report','企业公共信用报告');
+      },
+      /**
+       * 获取企业的基本信息
+       *
+       */
+      getBaseInfo() {
+        enterpriseCredit.getBaseInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            this.baseInfo = res.data;
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       *雷达图
+       */
+      drawRadar() {
+        let el = document.getElementById('radar-chart');
+        enterpriseCredit.getEvaluationInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            // console.log(123)
+            let indicator = [];
+            let data = res.data;
+            if (!arrayFunc.isEmpty(data.name) && !arrayFunc.isEmpty(data.value)) {
+              $(el).removeClass('nodata');
+              data.name.forEach((item, index) => {
+                indicator.push({
+                  name: item
+                });
+              });
+              let minAndMax = getMinAndMax(data.value);
+              let max = minAndMax.max;
+              let min = minAndMax.min;
+              indicator.forEach((item, index) => {
+                item.max = max;
+                item.min = min;
+              });
+              // console.log(indicator)
+              ycChart.renderRadarForPdf(el, indicator, data.value, '企业信用评价')
+            } else {
+              $(el).addClass('nodata')
+            }
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+      /**
+       * 获取企业的工商信息
+       */
+      getCommercialInfo() {
+        enterpriseCredit.qualification.getCommercialInfo(this.companyName).then(res => {
+          if (res.code === '200') {
+            this.commercialInfo = res.data;
+          } else {
+            dialog.error(res.message);
+          }
+        });
+      },
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  @import "../../assets/css/components/custom-table";
+  @import "../../assets/css/report";
+</style>

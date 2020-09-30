@@ -1,0 +1,95 @@
+<script type="text/html" id="big-data-credit-tp">
+    <div class="content-box">
+        <h2 class="content-box-title">3.1 政策申报记录</h2>
+        <div class="content-box-body">
+            <table class="pdf-table">
+                <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>申报项目</th>
+                    <th>申报结果</th>
+                    <th>奖励金额（万元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{if declarationRecords.length < 1}}
+                    <tr>
+                        <td colspan="4">暂无数据</td>
+                    </tr>
+                    {{else}}
+                    {{each declarationRecords value i}}
+                    <tr>
+                        <td>{{value.number || '-'}}</td>
+                        <td>{{value.name || '-'}}</td>
+                        <td>{{value.stat || '-'}}</td>
+                        <td>{{value.money || '-'}}</td>
+                    </tr>
+                    {{/each}}
+                {{/if}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="content-box">
+        <h2 class="content-box-title">3.2 政策性贷款申请记录</h2>
+        <div class="content-box-body">
+            <table class="pdf-table">
+                <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>申报产品</th>
+                    <th>申报结果</th>
+                    <th>奖励金额（万元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{if recordofPolicyLoan.length <1}}
+                <tr>
+                    <td colspan="4">暂无数据</td>
+                </tr>
+                {{else}}
+                {{each recordofPolicyLoan value i}}
+                <tr>
+                    <td>{{value.reportDate || '-'}}</td>
+                    <td>{{value.productName || '-'}}</td>
+                    <td>申请成功</td>
+                    <td>{{value.reportMoney || '-'}}</td>
+                </tr>
+                {{/each}}
+                {{/if}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="content-box">
+        <h2 class="content-box-title">3.3 企业信用记录</h2>
+        <div class="content-box-body p-b-40">
+            <h3 class="content-box-title">3.3.1 金融信用</h3>
+            <div class="content-box-text p-b-40">据大数据调查，该公司银行贷款违约情况：<span class="underline" style="height: 40px">{{breakPromise}}</span>。</div>
+            <h3 class="content-box-title">3.3.2 公共信用</h3>
+            <div class="content-box-text p-b-40">{{selectPublicCredit.content[0].informationConclusion.value}}</div>
+            <div class="info right">{{selectPublicCredit.content[0].informationDate.label}} : {{selectPublicCredit.content[0].informationDate.value}}</div>
+            <div id="content-box-add"></div>
+        </div>
+        <div class="content-box-body p-b-40">
+            <div class="content-box-text">{{selectPublicCredit.content[1].informationConclusion.value}}</div>
+            <div class="info right">{{selectPublicCredit.content[1].informationDate.label}} : {{selectPublicCredit.content[1].informationDate.value}}</div>
+            <div id="content-box-sub"></div>
+        </div>
+    </div>
+    </div>
+    <div class="content-box">
+        <h2 class="content-box-title">3.4 企业经营管理能力分析</h2>
+        <div class="content-box-body">
+            <h3 class="content-box-title">3.4.1 人力资源管理</h3>
+            <div class="content-box-body p-b-40" id="table1">
+            </div>
+            <h3 class="content-box-title">3.4.2 财务管理</h3>
+            <div class="content-box-body p-b-40" id="table2">
+            </div>
+            <h3 class="content-box-title">3.4.3 企业创新研发管理</h3>
+            <div class="content-box-body" id="table3">
+            </div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="../css/_lib-reset.css" rel="stylesheet">
+  <link href="../css/_lib-base.css" rel="stylesheet">
+  <link href="../css/custom-table.css" rel="stylesheet">
+  <link href="../css/yc-label.css" rel="stylesheet">
+  <link href="../css/pdf-table.css" rel="stylesheet">
+  <link href="../font/iconfont.css" rel="stylesheet">
+  <link rel="stylesheet" href="../financingPdf/css/financing-pdf.css">
+  <link rel="stylesheet" href="../css/vertical-table.css">
+  <script src="../js/jquery-1.12.4.min.js"></script>
+  <script type="text/javascript" src="../js/require.js"></script>
+  <title>融资信用贷款产品报告</title>
+</head>
+<body>
+<div id="report">
+  <!--内容-->
+  <div class="content-wrapper">
+    <div class="content-box2" id="report-catalog">
+      <div class="content-box-title2">报告目录</div>
+      <div class="content-box-body2" style="height:1745px;">
+        <div class="catalog-wrapper watermark" id="report-catalog-info">
+        </div>
+      </div>
+    </div>
+    <!--一、报告概述-->
+    <div class="content-box2" id="report-summary">
+      <div class="process"><h1 class="content-box-title2">一、报告概述</h1></div>
+      <div class="content-box-body2" id="report-summary-tp">
+      </div>
+    </div>
+    <!--融资信用基础数据-->
+    <div class="content-box2" id="financing-basic-data">
+      <div class="process"><h1 class="content-box-title2">二、融资信用基础数据</h1></div>
+      <div class="content-box-body2" id="financing-basic-data-tp">
+      </div>
+    </div>
+    <!--政策性贷款专项评价-->
+    <div class="content-box2">
+      <div class="process"><h1 class="content-box-title2">三、贷款准入基础数据</h1></div>
+      <div class="content-box-body2" id="loan-evaluate-tp"></div>
+    </div>
+    <!--附注-->
+    <div class="content-box2" id="note-info">
+      <div class="process"><h1 class="content-box-title2">四、附注</h1></div>
+      <div class="content-box-body2" id="note-info-tp">
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript">
+  require.config({
+    baseUrl: './',
+    paths: {
+      'art-template': '../js/template-web',
+      'text': '../js/require-text',
+      'echarts': '../js/echarts.min',
+      'api': '../js/api',
+      'api2': '../js/api2',
+      'jquery': '../js/jquery-1.12.4.min',
+      'pdf': '../js/pdf',
+      'verticalTable': '../js/verticalTable',
+      'tableTp': '../template/vertical-table-template.html',
+      'reportSummary': './js/report-summary',
+      'basicData': './js/basic-data',
+      'catalog': './js/catalog',
+      'catalog-template': './template/catalog-template.html',
+      'report-summary-template': './template/report-summary-template.html',
+      'basic-data-template': './template/basic-data-template.html',
+      'note-info-template': './template/note-info-template.html',
+      'noteInfo': './js/note-info',
+      'loanEvalute': './js/loan-evalute',
+      'loan-evalute-template':'./template/loan-evalute-template.html',
+    }
+  });
+  var resources = [
+    'jquery',
+    'art-template',
+    'echarts',
+    'pdf',
+    'verticalTable',
+    'reportSummary',
+    'basicData',
+    'text!report-summary-template',
+    'text!basic-data-template',
+    'catalog',
+    'text!catalog-template',
+    'noteInfo',
+    'text!note-info-template',
+    'loanEvalute',
+    'text!loan-evalute-template',
+  ];
+  require(resources, function ($) {
+    var pdf = require('pdf');
+    pdf.token = pdf.getQueryString('token');
+    pdf.companyName = pdf.getQueryString('companyName');
+    pdf.loanName = pdf.getQueryString('loanName');
+    var modules = [
+      // {
+      //   template: 'text!./template/header-template.html',
+      //   js: 'header',
+      //   id: 'report-header-tp'
+      // },
+      {
+        template: 'text!catalog-template',
+        js: 'catalog',
+        id: 'report-catalog-info'
+      },
+      {
+        template: 'text!report-summary-template',
+        js: 'reportSummary',
+        id: 'report-summary-tp'
+      },
+      {
+        template: 'text!basic-data-template',
+        js: 'basicData',
+        id: 'financing-basic-data-tp'
+      },
+      {
+        template: 'text!loan-evalute-template',
+        js: 'loanEvalute',
+        id: 'loan-evaluate-tp'
+      },
+      {
+        template: 'text!note-info-template',
+        js: 'noteInfo',
+        id: 'note-info-tp'
+      },
+      // {
+      //   template: 'text!./template/loan-evaluate-template.html',
+      //   js: 'loan-evaluate',
+      //   id: 'loan-evaluate'
+      // }
+    ];
+    modules.forEach(function (item, index) {
+      if (item.template) {
+        $('#' + item.id).html(require(item.template));
+      }
+      var entry = require(item.js);
+      entry.load();
+    });
+    pdf.addWaterMark($('#report-catalog .watermark'));
+  });
+</script>
+</html>

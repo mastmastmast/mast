@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href="../css/_lib-reset.css" rel="stylesheet">
+  <link href="../css/_lib-base.css" rel="stylesheet">
+  <link href="../font/iconfont.css" rel="stylesheet">
+  <link href="../loanProduct_new/css/loan-vertical-table.css" rel="stylesheet">
+  <link href="../loanProduct_new/css/loan-pdf-table.css" rel="stylesheet">
+  <link href="../loanProduct_new/css/loanPdf.css" rel="stylesheet">
+  <script type="text/javascript" src="../js/require.js"></script>
+  <title>征信报告demo</title>
+  <style type="text/css">
+    .demo-box {
+      margin: 20px 0;
+      padding-bottom: 30px;
+      font-size:20px;
+      border-bottom: 1px dashed #ccc;
+    }
+  </style>
+</head>
+<body>
+<div id="report">
+  <div class="content-wrapper">
+    <div class="section">
+      <h1 class="section-title">一、布局</h1>
+      <div class="section-body">
+        <div class="demo-box">
+          <h2>1.章节内容</h2>
+          <div class="section">
+            <h2 class="section-title">章节模块 .section</h2>
+            <div class="section-body">
+              章节内容的外层样式是.section,标题样式是.section-title,章节内容样式是.section-body
+            </div>
+          </div>
+        </div>
+        <div class="demo-box">
+          <h2>2.内容块 .content-box</h2>
+          <div class="content-box">
+            <div class="content-box-title">
+              这里是标题
+            </div>
+            <div class="content-box-body">
+              外层样式是content-box，标题样式是content-box-title，内容主体，样式是content-box-body
+              <p>这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，
+                这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，
+                这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容，这是很长很长的内容。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h1 class="section-title">二、基础样式</h1>
+      <div class="section-body">
+        <div class="demo-box">
+          <div class="content-box">
+            <h2 class="content-box-title">1.复选框</h2>
+            <div class="content-box-body">
+              <div><div class="pdf-checkbox">基础：.pdf-checkbox</div></div>
+              <div><div class="pdf-checkbox checked">选中：.pdf-checkbox.checked</div></div>
+              <div><div class="pdf-checkbox long">长：.long</div></div>
+              <div><div class="pdf-checkbox short">短：.short</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h1 class="section-title">三、表格样式</h1>
+      <div class="section-body">
+        <div class="demo-box">
+          <div class="content-box">
+            <h2 class="content-box-title">1.基础表格 .pdf-table</h2>
+            <div class="content-box-body">
+              <table class="pdf-table">
+                <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>申报项目</th>
+                  <th>申报结果</th>
+                  <th>奖励金额（万元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>2019-02</td>
+                  <td>申报企业发展奖励</td>
+                  <td>申报成功</td>
+                  <td>50</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="demo-box">
+          <div class="content-box">
+            <h2 class="content-box-title">2.上方有说明文字（居中）</h2>
+            <div class="content-box-body">
+              <div class="info center">（这里是一些说明信息）</div>
+              <table class="pdf-table">
+                <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>申报项目</th>
+                  <th>申报结果</th>
+                  <th>奖励金额（万元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>2019-02</td>
+                  <td>申报企业发展奖励</td>
+                  <td>申报成功</td>
+                  <td>50</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="demo-box">
+          <div class="content-box">
+            <h2 class="content-box-title">3.上方有说明文字（居右）</h2>
+            <div class="content-box-body">
+              <div class="info right">（这里是一些说明信息）</div>
+              <table class="pdf-table">
+                <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>申报项目</th>
+                  <th>申报结果</th>
+                  <th>奖励金额（万元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>2019-02</td>
+                  <td>申报企业发展奖励</td>
+                  <td>申报成功</td>
+                  <td>50</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="demo-box">
+          <div class="content-box">
+            <h3 class="content-box-title">4.标题独占一行的表格</h3>
+            <div class="content-box-body">
+              <table class="pdf-table">
+                <col style="width: 35%">
+                <col style="width: 15%">
+                <col style="width: 35%">
+                <col style="width: 15%">
+                <tbody>
+                <tr>
+                  <td colspan="4" class="title fill">信用加分</td>
+                </tr>
+                <tr>
+                  <td class="fill" width="200px">行业协会表彰数量</td>
+                  <td>2项</td>
+                  <td class="fill">行业许可证</td>
+                  <td>2项</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="demo-box">
+          <div class="content-box">
+            <h2 class="content-box-title">5. key-value表格</h2>
+            <div class="content-box-body" id="table1">
+
+            </div>
+          </div>
+        </div>
+        <div class="demo-box">
+          <div class="content-box">
+            <h2 class="content-box-title">6. 带标题的key-value表格</h2>
+            <div class="content-box-body">
+              <div class="info right">数据时间：2019-05-23</div>
+              <div id="table2"></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-box">
+          <div class="content-box">
+            <h2 class="content-box-title">7.企业基本信息表格</h2>
+            <div class="content-box-body">
+              <table class="pdf-table">
+                <tr>
+                  <td class="cell fill" width="14%">企业名称</td>
+                  <td class="cell text-left">成都索贝数码科技股份有限公司</td>
+                  <td class="cell fill" width="14%">成立时间</td>
+                  <td class="cell text-left">2003-06-09</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">注册地</td>
+                  <td class="cell text-left">四川省成都市高新区</td>
+                  <td class="cell fill">办公地址</td>
+                  <td class="cell text-left">四川省成都市高新区新园南二路2号</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">注册资本</td>
+                  <td class="cell text-left">8,000 万元</td>
+                  <td class="cell fill">生产地址</td>
+                  <td class="cell text-left">四川省成都市高新区新园南二路2号</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">法人代表</td>
+                  <td class="cell text-left">姚平</td>
+                  <td class="cell fill">身份证号码</td>
+                  <td class="cell text-left">230103195705133218</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">联系人</td>
+                  <td class="cell text-left">唐楠</td>
+                  <td class="cell fill">职务</td>
+                  <td class="cell text-left">财务部总监</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">电话/传真</td>
+                  <td class="cell text-left">18908180072</td>
+                  <td class="cell fill">电子邮件</td>
+                  <td class="cell text-left">tangnan@sobey.com</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">经营范围</td>
+                  <td class="cell item-list" colspan="3">
+                    <ul>
+                      <li>主营：电视台全台网综合解决方案业务、融合媒体解决方案业务、行业视频应用解决方案业务、海外媒体解决方案业务、媒体云业务和其他业务</li>
+                      <li>兼营：</li>
+                    </ul>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell fill">企业相关资质证书</td>
+                  <td class="cell text-left" colspan="3">计算机信息系统集成企业资质一级</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">专利情况</td>
+                  <td class="cell text-left" colspan="3">发明数量: 1：基于轮廓的透明度渐变抠像方法201610288311.1
+                    2：一种异构数据复合对象的事务一致性达成方法与系统201610039269.X
+                    3：一种快速整理、挑选和编辑综艺节目海量素材的系统和方法201510162511.8 等33项发明专利 软件著作权数量: 1：融合媒体生产业务系统V1.0 软著登字第2225535号
+                    2：NOVA网络非线性编辑系统V10.0 软著登字第1379372号 3：新闻智能拆条系统[简称：BIC]V1.0 软著登字第2271228号 等378项软件著作权
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell fill">行业归属</td>
+                  <td class="cell text-left" colspan="3">
+                    <div class="pdf-checkbox long">新一代信息技术</div>
+                    <div class="pdf-checkbox long">高端装备制造</div>
+                    <div class="pdf-checkbox long">新材料</div>
+                    <div class="pdf-checkbox long">新材料</div>
+                    <div class="pdf-checkbox long">新能源</div>
+                    <div class="pdf-checkbox long">新能源汽车</div>
+                    <div class="pdf-checkbox long">节能环保</div>
+                    <div class="pdf-checkbox long">数字创意</div>
+                    <div class="pdf-checkbox long">相关服务</div>
+                    <div class="pdf-checkbox checked long">其它</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell fill">企业性质</td>
+                  <td class="cell text-left" colspan="3">
+                    <div class="pdf-checkbox short">国有</div>
+                    <div class="pdf-checkbox short">民营</div>
+                    <div class="pdf-checkbox checked short">外资</div>
+                    <div class="pdf-checkbox short">其他</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell fill">主营产品</td>
+                  <td class="cell text-left " colspan="3">电视台全台网综合解决方案、融合媒体解决方案、行业视频应用解决方案</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">兼营产品</td>
+                  <td class="cell text-left" colspan="3">--</td>
+                </tr>
+                <tr>
+                  <td class="cell fill">员工构成</td>
+                  <td class="cell sub-table" colspan="3">
+                    <table class="pdf-table">
+                      <tbody>
+                      <tr>
+                        <td class="cell fill">员工总数</td>
+                        <td class="cell">898</td>
+                        <td class="cell fill">大专以上人数</td>
+                        <td class="cell">851</td>
+                      </tr>
+                      <tr>
+                        <td class="cell fill">技术开发人员总数</td>
+                        <td class="cell ">898</td>
+                        <td class="cell fill">技术人员中本科及以上人数</td>
+                        <td class="cell ">851</td>
+                      </tr>
+                      <tr>
+                        <td class="cell fill">硕士及以上人数</td>
+                        <td class="cell ">898</td>
+                        <td class="cell fill">中高级技术职称人数</td>
+                        <td class="cell ">851</td>
+                      </tr>
+                      <tr>
+                        <td class="cell fill">管理人员人数</td>
+                        <td class="cell ">898</td>
+                        <td class="cell fill">管理人员中本科以上人数</td>
+                        <td class="cell ">851</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="demo-box">
+          <div class="content-box">
+            <h2 class="content-box-title">8.表格中单元格样式</h2>
+            <div class="content-box-body">
+              <table class="pdf-table">
+                <thead>
+                <tr>
+                  <th>文字居左</th>
+                  <th>文字居中</th>
+                  <th>文字居右</th>
+                  <th>无填充</th>
+                  <th>有填充</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td class="text-left">text-left</td>
+                  <td class="text-center">text-center</td>
+                  <td class="text-right">text-right</td>
+                  <td>无填充</td>
+                  <td class="fill">fill</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+<script type="text/javascript">
+  require.config({
+    baseUrl: './',
+    paths: {
+      'art-template': '../js/template-web',
+      'text': '../js/require-text',
+      'echarts': '../js/echarts.min',
+      'api': '../js/api',
+      'api2': '../js/api2',
+      'jquery': '../js/jquery-1.12.4.min',
+      'pdf': '../js/pdf',
+      'verticalTable': '../js/verticalTable',
+      'tableTp': '../template/vertical-table-template.html'
+    }
+  });
+  var resources = [
+    'jquery',
+    'art-template',
+    'echarts',
+    'pdf',
+    'verticalTable'
+  ];
+  require(resources, function ($) {
+    var pdf = require('pdf');
+    var tableData1 = [
+      {
+        label: '员工总数',
+        value: '108人'
+      },
+      {
+        label: '管理人员人数占比',
+        value: '7.12%'
+      },
+      {
+        label: '社保参保人数占比',
+        value: '95.33%'
+      },
+      {
+        label: '管理人员硕士学历以上人数占比',
+        value: '30%'
+      }
+    ];
+    var verticalTable = require('verticalTable');
+    var html1 = new verticalTable({
+      dataItemCountPerRow: 2,
+      labelWidth: '68%',
+      data: tableData1
+    }).getHtml();
+    $('#table1').html(html1);
+    var html2 = new verticalTable({
+      dataItemCountPerRow: 2,
+      labelWidth: '68%',
+      data: tableData1,
+      title: '信用加分'
+    }).getHtml();
+    $('#table2').html(html2);
+  });
+</script>
+</html>

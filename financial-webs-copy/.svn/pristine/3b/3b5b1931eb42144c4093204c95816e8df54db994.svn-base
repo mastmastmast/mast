@@ -1,0 +1,260 @@
+import xhr from './axiosConfig';
+import {dialog} from "../assets/js/dialog";
+
+
+/**
+ * 企业公共信用相关接口
+ * @type {{getEnterpriseList(): *}}
+ */
+export const enterpriseCredit = {
+  /**
+   * 信用分分布
+   */
+  scoreDistribution(data) {
+    return xhr.request({
+      url: 'enterpriseInfo/selectPublicScoreDistribution',
+      method: 'post',
+      data
+    }).catch(err=>{
+      dialog.error('获取企业公共信用分分布失败')
+    })
+  },
+
+  /**
+   * 下载报告
+   */
+  getEnterpriseCreditReport(params) {
+    return xhr.request({
+      timeout: 180000,
+      url: 'reportDownload/enterpriseCreditReport',
+      method: 'post',
+      data: params,
+      responseType: 'blob'
+    }).catch(err=>{
+      dialog.error("下载报告失败")
+    })
+  },
+  /**
+   * 获取评价体系数据信息
+   * @returns {Promise<T | never>}
+   */
+  getEvaluationInfo(companyName) {
+    return xhr.request({
+      url: 'credit/selectEnterpriseInfoScore',
+      method: 'post',
+      data: {
+        companyName: companyName
+      }
+    }).catch(err => {
+      dialog.error('获取企业评价数据失败')
+    });
+  },
+  /**
+   * 企业基本信息
+   * @param companyName 公司名称
+   * @returns {Promise<T | never>}
+   */
+  getBaseInfo(companyName) {
+    return xhr.request({
+      url: 'enterpriseInfo/selectEnterpriseInfo',
+      method: 'post',
+      data: {
+        companyName: companyName
+      }
+    }).catch(err => {
+      dialog.error('获取企业基本信息数据失败')
+    });
+  },
+  /**
+   * 企业行为——灰名单相关信息
+   * @param companyName 公司名称
+   * @returns {Promise<T | never>}
+   */
+  getGrayListInfo(companyName) {
+    return xhr.request({
+      url: 'enterpriseInfo/selectGreyListOfEnt',
+      method: 'post',
+      data: {
+        companyName: companyName
+      }
+    }).catch(err => {
+      dialog.error('获取企业行为信息数据失败')
+    });
+  },
+  /**
+   * 切换灰名单状态
+   * @param params
+   * @returns {Promise<T | never>}
+   */
+  switchGrayListStatus(params) {
+    return xhr.request({
+      url: 'greyList',
+      method: 'post',
+      data: params
+    });
+  },
+  /**
+   * 获取企业的关联关系
+   * @param companyName
+   * @returns {*}
+   */
+  getRelationship(companyName) {
+    return xhr.request({
+      url: 'enterpriseInfo/selectCorrelation',
+      method: 'post',
+      data: {
+        companyName: companyName
+      }
+    }).catch(err=>{
+      dialog.error('获取企业的关联关系数据失败！');
+    });
+  },
+  /**
+   * 企业资质
+   */
+  qualification: {
+    /**
+     * 获取工商信息
+     * @param companyName 公司名字
+     * @returns {Promise<T | never>}
+     */
+    getCommercialInfo(companyName) {
+      return xhr.request({
+        url: 'enterpriseInfo/selectMarketBaseInfo',
+        method: 'post',
+        data: {
+          companyName: companyName
+        }
+      }).catch(err => {
+        dialog.error('获取企业工商信息失败')
+      });
+    },
+    /**
+     * 获取企业注册资本信息
+     * @param companyName 公司名字
+     * @returns {Promise<T | never>}
+     */
+    getRegisterCapitalInfo(companyName) {
+      return xhr.request({
+        url: 'enterpriseInfo/selectRegisteredCapital',
+        method: 'post',
+        data: {
+          companyName: companyName
+        }
+      }).catch(err => {
+        dialog.error('获取企业注册资本信息失败')
+      });
+    },
+    /**
+     * 获取企业的股东信息
+     * @param params
+     * @returns {Promise<T | never>}
+     */
+    getShareInfo(params) {
+      return xhr.request({
+        url: 'enterpriseInfo/selectShareholderInformation',
+        method: 'post',
+        data: params
+      }).catch(err => {
+        dialog.error('获取企业股东信息失败');
+      });
+    },
+    /**
+     * 获取企业的主要人员信息
+     * @param params
+     * @returns {Promise<T | never>}
+     */
+    getPrincipals(params) {
+      return xhr.request({
+        url: 'enterpriseInfo/selectEntEmployees',
+        method: 'post',
+        data: params
+      }).catch(err => {
+        dialog.error('获取企业的主要人员信息失败');
+      });
+    },
+    /**
+     * 获取企业的分支机构信息
+     * @param params
+     * @returns {Promise<T | never>}
+     */
+    getBranches(params) {
+      return xhr.request({
+        url: 'enterpriseInfo/selectAffiliates',
+        method: 'post',
+        data: params
+      }).catch(err => {
+        dialog.error('获取企业的分支机构信息失败');
+      });
+    }
+  },
+
+  /**
+   * 涉诉行为
+   */
+  lawsuits: {
+    /**
+     * 获取企业标签信息
+     * @param params
+     * @returns {Promise<T | never>}
+     */
+    involvedData(params) {
+      return xhr.request({
+        url: 'involvedData',
+        method: 'post',
+        data: params
+      }).catch(err => {
+        dialog.error('获取企业标签信息失败');
+      })
+    },
+  },
+  /**
+   * 经营风险
+   */
+  operationRisk: {
+    /**
+     * 获取企业标签信息
+     * @param params
+     * @returns {Promise<T | never>}
+     */
+    businessRisk(params) {
+      return xhr.request({
+        url: 'businessRisk',
+        method: 'post',
+        data: params
+      }).catch((err) => {
+        dialog.error('获取企业标签信息失败')
+      })
+    }
+  },
+  /**
+   * 经营行为
+   */
+  operation: {
+    /**
+     * 获取企业标签信息
+     * @param params
+     * @returns {Promise<T | never>}
+     */
+    managementInfo(params) {
+      return xhr.request({
+        url: 'managementInfo',
+        method: 'post',
+        data: params
+      }).catch((err) => {
+        dialog.error('获取企业标签信息失败')
+      })
+    }
+  },
+};
+
+
+
+
+
+
+
+
+
+
+

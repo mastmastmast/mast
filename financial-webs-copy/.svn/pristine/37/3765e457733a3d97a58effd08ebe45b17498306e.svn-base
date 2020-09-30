@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="../css/_lib-reset.css" rel="stylesheet">
+  <link href="../css/_lib-base.css" rel="stylesheet">
+  <link href="./css/loan-vertical-table.css" rel="stylesheet">
+  <link href="./css/loan-pdf-table.css" rel="stylesheet">
+  <link href="./css/loanPdf.css" rel="stylesheet">
+  <script type="text/javascript" src="../js/require.js"></script>
+  <title>征信贷款产品报告封面</title>
+</head>
+<body>
+<div id="report" style="height: 1735px">
+  <!--内容-->
+  <div id="cover">
+  </div>
+</div>
+</body>
+<script type="text/javascript">
+  require.config({
+    baseUrl: './',
+    paths: {
+      'art-template': '../js/template-web',
+      'text': '../js/require-text',
+      'echarts': '../js/echarts.min',
+      'api': '../js/api',
+      'api2': '../js/api2',
+      'jquery': '../js/jquery-1.12.4.min',
+      'pdf': '../js/pdf',
+      'verticalTable': '../js/verticalTable',
+      'tableTp': '../template/vertical-table-template.html',
+      'cover-tp': './template/cover-tp.html',
+      'cover-js': './js/cover',
+    }
+  });
+  var resources = [
+    'jquery',
+    'art-template',
+    'echarts',
+    'pdf',
+    'verticalTable',
+    'cover-js',
+    'text!cover-tp',
+  ];
+  require(resources, function ($) {
+    var pdf = require('pdf');
+    pdf.token = pdf.getQueryString('token');
+    pdf.companyName = pdf.getQueryString('companyName');
+    pdf.loanName = pdf.getQueryString('loanName');
+    pdf.id = pdf.getQueryString('id');
+    var modules = [
+      {
+        template: 'text!cover-tp',
+        js: 'cover-js',
+        id: 'cover'
+      },
+    ];
+    modules.forEach(function (item, index) {
+      if (item.template) {
+        $('#' + item.id).html(require(item.template));
+      }
+      var entry = require(item.js);
+      entry.load();
+    });
+  });
+</script>
+</html>
+

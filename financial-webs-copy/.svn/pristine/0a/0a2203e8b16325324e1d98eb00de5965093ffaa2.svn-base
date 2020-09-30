@@ -1,0 +1,29 @@
+<script type="text/html" id="comprehensive-assessment-tp">
+  <div class="content-box">
+    <div class="content-box-body aviods">
+      <div id="radar-chart" style="height: 650px;width: 50%;float: left"></div>
+      <div class="score-outer">
+        <p style="padding-top: 60px">
+          <span style="font-weight: bold;margin-right: 10px">评议分</span>
+          <span style="font-weight: bold;color: #ff640f;">{{summary.special_score}}</span>
+        </p>
+        <div class="score-bar">
+          <ul>
+            {{each group item}}
+            <li class="single-bar"><span class="{{item === summary.evaluate ? 'selected' : ''}}">{{item}}</span></li>
+            {{/each}}
+          </ul>
+          <div class="score-legend">
+            <span>0</span><span>70</span><span>75</span><span>80</span><span>90</span><span>100</span>
+          </div>
+        </div>
+      </div>
+      <div class="score-summary">
+        <p>通过依法采集政府、信息主体、第三方机构、公开信息等数据，依据合理的技术规范、评价体系、大数据信用模型，从基础势能、资产信用、财务信用、创新发展、公共信用五方面，分析得出：</p>
+        <p>{{summary.company_name}}{{summary.product_name}}评议分<span class="underline no-width">{{summary.special_score}}。</span></p>
+        <!-- <p>{{summary.company_name}}{{summary.product_name}}评议分<span class="underline no-width">{{summary.special_score}}</span>，在成都高新区政策性贷款申请企业中，信用分整体排名<span class="underline no-width">{{summary.ranking}}</span>，高于<span class="underline no-width">{{summary.special_rate}}</span>的同行业企业（<span class="underline no-width">{{summary.trade}}</span>）。</p> -->
+      </div>
+    </div>
+  </div>
+</script>
+

@@ -1,0 +1,50 @@
+@import "../lib-variable";
+
+$activeColor: #FF930F;
+$itemWidth: 22px;
+$itemHeight: 22px;
+.pagination {
+  margin-top: 20px;
+  color: $mainColor;
+  .el-pager li {
+    height: $itemHeight !important;
+    line-height: $itemHeight !important;
+    background-color: #fff !important;
+    color: $mainColor;
+    font-family: Arial, serif;
+    font-size: 14px;
+    font-weight: normal;
+    &:hover {
+      color: $activeColor !important;
+    }
+  }
+  .el-pager .number {
+    background: #fff !important;
+    color: $mainColor;
+    &.active {
+      background: #fff !important;
+      color: $activeColor !important;
+    }
+  }
+  .btn-prev,
+  .btn-next {
+    min-width: $itemWidth !important;
+    height: $itemWidth;
+    background: #fff !important;
+    color: $activeColor !important;
+    border: 1px solid $activeColor;
+    box-sizing: border-box;
+    i {
+      font-weight: normal;
+    }
+  }
+  .btn-prev:disabled,
+  .btn-next:disabled {
+    background: #fff !important;
+    color: #c0c4cc !important;
+    border: 1px solid #c0c4cc;
+  }
+  .el-pager .more::before {
+    line-height: $itemHeight;
+  }
+}

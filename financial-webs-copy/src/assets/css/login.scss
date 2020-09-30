@@ -1,0 +1,224 @@
+@import "lib-variable";
+
+.login {
+  height: 100%;
+  min-height: 710px;
+  .login-container {
+    position: relative;
+    height: 100%;
+    color: #333;
+    font-size: 14px;
+    .login-header {
+      position: absolute;
+      top: 0;
+      height: 100px;
+      width: 100%;
+      background-color: #FFFFFF;
+      .header-title {
+        position: relative;
+        width: 1200px;
+        margin: 0 auto;
+        .logo {
+          position: absolute;
+          top: 50%;
+          margin-top: -24px;
+          width: 185px;
+          height: 48px;
+          background: url(../../../public/img/loginLogo1.png) left center no-repeat;
+          &::after {
+            content: '';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            margin-top: -24px;
+            width: 1px;
+            height: 48px;
+            background: #bfbfbf;
+          }
+        }
+        .desc {
+          font-size: 30px;
+          font-weight: bold;
+          line-height: 100px;
+          // margin-left: 235px;
+          text-align: center;
+        }
+      }
+    }
+    .login-content {
+      position: absolute;
+      top: 100px;
+      bottom: 150px;
+      overflow: hidden;
+      width: 100%;
+      min-height: 460px;
+      background-image: linear-gradient(90deg, rgb(277, 277, 277) 0%, rgb(247, 247, 247) 100%);
+      box-shadow: inset 4px 6.928px 12px 0px rgba(0, 0, 0, 0.031);
+      .content-login {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+        width: 1200px;
+        height: 418px;
+        // background: url(../../../public/img/login3.jpg) left center no-repeat;
+        .login-form {
+          width: 390px;
+          height: 418px;
+          position: absolute;
+          top: 0;
+          right: 30%;
+          background-color: #FFFFFF;
+          .form-title {
+            line-height: 86px;
+            font-size: 18px;
+            text-align: center;
+          }
+          .form-content {
+            margin-left: 40px;
+            #loginForm {
+              .name-true {
+                position: absolute;
+                top: 2px;
+                right: 20px;
+                i {
+                  font-size: 17px;
+                  color: #50C592;
+                }
+              }
+              .pwd-error {
+                position: absolute;
+                top: 35px;
+                left: 45px;
+                font-size: 12px;
+                color: #ff0101;
+                line-height: 30px;
+              }
+              .captcha-btn {
+                height: 40px;
+                width: 310px;
+                font-size: 16px;
+              }
+            }
+            .operation {
+              height: 45px;
+              width: 310px;
+              position: relative;
+              margin-top: 15px;
+              color: #666;
+              .forget-pwd {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                color: #333333;
+              }
+            }
+            .login-btn {
+              height: 40px;
+              width: 310px;
+              font-size: 18px;
+              margin-top: 20px;
+            }
+          }
+        }
+      }
+    }
+    .login-footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 150px;
+      background-color: #FFFFFF;
+      .footer-content {
+        position: relative;
+        width: 1200px;
+        margin: 0 auto;
+        padding-top: 40px;
+        .footer-left {
+          position: absolute;
+          left: 0;
+          top: 40px;
+          .footer-logo {
+            height: 34px;
+            width: 134px;
+            background: url(../../../public/img/loginLogo2.png) left center no-repeat;
+          }
+          .footer-my {
+            margin-top: 25px;
+            a {
+              display: inline-block;
+              margin-right: 25px;
+              padding-right: 25px;
+              border-right: 1px solid #333333;
+              &:last-of-type {
+                border: none;
+              }
+              &:hover {
+                color: $highLightColor;
+              }
+            }
+          }
+        }
+        .footer-right {
+          position: absolute;
+          right: 0;
+          top: 40px;
+          text-align: right;
+          p {
+            color: #666;
+            margin-top: 20px;
+            &:first-of-type {
+              margin-top: 0;
+            }
+            span:first-of-type {
+              margin-right: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.validate-img {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  /*height: 280px;*/
+  /*border: 1px solid rgba(0, 0, 0, .05);*/
+  border-radius: 5px;
+  box-shadow: 0px -1px 5px rgba(0, 0, 0, .05), 1px 0px 5px rgba(0, 0, 0, .05), 0px -1px 5px rgba(0, 0, 0, .05), -1px 0px 5px rgba(0, 0, 0, .05);
+  z-index: 999;
+  & .arrow,
+  & .arrow::after {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+  }
+  & .arrow {
+    margin-left: -5px;
+    bottom: -8px;
+    left: 50%;
+    border-top-color: rgba(0, 0, 0, .05);;
+    border-width: 8px;
+    border-bottom-width: 0;
+  }
+  & .arrow::after {
+    content: " ";
+    top: -8px;
+    left: -7px;
+    border-top-color: #fff;
+    border-width: 7px;
+    border-bottom-width: 0;
+  }
+  & span {
+    margin: 20px 10px 0;
+    font-size: 14px;
+    color: #999;
+  }
+}
